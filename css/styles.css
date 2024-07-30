@@ -1,0 +1,307 @@
+/* Variables de Color */
+:root {
+    --primary-color: #6a1b9a; /* Morado */
+    --secondary-color: #0d47a1; /* Azul */
+    --text-color: #ffffff; /* Blanco */
+    --background-color: #f4f4f4; /* Gris Claro */
+}
+
+/* Estilos Generales */
+body {
+    width: 100%;
+    font-family: Arial, sans-serif;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Asegura que el contenido se ajuste a la altura de la ventana */
+}
+
+/* Navbar Styles */
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--secondary-color);
+    position: fixed; /* Fija el navbar en la parte superior */
+    top: 0;
+    width: 100%;
+    z-index: 1000; /* Asegura que el navbar esté sobre otros elementos */
+    box-sizing: border-box; /* Asegura que el padding no haga que el contenido se desborde */
+}
+
+.logo img {
+    height: 50px; /* Ajusta el tamaño del logo según sea necesario */
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 40px; /* Tamaño del área del botón */
+    height: 40px; /* Tamaño del área del botón */
+    position: relative;
+}
+
+.menu-icon,
+.close-icon {
+    width: 100%; /* Ajusta el tamaño del ícono del menú hamburguesa */
+    height: auto;
+    display: block;
+    filter: brightness(0) invert(1); /* Cambia el ícono a blanco */
+}
+
+.close-icon {
+    display: none; /* Oculta el ícono de cerrar por defecto */
+}
+
+/* Navbar Menu Styles */
+.nav-menu {
+    display: none;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    margin-left: 1rem;
+}
+
+nav ul li a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: var(--primary-color);
+}
+
+.dropdown-menu {
+    display: none; /* Oculta el ícono del menú cuando está activo */
+}
+
+/* Menu Toggle Styles */
+.menu-toggle.active .menu-icon {
+    display: none; /* Oculta el ícono del menú cuando está activo */
+}
+
+.menu-toggle.active .close-icon {
+    display: block; /* Muestra el ícono de cerrar cuando está activo */
+}
+
+/* Estilos para el Hero */
+.hero {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    padding: 2rem;
+    text-align: center;
+    margin-top: 60px; /* Ajusta el margen superior para no cubrir el contenido con el navbar fijo */
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    margin: 0.5rem 0;
+}
+
+.hero button {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.hero button:hover {
+    background-color: #004ba0; /* Azul más oscuro */
+}
+
+/* Estilos para el Contenido */
+.content {
+    padding: 2rem;
+    background-color: var(--background-color);
+    margin-top: 20px; /* Añadir margen superior para que no se superponga con el navbar */
+}
+
+.content h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.content p {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* Estilos para el Formulario de Contacto */
+.contact-form {
+    padding: 2rem;
+    background-color: var(--background-color);
+}
+
+.contact-form h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.contact-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-form label {
+    margin-bottom: 0.5rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.contact-form button {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border: none;
+    padding: 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.contact-form button:hover {
+    background-color: #4a0072; /* Morado más oscuro */
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    .menu {
+        display: none;
+    }
+
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: 60px; /* Ajusta según el alto de tu navbar */
+        right: 0;
+        background-color: var(--secondary-color);
+        width: 100%;
+        text-align: center;
+        padding: 1rem 2rem;
+        z-index: 1000;
+        box-sizing: border-box; /* Asegura que el padding no haga que el contenido se desborde */
+    }
+
+    .nav-menu ul {
+        display: block;
+        padding: 0;
+        margin: 0;
+    }
+
+    .nav-menu ul li {
+        margin: 0.5rem 0; /* Espaciado vertical de los ítems */
+    }
+
+    .nav-menu ul li a {
+        display: block;
+        padding: 1rem; /* Asegura que el área de clic sea lo suficientemente grande */
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .menu-toggle.active {
+        display: block;
+    }
+
+    /* Menú desplegable */
+
+    .dropdown-menu {
+        display: none;
+        position: fixed; /* Cambia a fixed para cubrir toda la pantalla */
+        top: 5rem; /* Posiciona en la parte superior de la pantalla */
+        left: 0; /* Posiciona en la parte izquierda de la pantalla */
+        width: 100%; /* Asegura que ocupe todo el ancho */
+        height: 100%; /* Asegura que ocupe toda la altura */
+        background-color: var(--secondary-color);
+        z-index: 999; /* Asegura que esté detrás del navbar */
+        margin-top: 0; /* Empieza sin margen */
+    }
+
+    /* Mostrar el menú cuando tenga la clase active */
+    .dropdown-menu.active {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dropdown-menu ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+    
+
+    .dropdown-menu ul li {
+        padding: 2rem;
+    }
+
+    .dropdown-menu ul li a { 
+        padding: 2rem;
+        
+    }
+
+    /* Iconos por defecto */
+    .menu-icon {
+        display: block;
+    }
+
+    .close-icon {
+        display: none;
+    }
+
+    /* Mostrar íconos según el estado del menú */
+    .menu-toggle.active .menu-icon {
+        display: none;
+    }
+
+    .menu-toggle.active .close-icon {
+        display: block;
+    }
+}
+
+/* Estilos para el Footer */
+footer {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    padding: 1rem;
+    text-align: center;
+    position: relative; /* Asegura que el footer se posicione correctamente */
+    bottom: 0;
+    width: 100%;
+    margin-top: auto; /* Asegura que el footer esté en la parte inferior */
+}
