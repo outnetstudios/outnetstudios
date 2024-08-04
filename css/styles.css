@@ -1,307 +1,189 @@
-/* Variables de Color */
-:root {
-    --primary-color: #6a1b9a; /* Morado */
-    --secondary-color: #0d47a1; /* Azul */
-    --text-color: #ffffff; /* Blanco */
-    --background-color: #f4f4f4; /* Gris Claro */
-}
+/* Importar fuente Inter desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
-/* Estilos Generales */
+/* Aplicar la fuente globalmente */
 body {
-    width: 100%;
-    font-family: Arial, sans-serif;
-    color: var(--text-color);
-    background-color: var(--background-color);
+    font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Asegura que el contenido se ajuste a la altura de la ventana */
+    box-sizing: border-box;
+    height: 100vh; /* Asegura que el body ocupe toda la altura de la vista */
 }
 
-/* Navbar Styles */
+/* Variables de Color */
+:root {
+    --navbar-bg-color: #333;
+    --item-bg-hover-color: #555;
+    --text-color: white;
+    --menu-height: calc(100vh - 60px);
+    --box-shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Navbar estilos */
+.navbar {
+    background-color: var(--navbar-bg-color);
+    color: var(--text-color);
+    padding: 1rem;
+    position: fixed; /* Asegura que el navbar permanezca en la vista */
+    width: 100%; /* Asegura que el navbar cubra todo el ancho de la pantalla */
+    top: 0; /* Posiciona el navbar en la parte superior */
+    left: 0; /* Asegura que el navbar esté alineado a la izquierda */
+    z-index: 1000; /* Asegura que el navbar esté por encima del contenido */
+    box-sizing: border-box; /* Asegura que el padding no haga que el ancho sea mayor al 100% */
+}
+
 .navbar-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
-    background-color: var(--secondary-color);
-    position: fixed; /* Fija el navbar en la parte superior */
-    top: 0;
-    width: 100%;
-    z-index: 1000; /* Asegura que el navbar esté sobre otros elementos */
-    box-sizing: border-box; /* Asegura que el padding no haga que el contenido se desborde */
 }
 
-.logo img {
-    height: 50px; /* Ajusta el tamaño del logo según sea necesario */
+.navbar-logo img {
+    height: 40px;
 }
 
-.menu-toggle {
+.navbar-menu {
+    display: flex;
+    gap: 1rem;
+}
+
+.navbar-item {
+    color: var(--text-color);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s;
+}
+
+.navbar-item:hover {
+    background-color: var(--item-bg-hover-color);
+}
+
+.navbar-toggle {
     display: none;
     background: none;
     border: none;
-    cursor: pointer;
-    padding: 0;
-    width: 40px; /* Tamaño del área del botón */
-    height: 40px; /* Tamaño del área del botón */
     position: relative;
+    width: 30px;
+    height: 30px;
 }
 
-.menu-icon,
-.close-icon {
-    width: 100%; /* Ajusta el tamaño del ícono del menú hamburguesa */
-    height: auto;
+
+/* Íconos de menú */
+.icon {
+    height: 30px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    filter: invert(1) brightness(100) grayscale(0); /* Cambia el color de los íconos a blanco */
+}
+
+.menu-icon {
     display: block;
-    filter: brightness(0) invert(1); /* Cambia el ícono a blanco */
 }
 
 .close-icon {
-    display: none; /* Oculta el ícono de cerrar por defecto */
-}
-
-/* Navbar Menu Styles */
-.nav-menu {
     display: none;
 }
 
-nav ul {
-    list-style: none;
-    display: flex;
-    padding: 0;
-    margin: 0;
-}
 
-nav ul li {
-    margin-left: 1rem;
-}
-
-nav ul li a {
-    color: var(--text-color);
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-nav ul li a:hover {
-    color: var(--primary-color);
-}
-
-.dropdown-menu {
-    display: none; /* Oculta el ícono del menú cuando está activo */
-}
-
-/* Menu Toggle Styles */
-.menu-toggle.active .menu-icon {
-    display: none; /* Oculta el ícono del menú cuando está activo */
-}
-
-.menu-toggle.active .close-icon {
-    display: block; /* Muestra el ícono de cerrar cuando está activo */
-}
-
-/* Estilos para el Hero */
-.hero {
-    width: 100%;
-    background-color: var(--primary-color);
-    color: var(--text-color);
-    padding: 2rem;
-    text-align: center;
-    margin-top: 60px; /* Ajusta el margen superior para no cubrir el contenido con el navbar fijo */
-}
-
-.hero h1 {
-    font-size: 2.5rem;
-    margin: 0;
-}
-
-.hero p {
-    font-size: 1.25rem;
-    margin: 0.5rem 0;
-}
-
-.hero button {
-    background-color: var(--secondary-color);
-    color: var(--text-color);
-    border: none;
-    padding: 1rem 2rem;
-    font-size: 1rem;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.hero button:hover {
-    background-color: #004ba0; /* Azul más oscuro */
-}
-
-/* Estilos para el Contenido */
 .content {
-    padding: 2rem;
-    background-color: var(--background-color);
-    margin-top: 20px; /* Añadir margen superior para que no se superponga con el navbar */
-}
-
-.content h1 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-}
-
-.content p {
-    font-size: 1rem;
-    line-height: 1.6;
-}
-
-/* Estilos para el Formulario de Contacto */
-.contact-form {
-    padding: 2rem;
-    background-color: var(--background-color);
-}
-
-.contact-form h1 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-}
-
-.contact-form form {
-    display: flex;
-    flex-direction: column;
-}
-
-.contact-form label {
-    margin-bottom: 0.5rem;
-}
-
-.contact-form input,
-.contact-form textarea {
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-}
-
-.contact-form button {
-    background-color: var(--primary-color);
-    color: var(--text-color);
-    border: none;
-    padding: 1rem;
-    font-size: 1rem;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.contact-form button:hover {
-    background-color: #4a0072; /* Morado más oscuro */
-}
-
-/* Responsive Styles */
-@media (max-width: 600px) {
-    .menu {
-        display: none;
-    }
-
-    .nav-menu {
-        display: none;
-        position: absolute;
-        top: 60px; /* Ajusta según el alto de tu navbar */
-        right: 0;
-        background-color: var(--secondary-color);
-        width: 100%;
-        text-align: center;
-        padding: 1rem 2rem;
-        z-index: 1000;
-        box-sizing: border-box; /* Asegura que el padding no haga que el contenido se desborde */
-    }
-
-    .nav-menu ul {
-        display: block;
-        padding: 0;
-        margin: 0;
-    }
-
-    .nav-menu ul li {
-        margin: 0.5rem 0; /* Espaciado vertical de los ítems */
-    }
-
-    .nav-menu ul li a {
-        display: block;
-        padding: 1rem; /* Asegura que el área de clic sea lo suficientemente grande */
-    }
-
-    .menu-toggle {
-        display: block;
-    }
-
-    .menu-toggle.active {
-        display: block;
-    }
-
-    /* Menú desplegable */
-
-    .dropdown-menu {
-        display: none;
-        position: fixed; /* Cambia a fixed para cubrir toda la pantalla */
-        top: 5rem; /* Posiciona en la parte superior de la pantalla */
-        left: 0; /* Posiciona en la parte izquierda de la pantalla */
-        width: 100%; /* Asegura que ocupe todo el ancho */
-        height: 100%; /* Asegura que ocupe toda la altura */
-        background-color: var(--secondary-color);
-        z-index: 999; /* Asegura que esté detrás del navbar */
-        margin-top: 0; /* Empieza sin margen */
-    }
-
-    /* Mostrar el menú cuando tenga la clase active */
-    .dropdown-menu.active {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .dropdown-menu ul {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin-top: 2rem;
-    }
-    
-
-    .dropdown-menu ul li {
-        padding: 2rem;
-    }
-
-    .dropdown-menu ul li a { 
-        padding: 2rem;
-        
-    }
-
-    /* Iconos por defecto */
-    .menu-icon {
-        display: block;
-    }
-
-    .close-icon {
-        display: none;
-    }
-
-    /* Mostrar íconos según el estado del menú */
-    .menu-toggle.active .menu-icon {
-        display: none;
-    }
-
-    .menu-toggle.active .close-icon {
-        display: block;
-    }
-}
-
-/* Estilos para el Footer */
-footer {
-    background-color: var(--secondary-color);
-    color: var(--text-color);
-    padding: 1rem;
-    text-align: center;
-    position: relative; /* Asegura que el footer se posicione correctamente */
-    bottom: 0;
+    background-color: red;
     width: 100%;
-    margin-top: auto; /* Asegura que el footer esté en la parte inferior */
+    height: calc(100vh - 60px); /* Ajusta la altura según la altura del navbar */
+    padding-top: 60px; /* Añade espacio en la parte superior para evitar que el contenido quede detrás del navbar */
+}
+
+
+
+/* Media Queries para Responsive Design */
+@media (max-width: 768px) {
+    /* Estilos para el menú cuando está cerrado */
+    .navbar-menu {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        height: var(--menu-height); /* Ocupa el resto de la altura de la vista, ajusta 60px al alto del navbar si es diferente */
+        background-color: var(--navbar-bg-color); /* Ajusta el color de fondo si es necesario */
+        position: fixed; /* Posiciona el menú para que esté sobre el contenido */
+        top: 60px; /* Ajusta al alto del navbar */
+        left: 0;
+        right: 0;
+        padding-top: 1rem; /* Espacio superior para el contenido del menú */
+        padding-bottom: 1rem; /* Espacio inferior para el contenido del menú */
+        z-index: 1000; /* Asegura que el menú esté encima del contenido */
+        overflow-y: auto; /* Permite el desplazamiento vertical si el contenido es más largo */
+        justify-content: center; /* Centra el contenido verticalmente */
+        box-sizing: border-box; /* Asegura que el padding no haga que el ancho sea mayor al 100% */
+    }
+
+    /* Mostrar menú cuando está activo */
+    .navbar-menu.active {
+        display: flex;
+    }
+
+    .navbar-toggle {
+        display: block;
+    }
+
+    /* Alternar entre íconos cuando el menú está activo */
+    .navbar-menu.active + .navbar-toggle .menu-icon {
+        display: none;
+    }
+
+    .navbar-menu.active + .navbar-toggle .close-icon {
+        display: block;
+    }
+
+    .navbar-item {
+        padding: 1rem; /* Aumenta el padding para mejor usabilidad en pantallas táctiles */
+        text-align: center; /* Centra el texto */
+        color: var(--text-color);
+        text-decoration: none;
+        flex: 1; /* Permite que los ítems se expandan para ocupar el espacio disponible */
+        display: flex; /* Asegura que los ítems ocupen el espacio disponible */
+        align-items: center; /* Centra el texto verticalmente dentro del ítem */
+        justify-content: center; /* Centra el texto horizontalmente dentro del ítem */
+    }
+
+    .navbar-item:last-child {
+        border-bottom: none; /* Quita la línea separadora del último ítem */
+    }
+}
+
+/* Footer estilos */
+.footer {
+    background-color: var(--footer-bg-color);
+    color: var(--footer-text-color);
+    padding: 1rem;
+    position: relative; /* Mantiene el footer en la parte inferior si el contenido es corto */
+    width: 100%; /* Asegura que el footer cubra todo el ancho de la pantalla */
+    box-sizing: border-box; /* Incluye padding en el cálculo del ancho total */
+    text-align: center; /* Centra el texto en el footer */
+}
+
+.footer-container {
+    max-width: 1200px; /* Ajusta el ancho máximo del contenido */
+    margin: 0 auto; /* Centra el footer en la página */
+    padding: 0 1rem; /* Añade padding lateral para el contenido */
+}
+
+.footer-links {
+    margin-top: 1rem; /* Añade espacio superior para separar los enlaces del texto */
+}
+
+.footer-links a {
+    color: var(--footer-link-color);
+    text-decoration: none;
+    margin: 0 0.5rem; /* Añade espacio entre los enlaces */
+}
+
+.footer-links a:hover {
+    text-decoration: underline; /* Añade subrayado al pasar el ratón por encima */
+}
+
+/* Variables de Color */
+:root {
+    --footer-bg-color: #333;
+    --footer-text-color: white;
+    --footer-link-color: #ccc;
 }
