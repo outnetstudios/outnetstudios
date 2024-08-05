@@ -68,6 +68,8 @@ body {
 }
 
 
+
+
 /* Íconos de menú */
 .icon {
     height: 30px;
@@ -85,12 +87,79 @@ body {
     display: none;
 }
 
-
 .content {
     background-color: red;
     width: 100%;
-    height: calc(100vh - 60px); /* Ajusta la altura según la altura del navbar */
     padding-top: 60px; /* Añade espacio en la parte superior para evitar que el contenido quede detrás del navbar */
+}
+
+
+
+/* Estilos para el Primer Bloque: Banner */
+.banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
+    background-image: url('ruta/a/tu/imagen-de-fondo.jpg'); /* Ajusta la ruta de la imagen */
+    background-size: cover;
+    background-position: center;
+    color: var(--text-color);
+    height: 80vh; /* Altura del banner */
+}
+
+.banner-text {
+    max-width: 50%;
+}
+
+.banner-image {
+    width: 40%;
+    height: 100%;
+    background-color: red; /* Color temporal para identificar */
+}
+
+
+.hire-us-button {
+    background-color: #007BFF; /* Color de fondo del botón */
+    color: white; /* Color del texto del botón */
+    border: none; /* Sin bordes */
+    padding: 0.75rem 1.5rem; /* Espaciado interno del botón */
+    font-size: 1rem; /* Tamaño de fuente */
+    cursor: pointer; /* Cambio de cursor al pasar por encima */
+    transition: background-color 0.3s; /* Transición suave para el cambio de color de fondo */
+    border-radius: 5px; /* Bordes redondeados */
+    margin-top: 1rem; /* Espacio superior para separar el botón del párrafo */
+}
+
+.hire-us-button:hover {
+    background-color: #0056b3; /* Color de fondo del botón al pasar el cursor */
+}
+
+
+/* Estilos para el Segundo y Cuarto Bloque: Texto Centrado */
+.centered-text {
+    text-align: center;
+    padding: 3rem 1rem;
+    background-color: #f9f9f9; /* Color de fondo claro para diferenciar */
+}
+
+/* Estilos para el Tercer Bloque: Texto Izquierda con Imagen Derecha */
+.text-image {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
+    background-color: #fff; /* Color de fondo blanco */
+}
+
+.text-left {
+    max-width: 50%;
+}
+
+.image-right {
+    width: 40%;
+    height: 300px; /* Altura de la imagen derecha */
+    background-color: red; /* Color temporal para identificar */
 }
 
 
@@ -147,6 +216,20 @@ body {
 
     .navbar-item:last-child {
         border-bottom: none; /* Quita la línea separadora del último ítem */
+    }
+
+    .banner, .text-image {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .banner-text, .text-left, .banner-image, .image-right {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .banner-image, .image-right {
+        height: 200px; /* Ajustar la altura para pantallas más pequeñas */
     }
 }
 
