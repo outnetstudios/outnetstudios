@@ -12,9 +12,14 @@ body {
 
 /* Variables de Color */
 :root {
-    --navbar-bg-color: #333;
-    --item-bg-hover-color: #555;
+    --navbar-bg-color: #0e0edb;
+    --gradient: linear-gradient(to right, #0051FF, #0e0edb);
+    --item-bg-hover-color: #08088f;
+    --bottom-color: #0e0edb;
+    --bottom-hover: white;
     --text-color: white;
+    --text-colortwo: rgba(0, 0, 0, 0.1);
+    --text-colorthree: #0e0edb;
     --menu-height: calc(100vh - 60px);
     --box-shadow-color: rgba(0, 0, 0, 0.1);
 }
@@ -48,6 +53,7 @@ body {
 }
 
 .navbar-item {
+    border-radius: 30px; /* Asegura que el borde redondeado esté siempre aplicado */
     color: var(--text-color);
     text-decoration: none;
     padding: 0.5rem 1rem;
@@ -55,7 +61,10 @@ body {
 }
 
 .navbar-item:hover {
-    background-color: var(--item-bg-hover-color);
+    background-color: var(--bottom-hover);
+    border-radius: 30px;
+    color: var(--text-colorthree);
+    cursor: pointer;
 }
 
 .navbar-toggle {
@@ -120,21 +129,21 @@ body {
 
 
 .hire-us-button {
-    background-color: #007BFF; /* Color de fondo del botón */
-    color: white; /* Color del texto del botón */
+    background-color: var(--bottom-color); /* Color de fondo del botón */
+    color: var(--text-color); /* Color del texto del botón */
     border: none; /* Sin bordes */
     padding: 0.75rem 1.5rem; /* Espaciado interno del botón */
     font-size: 1rem; /* Tamaño de fuente */
     cursor: pointer; /* Cambio de cursor al pasar por encima */
     transition: background-color 0.3s; /* Transición suave para el cambio de color de fondo */
-    border-radius: 5px; /* Bordes redondeados */
+    border-radius: 30px; /* Bordes redondeados */
     margin-top: 1rem; /* Espacio superior para separar el botón del párrafo */
 }
 
 .hire-us-button:hover {
-    background-color: #0056b3; /* Color de fondo del botón al pasar el cursor */
+    background-color: var(--bottom-hover);
+    color: var(--text-colorthree); /* Color de fondo del botón al pasar el cursor */
 }
-
 
 /* Estilos para el Segundo y Cuarto Bloque: Texto Centrado */
 .centered-text {
@@ -183,6 +192,13 @@ body {
         overflow-y: auto; /* Permite el desplazamiento vertical si el contenido es más largo */
         justify-content: center; /* Centra el contenido verticalmente */
         box-sizing: border-box; /* Asegura que el padding no haga que el ancho sea mayor al 100% */
+    }
+
+    .navbar-item:hover {
+        background-color: var(--bottom-hover);
+        border-radius: 0;
+        color: var(--text-colorthree);
+        cursor: pointer;
     }
 
     /* Mostrar menú cuando está activo */
@@ -266,7 +282,7 @@ body {
 
 /* Variables de Color */
 :root {
-    --footer-bg-color: #333;
+    --footer-bg-color:  #0e0edb;
     --footer-text-color: white;
-    --footer-link-color: #ccc;
+    --footer-link-color: white;
 }
