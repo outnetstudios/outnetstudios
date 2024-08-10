@@ -19,6 +19,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     menuIcon.style.display = menuIcon.style.display === 'none';
                     closeIcon.style.display = closeIcon.style.display === 'none';
                 });
+
+
+                // Agregar el código para cambiar el color de fondo al hacer scroll
+                window.addEventListener('scroll', () => {
+                    const navbar = document.querySelector('.navbar');
+                    if (window.scrollY > 0) {
+                        navbar.classList.add('scrolled');
+                    } else {
+                        navbar.classList.remove('scrolled');
+                    }
+                });
             })
             .catch(error => console.error('Error loading navbar:', error));
     }
