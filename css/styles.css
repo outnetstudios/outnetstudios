@@ -116,7 +116,6 @@ body {
     align-items: center;
     padding: 2rem;
     padding-top: 60px;
-    background-image: url('/img/imagen-de-fondo.png'); /* Ajusta la ruta de la imagen */
     background-size: cover;
     background-position: center;
     color: var(--text-color);
