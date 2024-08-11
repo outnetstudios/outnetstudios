@@ -17,6 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     navbarMenu.classList.toggle('active');
                     navbar.classList.toggle('active');
 
+                    // Forzar la aplicación del color de fondo en iOS
+                    if (navbar.classList.contains('active')) {
+                        navbar.style.backgroundColor = 'var(--navbar-bg-color)';
+                    } else {
+                        navbar.style.backgroundColor = ''; // Reset al color original
+                    }
+
                     // Alternar entre los íconos
                     const menuIcon = navbarToggle.querySelector('.menu-icon');
                     const closeIcon = navbarToggle.querySelector('.close-icon');
@@ -26,15 +33,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 window.addEventListener('scroll', () => {
-                    const navbar = document.querySelector('.navbar');
                     if (window.scrollY > 0) {
                         navbar.classList.add('scrolled');
+                        navbar.style.backgroundColor = 'var(--navbar-bg-color)'; // Asegurar el color en scroll
                     } else {
                         navbar.classList.remove('scrolled');
+                        if (!navbar.classList.contains('active')) {
+                            navbar.style.backgroundColor = ''; // Solo eliminar color si el menú no está activo
+                        }
                     }
                 });
-                
             })
+            .catch(error => console.error('Error loading navbar:', error));
     }
 
     if (footerContainer) {
@@ -43,5 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 footerContainer.innerHTML = data;
             })
+            .catch(error => console.error('Error loading footer:', error));
     }
 });
