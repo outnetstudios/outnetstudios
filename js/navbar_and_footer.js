@@ -28,14 +28,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         menuIcon.style.display = 'none';
                         closeIcon.style.display = 'block';
                     }
+                });
 
-                    // Aplicar color de fondo al navbar solo si está activo o scrolled
+                navbar.addEventListener('click', () => {
                     if (navbar.classList.contains('active') || window.scrollY > 0) {
                         navbar.style.backgroundColor = 'var(--navbar-bg-color)';
                     } else {
                         navbar.style.backgroundColor = ''; // Reset al color original si no cumple las condiciones
                     }
                 });
+
 
                 window.addEventListener('scroll', () => {
                     if (window.scrollY > 0) {
