@@ -120,11 +120,11 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 2rem;
-    padding-top: 60px;
+    padding-top: 12vh;
     background-size: cover;
     background-position: center;
     color: var(--text-color);
-    height: 85vh; /* Altura del banner */
+    height: 82vh; /* Altura del banner */
 }
 
 .banner-text {
