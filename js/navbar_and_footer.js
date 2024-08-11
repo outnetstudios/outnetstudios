@@ -16,21 +16,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Alternar la clase active en el menú y el navbar
                     navbarMenu.classList.toggle('active');
                     navbar.classList.toggle('active');
-
+                
                     // Forzar la aplicación del color de fondo en iOS
                     if (navbar.classList.contains('active')) {
                         navbar.style.backgroundColor = 'var(--navbar-bg-color)';
                     } else {
                         navbar.style.backgroundColor = ''; // Reset al color original
                     }
-
+                
                     // Alternar entre los íconos
                     const menuIcon = navbarToggle.querySelector('.menu-icon');
                     const closeIcon = navbarToggle.querySelector('.close-icon');
-
-                    menuIcon.style.display = menuIcon.style.display === 'none';
-                    closeIcon.style.display = closeIcon.style.display === 'none';
+                
+                    if (menuIcon.style.display === 'none') {
+                        menuIcon.style.display = 'block';
+                        closeIcon.style.display = 'none';
+                    } else {
+                        menuIcon.style.display = 'none';
+                        closeIcon.style.display = 'block';
+                    }
                 });
+                
 
                 window.addEventListener('scroll', () => {
                     if (window.scrollY > 0) {
