@@ -69,7 +69,7 @@ body {
     border-radius: 30px; /* Asegura que el borde redondeado esté siempre aplicado */
     color: var(--text-color);
     text-decoration: none;
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1.5rem;
     transition: background-color 0.3s;
 }
 
@@ -132,8 +132,86 @@ body {
 }
 
 .banner-image {
+    position: relative;
     width: 40%;
-    height: 100%;
+    height: auto;
+    display: flex;
+    align-items: center; /* Centra verticalmente */
+    justify-content: center; /* Centra horizontalmente */
+    overflow: hidden; /* Asegura que el contenido que se desborda se oculte */
+}
+
+.image-wrapper {
+    position: relative;
+    width: 320px; /* Ajusta el ancho según sea necesario */
+    height: auto; /* Ocupa el 100% de la altura del contenedor */
+    margin: auto auto;
+    overflow: hidden;
+}
+
+.mobile-container {
+    position: relative;
+    width: 80%; /* Asegura que el contenedor móvil ocupe todo el ancho de image-wrapper */
+    height: auto; /* Ajusta la altura automáticamente en función del contenido */
+}
+
+.device-image {
+    position: relative;
+    width: 100%;
+    height: auto;
+    z-index: 2;
+}
+
+.scrolling-background {
+    position: absolute;
+    top: 0.3rem;
+    left: 0.1rem;
+    width: 98.8%;
+    height: 96%;
+    z-index: 1;
+    overflow: hidden;
+    background-color: white;
+    border-radius: 50px;
+}
+
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    animation: scrollBackground 60s ease-in-out infinite; /* Ajusta la duración de la animación */
+}
+
+@keyframes scrollBackground {
+    0% {
+        transform: translateY(0%);
+    }
+    50% {
+        transform: translateY(-87%); /* Desplaza la imagen hasta el 87% del contenedor */
+    }
+    100% {
+        transform: translateY(0%);
+    }
+}
+
+
+
+#hire-us-link {
+    background-color: var(--bottom-color-one); /* Color de fondo del botón */
+    color: var(--text-color); /* Color del texto del botón */
+    border: none; /* Sin bordes */
+    padding: 0.75rem 1.5rem; /* Espaciado interno del botón */
+    font-size: 1rem; /* Tamaño de fuente */
+    cursor: pointer; /* Cambio de cursor al pasar por encima */
+    transition: background-color 0.3s; /* Transición suave para el cambio de color de fondo */
+    border-radius: 30px; /* Bordes redondeados */
+}
+
+
+#hire-us-link:hover {
+    background-color: var(--bottom-hover);
+    color: var(--text-colorthree); /* Color de fondo del botón al pasar el cursor */
 }
 
 
@@ -240,6 +318,12 @@ body {
 .plan-button:hover {
     background-color: #F5A200;
     color: var(--text-color); /* Color de fondo del botón al pasar el cursor */
+}
+
+
+
+@media (max-width: ) {
+
 }
 
 
