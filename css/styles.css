@@ -112,15 +112,13 @@ body {
      /* Añade espacio en la parte superior para evitar que el contenido quede detrás del navbar */
 }
 
-
-
 /* Estilos para el Primer Bloque: Banner */
 .banner {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 2rem;
-    padding-top: 12vh;
+    padding-top: 14vh;
     background-size: cover;
     background-position: center;
     color: var(--text-color);
@@ -132,69 +130,30 @@ body {
 }
 
 .banner-image {
-    position: relative;
-    width: 40%;
-    height: auto;
+    width: 50%;
+    height: 100%;
+}
+
+.banner-box {
     display: flex;
-    align-items: center; /* Centra verticalmente */
-    justify-content: center; /* Centra horizontalmente */
-    overflow: hidden; /* Asegura que el contenido que se desborda se oculte */
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Asegura que el contenedor ocupe toda la altura disponible */
 }
 
-.image-wrapper {
-    position: relative;
-    width: 320px; /* Ajusta el ancho según sea necesario */
-    height: auto; /* Ocupa el 100% de la altura del contenedor */
-    margin: auto auto;
-    overflow: hidden;
+.banner-box img {
+    max-width: fit-content;
+    width: auto;
+    height: 400px;
+    display: block; /* Asegura que la imagen se comporte como un bloque para mejor centrado */
+    margin: 0 auto; /* Alternativa para centrar si no se usa flexbox */
+    
+    /* Agregando la máscara de recorte */
+    mask-image: url('/img/mascara.svg'); /* Reemplaza con la ruta a tu archivo PNG */
+    mask-size: cover; /* Ajusta el tamaño de la máscara para cubrir toda la imagen */
+    mask-repeat: no-repeat; /* Evita que la máscara se repita */
+    mask-position: center; /* Centra la máscara en la imagen */
 }
-
-.mobile-container {
-    position: relative;
-    width: 80%; /* Asegura que el contenedor móvil ocupe todo el ancho de image-wrapper */
-    height: auto; /* Ajusta la altura automáticamente en función del contenido */
-}
-
-.device-image {
-    position: relative;
-    width: 100%;
-    height: auto;
-    z-index: 2;
-}
-
-.scrolling-background {
-    position: absolute;
-    top: 0.3rem;
-    left: 0.1rem;
-    width: 98.8%;
-    height: 96%;
-    z-index: 1;
-    overflow: hidden;
-    background-color: white;
-    border-radius: 50px;
-}
-
-.background-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-    animation: scrollBackground 60s ease-in-out infinite; /* Ajusta la duración de la animación */
-}
-
-@keyframes scrollBackground {
-    0% {
-        transform: translateY(0%);
-    }
-    50% {
-        transform: translateY(-87%); /* Desplaza la imagen hasta el 87% del contenedor */
-    }
-    100% {
-        transform: translateY(0%);
-    }
-}
-
 
 
 #hire-us-link {
@@ -322,13 +281,6 @@ body {
 
 
 
-@media (max-width: ) {
-
-}
-
-
-
-
 /* Media Queries para Responsive Design */
 @media (max-width: 768px) {
     /* Estilos para el menú cuando está cerrado */
@@ -398,10 +350,6 @@ body {
     .banner-text, .text-left, .banner-image, .image-right {
         max-width: 100%;
         width: 100%;
-    }
-
-    .banner-image, .image-right {
-        height: 200px; /* Ajustar la altura para pantallas más pequeñas */
     }
 
     .adaptive-grid {
