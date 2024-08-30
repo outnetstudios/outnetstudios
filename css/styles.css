@@ -118,11 +118,12 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 2rem;
-    padding-top: 14vh;
+    padding-top: 15vh;
     background-size: cover;
     background-position: center;
     color: var(--text-color);
     height: 82vh; /* Altura del banner */
+    gap: 1rem;
 }
 
 .banner-text {
@@ -132,6 +133,11 @@ body {
 .banner-image {
     width: 50%;
     height: 100%;
+    padding: 0.5rem;
+    background-image: url(/img/Symbols2.svg);
+    background-size: 90%;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .banner-box {
@@ -153,6 +159,20 @@ body {
     mask-size: cover; /* Ajusta el tamaño de la máscara para cubrir toda la imagen */
     mask-repeat: no-repeat; /* Evita que la máscara se repita */
     mask-position: center; /* Centra la máscara en la imagen */
+
+}
+
+.banner-image .banner-box video::-webkit-media-controls {
+    display: none !important;
+}
+.banner-image .banner-box video::-moz-media-controls {
+    display: none !important;
+}
+.banner-image .banner-box video::-o-media-controls {
+    display: none !important;
+}
+.banner-image .banner-box video::media-controls {
+    display: none !important;
 }
 
 
