@@ -141,7 +141,7 @@ body {
     height: 100%; /* Asegura que el contenedor ocupe toda la altura disponible */
 }
 
-.banner-box img {
+.banner-box video {
     max-width: fit-content;
     width: auto;
     height: 400px;
