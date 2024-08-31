@@ -134,7 +134,7 @@ body {
     width: 50%;
     height: 100%;
     padding: 0.5rem;
-    background-image: url(img/Symbols2.svg);
+    background-image: url(css/img/Symbols2.svg);
     background-size: 90%;
     background-position: center;
     background-repeat: no-repeat;
@@ -155,7 +155,7 @@ body {
     margin: 0 auto; /* Alternativa para centrar si no se usa flexbox */
     
     /* Agregando la máscara de recorte */
-    mask-image: url('img/mascara.svg'); /* Reemplaza con la ruta a tu archivo PNG */
+    mask-image: url('css/img/mascara.svg'); /* Reemplaza con la ruta a tu archivo PNG */
     mask-size: cover; /* Ajusta el tamaño de la máscara para cubrir toda la imagen */
     mask-repeat: no-repeat; /* Evita que la máscara se repita */
     mask-position: center; /* Centra la máscara en la imagen */
