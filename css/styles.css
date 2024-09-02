@@ -153,7 +153,6 @@ body {
     height: 400px;
     display: block; /* Asegura que la imagen se comporte como un bloque para mejor centrado */
     margin: 0 auto; /* Alternativa para centrar si no se usa flexbox */
-    
     /* Agregando la máscara de recorte */
     mask-image: url('img/mascara.svg'); /* Reemplaza con la ruta a tu archivo PNG */
     mask-size: cover; /* Ajusta el tamaño de la máscara para cubrir toda la imagen */
@@ -224,7 +223,6 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 4rem 2rem;
-    background-color: #fff; /* Color de fondo blanco */
 }
 
 .text-left {
@@ -239,6 +237,8 @@ body {
 .image-right img {
     width: 100%;
     height: auto; /* Altura de la imagen derecha */
+    border-radius: 30px;
+    box-shadow: 0px 0px 30px 10px rgba(0, 0, 0, 0.2);
 }
 
 .centered-text-two {
