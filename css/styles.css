@@ -316,6 +316,10 @@ body {
 
 .title-icon h2 {
     padding-right: 0.5rem;
+    text-transform: uppercase;    /* Convierte el texto a mayúsculas */
+    letter-spacing: 0.1em;        /* Añade un poco de espacio entre letras (0.1em es más consistente en tamaños variables) */
+    font-weight: 600;             /* Peso medio para no ser ni bold ni light */
+    font-size: 120%;  
 }
 
 .title-icon img {
@@ -411,7 +415,6 @@ body {
         gap: 0;
         height: 140%;
     }
-
 
     .banner-box {
         height: 600px;
