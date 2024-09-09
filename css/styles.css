@@ -372,24 +372,16 @@ body {
 
 /* Contenedor del formulario */
 .contact-form {
-    max-width: 800px; /* Limita el ancho máximo del contenedor a un valor adecuado */
-    width: 90%; /* Asegura que el contenedor se ajuste al tamaño de la ventana */
-    margin: 0 auto; /* Centra el contenedor horizontalmente */
+    max-width: 560px; /* Limita el ancho máximo del contenedor a un valor adecuado */
+    width: 90%;
+    height: auto;
+    align-items: center;   
+    padding: 3rem 2rem 2rem 2rem; /* Espacio inferior para mejor diseño */
     background-color: var(--background); /* Color de fondo del contenedor */
-    border-radius: 30px; /* Bordes redondeados */
-    padding-bottom: 1rem; /* Espacio inferior para mejor diseño */
     margin-bottom: 3rem; /* Espacio inferior para separación */
+    border-radius: 30px; /* Bordes redondeados */
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Añade sombra para destacar el formulario */
 }
-
-/* iframe dentro del contenedor */
-.contact-form iframe {
-    width: 100%; /* El iframe ocupa todo el ancho del contenedor */
-    height: 1450px; /* Ajusta la altura del iframe según el tamaño de la ventana */
-    padding-top: 1rem;
-    border: none; /* Elimina el borde del iframe */
-}
-
 
 /* Media Queries para Responsive Design */
 @media (max-width: 768px) {
