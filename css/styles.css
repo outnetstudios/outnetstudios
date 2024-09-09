@@ -212,7 +212,7 @@ body {
 
 
 .banner-three .banner-text {
-    width: 1300px;
+    width: 100%;
     max-width: 100%;
     text-align: center; /* Centra el texto dentro del contenedor */
     display: flex;
