@@ -111,7 +111,7 @@
                     <li><strong>Soporte durante el Primer Mes</strong>: Asistencia técnica para resolver cualquier inconveniente durante el primer mes tras el lanzamiento, asegurando que tu tienda funcione sin problemas.</li>
                 </ul>
                 <p><strong>Precio:</strong> Un solo pago de 1.500€</p>
-                <button class="plan-button" onclick="location.href='hireus.php?plan=Básico'">Contratar</button>
+                <button class="plan-button" onclick="location.href='hireus.php?plan=basic'">Contratar</button>
             </div>
             
             <div class="grid-item-two text-content">
@@ -128,7 +128,7 @@
                     <li><strong>Analítica y Reportes en PrestaShop</strong>: Configuración de herramientas de análisis dentro de PrestaShop para monitorizar el rendimiento de tu tienda, permitiéndote tomar decisiones basadas en datos.</li>
                 </ul>
                 <p><strong>Precio:</strong> 250€/mes con un contrato de un año.</p>
-                <button class="plan-button" onclick="location.href='hireus.php?plan=Profesional'">Contratar</button>
+                <button class="plan-button" onclick="location.href='hireus.php?plan=professional'">Contratar</button>
             </div>
             
             <div class="grid-item-two text-content">
@@ -146,7 +146,7 @@
                     <li><strong>Consultoría y Auditoría de PrestaShop</strong>: Evaluaciones periódicas del rendimiento de tu tienda, con auditorías completas y recomendaciones estratégicas para mejorar y escalar tu negocio.</li>
                 </ul>
                 <p><strong>Precio:</strong> 400€/mes con un contrato de un año.</p>
-                <button class="plan-button" onclick="location.href='hireus.php?plan=Premium'">Contratar</button>
+                <button class="plan-button" onclick="location.href='hireus.php?plan=premium'">Contratar</button>
             </div>
         </section>
     </div>

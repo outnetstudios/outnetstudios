@@ -44,13 +44,13 @@ body {
 
 .navbar.navbar--solid,
 .navbar.active {
-    background-color: rgba(0, 0, 0, 0.96); /* Color de fondo cuando el menú está activo */
+    background-color: var(--navbar-bg-color); /* Color de fondo cuando el menú está activo */
 }
 
 /* Estilo cuando se hace scroll */
 .navbar.navbar--solid,
 .navbar.scrolled {
-    background-color: rgba(0, 0, 0, 0.96); /* Cambia el color de fondo al hacer scroll */
+    background-color: var(--navbar-bg-color); /* Cambia el color de fondo al hacer scroll */
     backdrop-filter: blur(10px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
 }

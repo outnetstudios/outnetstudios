@@ -88,9 +88,9 @@
                         <label for="plan_interes">Plan de Interés <span style="color: red;">*</span></label>
                         <select id="plan_interes" name="plan_interes" required>
                             <option value="">Selecciona un plan</option>
-                            <option value="Básico">Plan Básico</option>
-                            <option value="Profesional">Plan Profesional</option>
-                            <option value="Premium">Plan Premium</option>
+                            <option value="basic">Plan Básico</option>
+                            <option value="professional">Plan Profesional</option>
+                            <option value="premium">Plan Premium</option>
                         </select>
                         
                         <label for="nombre_empresa">Nombre de la Empresa</label>
@@ -107,6 +107,15 @@
                 </div>                
             </div>
         </section>
+    </div>
+
+    <div class="form-modal" id="contactModal" aria-hidden="true">
+        <div class="form-modal__overlay" id="contactModalOverlay"></div>
+        <div class="form-modal__panel" id="contactModalPanel" data-state="success" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+            <h2 class="form-modal__title" id="contactModalTitle">Gracias</h2>
+            <p class="form-modal__message" id="contactModalMessage">Tu información fue enviada correctamente.</p>
+            <button type="button" class="form-modal__button" id="contactModalClose">Cerrar</button>
+        </div>
     </div>
 
     <?php include __DIR__ . '/templates/partials/footer.php'; ?>
