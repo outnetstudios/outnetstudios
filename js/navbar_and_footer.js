@@ -2,15 +2,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const navbarToggle = document.getElementById('navbarToggle');
     const navbarMenu = document.getElementById('navbarMenu');
     const navbar = document.querySelector('.navbar');
+    const navbarSentinel = document.getElementById('navbarScrollSentinel');
 
     if (!navbarToggle || !navbar || !navbarMenu) {
         return;
     }
 
+    let isPastThreshold = false;
+
+    const refreshNavbarState = () => {
+        const shouldDarken = isPastThreshold || navbarMenu.classList.contains('active');
+        navbar.classList.toggle('navbar--solid', shouldDarken);
+    };
+
     const updateNavbarState = () => {
-        const shouldDarken = window.scrollY > 0 || navbarMenu.classList.contains('active');
-        navbar.classList.toggle('scrolled', shouldDarken);
-        navbar.style.backgroundColor = shouldDarken ? 'rgba(0, 0, 0, 0.96)' : 'transparent';
+        refreshNavbarState();
     };
 
     navbarToggle.addEventListener('click', () => {
@@ -32,7 +38,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    window.addEventListener('scroll', updateNavbarState);
+    if (navbarSentinel && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(([entry]) => {
+            isPastThreshold = !entry.isIntersecting;
+            refreshNavbarState();
+        }, {
+            threshold: 0,
+            rootMargin: '0px',
+        });
+
+        observer.observe(navbarSentinel);
+    } else {
+        const updateFromScroll = () => {
+            isPastThreshold = window.scrollY > 0;
+            refreshNavbarState();
+        };
+
+        window.addEventListener('scroll', updateFromScroll, { passive: true });
+        window.addEventListener('resize', updateFromScroll);
+        updateFromScroll();
+    }
+
     window.addEventListener('resize', updateNavbarState);
-    updateNavbarState();
+    refreshNavbarState();
 });

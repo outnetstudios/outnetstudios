@@ -14,3 +14,4 @@
         </button>
     </div>
 </nav>
+<div class="navbar-scroll-sentinel" id="navbarScrollSentinel" aria-hidden="true"></div>
