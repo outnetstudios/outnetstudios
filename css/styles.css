@@ -12,7 +12,7 @@ body {
 
 /* Variables de Color */
 :root {
-    --navbar-bg-color: #1F2126;
+    --navbar-bg-color: #000000;
     --gradient: linear-gradient(to right, #0051FF, #0e0edb);
     --item-bg-hover-color: #1D1033;
     --bottom-color-one: #1F2126;
@@ -43,12 +43,12 @@ body {
 }
 
 .navbar.active {
-    background-color: rgba(31, 33, 38, 0.96); /* Color de fondo cuando el menú está activo */
+    background-color: rgba(0, 0, 0, 0.96); /* Color de fondo cuando el menú está activo */
 }
 
 /* Estilo cuando se hace scroll */
 .navbar.scrolled {
-    background-color: rgba(31, 33, 38, 0.96); /* Cambia el color de fondo al hacer scroll */
+    background-color: rgba(0, 0, 0, 0.96); /* Cambia el color de fondo al hacer scroll */
     backdrop-filter: blur(10px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
 }

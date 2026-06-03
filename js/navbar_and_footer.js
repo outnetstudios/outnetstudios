@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateNavbarState = () => {
         const shouldDarken = window.scrollY > 0 || navbarMenu.classList.contains('active');
         navbar.classList.toggle('scrolled', shouldDarken);
+        navbar.style.backgroundColor = shouldDarken ? 'rgba(0, 0, 0, 0.96)' : 'transparent';
     };
 
     navbarToggle.addEventListener('click', () => {
