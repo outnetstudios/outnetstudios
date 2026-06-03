@@ -1,0 +1,88 @@
+/* Estilos generales para el formulario */
+form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto; /* Centrar el formulario */
+}
+
+/* Estilos para los inputs y textarea */
+input[type="text"],
+input[type="email"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    border-radius: 30px; /* Esquinas totalmente redondas */
+    border: 1px solid #ccc;
+    background-color: #f7f7f7; /* Gris atenuado */
+    font-size: 16px;
+    color: #333;
+    box-sizing: border-box;
+}
+
+
+/* Estilos generales del select */
+select {
+    appearance: none; /* Elimina el estilo nativo */
+    -webkit-appearance: none; /* Safari */
+    -moz-appearance: none; /* Firefox */
+    
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    padding: 10px 20px;
+    width: 100%;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+    
+    /* Agregar la flecha personalizada */
+    background-image: url('img/Arrow_down.svg'); /* Ícono personalizado */
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    
+    padding-right: 40px; /* Añade espacio para la flecha */
+}
+
+/* Para ocultar la flecha nativa en Internet Explorer y Edge antiguos */
+select::-ms-expand {
+    display: none;
+}
+
+
+/* Estilo para los botones de enviar */
+button[type="submit"] {
+    background-color: #007BFF; /* Color de fondo para el botón */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px; /* Esquinas redondeadas */
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3; /* Color del botón en hover */
+}
+
+/* Ajustes para etiquetas */
+label {
+    font-weight: medium;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: black;
+    text-align: left; /* Alinea el texto a la izquierda */
+    margin-left: 0.5rem;
+}
+
+/* Estilo adicional para textarea */
+textarea {
+    height: 100px;
+    resize: vertical; /* Permitir redimensionar verticalmente */
+
+}

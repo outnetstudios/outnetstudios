@@ -56,9 +56,18 @@ body {
     align-items: center;
 }
 
-.navbar-logo img {
-    height: 40px;
+.navbar-logo {
+    display: flex;
+    justify-content: flex-start; /* Asegura que el logo esté alineado a la izquierda */
+    flex-grow: 0; /* Evita que el logo crezca y ocupe más espacio */
 }
+
+.navbar-logo img {
+    width: auto;
+    height: 40px;
+    margin-left: 0; /* Asegura que no haya margen extra a la izquierda */
+}
+
 
 .navbar-menu {
     display: flex;
@@ -201,7 +210,7 @@ body {
     display: flex;
     justify-content: space-between; /* Espacio entre los elementos hijos */
     align-items: center; /* Alineación vertical centrada */
-    padding: 2rem;
+    padding: 2rem 1rem;
     padding-top: 15vh;
     background-size: cover;
     background-position: center;
@@ -212,7 +221,7 @@ body {
 
 
 .banner-three .banner-text {
-    width: 1300px;
+    width: 100%;
     max-width: 100%;
     text-align: center; /* Centra el texto dentro del contenedor */
     display: flex;
@@ -255,6 +264,7 @@ body {
 .hire-us-button:hover {
     background-color: var(--bottom-hover);
     color: var(--text-colorthree); /* Color de fondo del botón al pasar el cursor */
+    border-radius: 30px;
 }
 
 /* Estilos para el Segundo y Cuarto Bloque: Texto Centrado */
@@ -372,24 +382,16 @@ body {
 
 /* Contenedor del formulario */
 .contact-form {
-    max-width: 800px; /* Limita el ancho máximo del contenedor a un valor adecuado */
-    width: 90%; /* Asegura que el contenedor se ajuste al tamaño de la ventana */
-    margin: 0 auto; /* Centra el contenedor horizontalmente */
-    background-color: var(--background); /* Color de fondo del contenedor */
-    border-radius: 30px; /* Bordes redondeados */
-    padding-bottom: 1rem; /* Espacio inferior para mejor diseño */
-    margin-bottom: 3rem; /* Espacio inferior para separación */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Añade sombra para destacar el formulario */
+    max-width: 560px; 
+    width: 90%;
+    /*height: auto;
+    align-items: center;   
+    padding: 3rem 2rem 2rem 2rem;
+    background-color: var(--background); 
+    margin-bottom: 3rem;
+    border-radius: 30px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);*/
 }
-
-/* iframe dentro del contenedor */
-.contact-form iframe {
-    width: 100%; /* El iframe ocupa todo el ancho del contenedor */
-    height: 1450px; /* Ajusta la altura del iframe según el tamaño de la ventana */
-    padding-top: 1rem;
-    border: none; /* Elimina el borde del iframe */
-}
-
 
 /* Media Queries para Responsive Design */
 @media (max-width: 768px) {
@@ -446,6 +448,7 @@ body {
         display: flex; /* Asegura que los ítems ocupen el espacio disponible */
         align-items: center; /* Centra el texto verticalmente dentro del ítem */
         justify-content: center; /* Centra el texto horizontalmente dentro del ítem */
+        border-radius: 30px;
     }
 
     .navbar-item:last-child {
@@ -506,6 +509,17 @@ body {
 }
 
 
+@media (max-width: 545px) {
+    .adaptive-grid-two {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+    
+    .adaptive-grid-two .grid-item-two:nth-child(3) {
+        grid-column: auto;
+    }
+}
+
 @media (max-width: 480px) {
     .adaptive-grid {
         grid-template-columns: 1fr;
@@ -514,15 +528,6 @@ body {
     }
     
     .adaptive-grid .grid-item:nth-child(3) {
-        grid-column: auto;
-    }
-
-    .adaptive-grid-two {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-    }
-    
-    .adaptive-grid-two .grid-item-two:nth-child(3) {
         grid-column: auto;
     }
 
