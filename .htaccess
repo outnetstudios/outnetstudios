@@ -1,0 +1,6 @@
+﻿DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(index|hireus|mission)\.html$ /$1.php [L,R=301]
+</IfModule>

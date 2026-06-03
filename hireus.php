@@ -9,17 +9,14 @@
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <!-- Contenedor para el Navbar -->
-    <div id="navbar-container"></div>
+    <?php include __DIR__ . '/templates/partials/navbar.php'; ?>
 
-    <!-- Contenido de la página -->
     <div class="content">
-        <!-- Aquí va el contenido específico de cada página -->
         <section class="banner-three" style="background-image: url('https://outnetstudios.github.io/outnetstudios/img/imagen-de-fondo.png');">
             <div class="banner-text">
                 <h1>Contáctanos</h1>
                 <div class="contact-form">
-                    <form id="contactForm" method="POST" action="/form/submit_contact.php">
+                    <form id="contactForm" method="POST" action="form/submit_contact.php">
                         <label for="nombre_apellido">Nombre y Apellido <span style="color: red;">*</span></label>
                         <input type="text" id="nombre_apellido" name="nombre_apellido" required placeholder="Ej: Juan Pérez">
                         
@@ -112,10 +109,8 @@
         </section>
     </div>
 
-    <!-- Contenedor para el Footer -->
-    <div id="footer-container"></div>
+    <?php include __DIR__ . '/templates/partials/footer.php'; ?>
 
-    <!-- Cargar el script para el Navbar y el Footer -->
     <script src="js/navbar_and_footer.js"></script>
     <script src="js/contact_form.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.9.48/libphonenumber-js.min.js"></script>
@@ -134,20 +129,19 @@
             "PY": "+595", "PE": "+51", "UY": "+598", "VE": "+58"
         };
 
-        // Inicializa el formulario con España seleccionada
-        document.getElementById('pais').value = 'ES'; // Selecciona España
-        document.getElementById('telefono').value = countryCodes['ES'] + " "; // Agrega el código de país
+        document.getElementById('pais').value = 'ES';
+        document.getElementById('telefono').value = countryCodes['ES'] + " ";
 
         document.getElementById('pais').addEventListener('change', function() {
             const countryCode = countryCodes[this.value];
             const phoneInput = document.getElementById('telefono');
-            
+
             if (countryCode) {
-                phoneInput.value = countryCode + " "; // Agrega el código de país seguido de un espacio
-                phoneInput.placeholder = "Ej: " + countryCode + " 600 000 000"; // Actualiza el placeholder
+                phoneInput.value = countryCode + " ";
+                phoneInput.placeholder = "Ej: " + countryCode + " 600 000 000";
             } else {
-                phoneInput.value = ""; // Limpia el campo si no hay código
-                phoneInput.placeholder = "Ej: 600 000 000"; // Reinicia el placeholder
+                phoneInput.value = "";
+                phoneInput.placeholder = "Ej: 600 000 000";
             }
         });
 
@@ -155,7 +149,6 @@
             const emailInput = document.getElementById('email');
             const phoneInput = document.getElementById('telefono');
 
-            // Validación de email
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailPattern.test(emailInput.value)) {
                 alert('Por favor, ingresa un correo electrónico válido.');
@@ -163,8 +156,7 @@
                 return;
             }
 
-            // Validación de número de teléfono
-            const phoneNumber = phoneInput.value.replace(/\D/g, ''); // Elimina caracteres no numéricos
+            const phoneNumber = phoneInput.value.replace(/\D/g, '');
             if (phoneNumber.length < 10) {
                 alert('Por favor, ingresa un número de teléfono válido.');
                 event.preventDefault();

@@ -12,17 +12,14 @@
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <!-- Contenedor para el Navbar -->
-    <div id="navbar-container"></div>
+    <?php include __DIR__ . '/templates/partials/navbar.php'; ?>
 
-    <!-- Contenido de la página -->
     <div class="content">
-        <!-- Primer Bloque: Banner con Imagen de Fondo y Texto a la Izquierda, Imagen a la Derecha -->
         <section class="banner" style="background-image: url('https://outnetstudios.github.io/outnetstudios/img/imagen-de-fondo.png');">
             <div class="banner-text">
                 <h1>¡Impulsa tu negocio con una tienda online hecha a medida!</h1>
                 <p>Creamos experiencias de compra excepcionales con PrestaShop que conectan con tus clientes y maximizan tus ingresos. ¡Descubre cómo podemos transformar tu eCommerce hoy mismo!</p>
-                <button class="hire-us-button" onclick="location.href='hireus.html'">Contáctanos</button>
+                <button class="hire-us-button" onclick="location.href='hireus.php'">Contáctanos</button>
             </div>
             <div class="banner-image">
                 <div class="banner-box">
@@ -32,8 +29,7 @@
                 </div>
             </div>
         </section>
-    
-        <!-- Segundo Bloque: Texto Centrado -->
+
         <section class="centered-text">
             <div class="image-center">
                 <a href="https://prestashop.es/">
@@ -43,8 +39,7 @@
             <h2>Desarrollo de Tiendas Online eCommerce con PrestaShop</h2>
             <p>En OutNet Studios, ofrecemos soluciones de desarrollo web especializadas en PrestaShop, diseñadas para mercados europeos y latinoamericanos. Nos enfocamos en ofrecer plataformas de eCommerce que no solo capturan la esencia de tu marca, sino que también optimizan la experiencia del usuario y las oportunidades de venta.</p>
         </section>
-    
-        <!-- Tercer Bloque: Texto a la Izquierda con Imagen a la Derecha -->
+
         <section class="text-image">
             <div class="text-left">
                 <h2>¿Por qué PrestaShop es tu mejor opción para eCommerce?</h2>
@@ -58,8 +53,7 @@
                 <img src="img/simulación.png" alt="">
             </div>
         </section>
-    
-        <!-- Cuarto Bloque: Texto Centrado -->
+
         <section class="centered-text">
             <div class="image-center">
                 <img src="img/vctrly-business-illustrations-1.svg" alt="" style="width: 100px; height: auto;">
@@ -71,7 +65,6 @@
             <p><strong>Lanzamiento y Soporte</strong>: Lanzamos tu tienda y proporcionamos soporte continuo.</p>
         </section>
 
-        <!-- Quinto Bloque: Servicios -->
         <section class="centered-text-two">
             <h2>Nuestros Servicios</h2>
         </section>
@@ -118,7 +111,7 @@
                     <li><strong>Soporte durante el Primer Mes</strong>: Asistencia técnica para resolver cualquier inconveniente durante el primer mes tras el lanzamiento, asegurando que tu tienda funcione sin problemas.</li>
                 </ul>
                 <p><strong>Precio:</strong> Un solo pago de 1.500€</p>
-                <button class="plan-button" onclick="location.href='hireus.html?plan=Básico'">Contratar</button>
+                <button class="plan-button" onclick="location.href='hireus.php?plan=Básico'">Contratar</button>
             </div>
             
             <div class="grid-item-two text-content">
@@ -135,7 +128,7 @@
                     <li><strong>Analítica y Reportes en PrestaShop</strong>: Configuración de herramientas de análisis dentro de PrestaShop para monitorizar el rendimiento de tu tienda, permitiéndote tomar decisiones basadas en datos.</li>
                 </ul>
                 <p><strong>Precio:</strong> 250€/mes con un contrato de un año.</p>
-                <button class="plan-button" onclick="location.href='hireus.html?plan=Profesional'">Contratar</button>
+                <button class="plan-button" onclick="location.href='hireus.php?plan=Profesional'">Contratar</button>
             </div>
             
             <div class="grid-item-two text-content">
@@ -153,15 +146,13 @@
                     <li><strong>Consultoría y Auditoría de PrestaShop</strong>: Evaluaciones periódicas del rendimiento de tu tienda, con auditorías completas y recomendaciones estratégicas para mejorar y escalar tu negocio.</li>
                 </ul>
                 <p><strong>Precio:</strong> 400€/mes con un contrato de un año.</p>
-                <button class="plan-button" onclick="location.href='hireus.html?plan=Premium'">Contratar</button>
+                <button class="plan-button" onclick="location.href='hireus.php?plan=Premium'">Contratar</button>
             </div>
         </section>
     </div>
 
-    <!-- Contenedor para el Footer -->
-    <div id="footer-container"></div>
+    <?php include __DIR__ . '/templates/partials/footer.php'; ?>
 
-    <!-- Cargar el script para el Navbar y el Footer -->
     <script src="js/navbar_and_footer.js"></script>
 </body>
 </html>

@@ -10,12 +10,9 @@
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <!-- Contenedor para el Navbar -->
-    <div id="navbar-container"></div>
+    <?php include __DIR__ . '/templates/partials/navbar.php'; ?>
 
-    <!-- Contenido de la página -->
     <div class="content">
-        <!-- Sección de Misión y Visión -->
         <section class="banner-two" style="background-image: url('https://outnetstudios.github.io/outnetstudios/img/imagen-de-fondo.png');">
             <div class="banner-text">
                 <h1>Misión</h1>
@@ -24,11 +21,10 @@
                 <h1>Visión</h1>
                 <p>Ser líderes en el desarrollo de soluciones de eCommerce integrales, combinando tecnologías avanzadas y emergentes. Revolucionamos la manera en que las empresas interactúan con sus clientes, creando plataformas de compra inteligentes, ágiles y personalizadas que se adapten al futuro del comercio digital. Expandimos nuestras soluciones más allá de una sola plataforma, ofreciendo tecnología versátil y adaptable.</p>
                 
-                <button class="hire-us-button" onclick="location.href='hireus.html'">Contáctanos</button>
+                <button class="hire-us-button" onclick="location.href='hireus.php'">Contáctanos</button>
             </div>            
         </section>
     
-        <!-- Segundo Bloque: Texto Centrado -->
         <section class="centered-text">
             <div class="image-center">
                 <img src="img/vctrly-business-illustrations-240-deal.svg" alt="Ilustración de acuerdo" style="width: 100px; height: auto;">
@@ -38,7 +34,6 @@
             <p>PrestaShop nos proporciona la flexibilidad necesaria para desarrollar tiendas online que se adapten a las necesidades específicas de cada negocio, garantizando resultados óptimos en diversas industrias. Creemos en la personalización y la innovación constante para lograr el éxito en el comercio digital.</p>
         </section>
         
-        <!-- Tercer Bloque: Texto a la Izquierda con Imagen a la Derecha -->
         <section class="text-image">
             <div class="text-left">
                 <h2>Liderar el Futuro del eCommerce con Innovación y Adaptabilidad</h2>
@@ -50,7 +45,6 @@
             </div>
         </section>
 
-        <!-- Cuarto Bloque: Compromiso con PrestaShop -->
         <section class="centered-text">
             <h2>¿Por qué Nos Comprometemos con PrestaShop a Largo Plazo?</h2>
             <p>Elegimos PrestaShop por su flexibilidad actual y su capacidad de adaptación futura. Como empresa comprometida con la innovación, creemos que PrestaShop tiene las características esenciales para evolucionar con las demandas del mercado. Esto nos permite ofrecer soluciones sostenibles y escalables a largo plazo, alineadas con nuestra visión de ser líderes en el desarrollo de eCommerce.</p>
@@ -58,10 +52,8 @@
         </section> 
     </div>
 
-    <!-- Contenedor para el Footer -->
-    <div id="footer-container"></div>
+    <?php include __DIR__ . '/templates/partials/footer.php'; ?>
 
-    <!-- Cargar el script para el Navbar y el Footer -->
     <script src="js/navbar_and_footer.js"></script>
 </body>
 </html>

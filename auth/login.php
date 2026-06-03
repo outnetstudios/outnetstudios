@@ -5,38 +5,43 @@ require_once '../includes/db_connection.php'; // Verifica que esta ruta sea corr
 $error_message = ''; // Variable para almacenar mensajes de error
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = trim($_POST['username'] ?? '');
+    $password = trim($_POST['password'] ?? '');
 
-    // Verificar si la conexión a la base de datos funciona
-    if (!$conn) {
-        die("Conexión fallida: " . mysqli_connect_error());
-    }
-
-    // Buscar usuario en la base de datos
-    $query = "SELECT * FROM admin_users WHERE username = ?";
-    $stmt = $conn->prepare($query);
-    
-    if (!$stmt) {
-        die("Error en la preparación de la consulta: " . $conn->error);
-    }
-
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows === 1) {
-        $user = $result->fetch_assoc();
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['loggedin'] = true;
-            $_SESSION['username'] = $user['username'];
-            header("Location: dashboard.php");
-            exit;
-        } else {
-            $error_message = "Contraseña incorrecta.";
-        }
+    if ($username === '' || $password === '') {
+        $error_message = "Debe completar usuario y contraseña.";
     } else {
-        $error_message = "Usuario no encontrado.";
+        // Verificar si la conexión a la base de datos funciona
+        if (!$conn) {
+            error_log('MySQL connection failed: ' . mysqli_connect_error());
+            die("No se pudo procesar el inicio de sesión.");
+        }
+
+        // Buscar usuario en la base de datos
+        $query = "SELECT * FROM admin_users WHERE username = ?";
+        $stmt = $conn->prepare($query);
+        
+        if (!$stmt) {
+            error_log('Login statement preparation failed: ' . $conn->error);
+            die("No se pudo procesar el inicio de sesión.");
+        }
+
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result && $result->num_rows === 1) {
+            $user = $result->fetch_assoc();
+            if (password_verify($password, $user['password'])) {
+                session_regenerate_id(true);
+                $_SESSION['loggedin'] = true;
+                $_SESSION['username'] = $user['username'];
+                header("Location: dashboard.php");
+                exit;
+            }
+        }
+
+        $error_message = "Usuario o contraseña incorrectos.";
     }
 }
 ?>
@@ -47,93 +52,131 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión</title>
+    <link rel="stylesheet" href="../css/styles.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        /* Estilos generales para el formulario */
-        form {
-            background-color: white;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: 0 auto; /* Centrar el formulario */
-        }
-
-        /* Estilos para los inputs y textarea */
-        input[type="text"],
-        input[type="password"], /* Asegúrate de incluir input[type="password"] */
-        textarea,
-        select {
-            width: 100%;
-            padding: 10px 20px;
-            margin-bottom: 20px;
-            border-radius: 30px; /* Esquinas totalmente redondas */
-            border: 1px solid #ccc;
-            background-color: #f7f7f7; /* Gris atenuado */
-            font-size: 16px;
-            color: #333;
+        * {
             box-sizing: border-box;
         }
 
-        /* Estilo para los botones de enviar */
-        button[type="submit"] {
-            background-color: #007BFF; /* Color de fondo para el botón */
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at top, rgba(0, 81, 255, 0.18), transparent 30%), #0b0d1d;
             color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 30px; /* Esquinas redondeadas */
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px; /* Espacio encima del botón */
-            width: 100%; /* Asegúrate de que el botón tenga un ancho completo */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
         }
 
-        button[type="submit"]:hover {
-            background-color: #0056b3; /* Color del botón en hover */
+        .login-container {
+            width: min(100%, 440px);
+            padding: 2rem;
+            border-radius: 32px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(18px);
         }
 
-        /* Ajustes para etiquetas */
+        .login-container h2 {
+            margin: 0 0 1rem;
+            font-size: 2rem;
+            letter-spacing: -0.03em;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .login-container p {
+            color: rgba(255, 255, 255, 0.75);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
         label {
-            font-weight: medium;
-            margin-bottom: 0.5rem;
             display: block;
-            color: black;
-            text-align: left; /* Alinea el texto a la izquierda */
-            margin-left: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: #d8e0ff;
+            font-size: 0.95rem;
         }
 
+        input[type="text"],
+        input[type="password"] {
+            display: block;
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+            min-width: 0;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
 
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: rgba(0, 81, 255, 0.75);
+            box-shadow: 0 0 0 4px rgba(0, 81, 255, 0.12);
+        }
+
+        .button-primary {
+            width: 100%;
+            border: none;
+            border-radius: 28px;
+            padding: 14px 18px;
+            background: linear-gradient(90deg, #0051FF, #0e0edb);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .button-primary:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        .error-message {
+            margin-bottom: 1.25rem;
+            padding: 12px 16px;
+            border-radius: 24px;
+            background: rgba(255, 65, 65, 0.12);
+            color: #ffb3b3;
+            border: 1px solid rgba(255, 65, 65, 0.24);
+        }
     </style>
 </head>
 <body>
+    <div class="login-container">
+        <h2>Iniciar sesión</h2>
+        <p>Accede al panel administrativo para revisar prospectos y gestionar datos.</p>
 
-<div class="login-container">
-    <h2>Iniciar sesión</h2>
-    
-    <!-- Mensaje de error (si hay) -->
-    <?php if (!empty($error_message)): ?>
-        <div class="error-message"><?php echo $error_message; ?></div>
-    <?php endif; ?>
-    
-    <form id="loginForm" method="POST" action="auth/login.php">
-    <label for="username">Usuario</label>
-    <input type="text" id="username" name="username" required>
+        <?php if (!empty($error_message)): ?>
+            <div class="error-message"><?php echo $error_message; ?></div>
+        <?php endif; ?>
 
-    <label for="password">Contraseña</label>
-    <input type="password" id="password" name="password" required>
+        <form id="loginForm" method="POST" action="">
+            <div class="form-group">
+                <label for="username">Usuario</label>
+                <input type="text" id="username" name="username" required>
+            </div>
 
-    <!-- Botón de Iniciar Sesión justo debajo del campo de contraseña -->
-    <button type="submit">Iniciar Sesión</button>
-</form>
-</div>
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" required>
+            </div>
 
+            <button class="button-primary" type="submit">Iniciar Sesión</button>
+        </form>
+        <div style="text-align:center; margin-top:1rem;">
+            <a href="forgot_password.php" style="color:#a2c7ff; text-decoration:none;">¿Olvidaste tu contraseña?</a>
+        </div>
+    </div>
 </body>
 </html>

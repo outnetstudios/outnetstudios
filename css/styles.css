@@ -38,16 +38,19 @@ body {
     left: 0;
     z-index: 1000;
     box-sizing: border-box;
-    transition: background-color 0.1s ease; /* Transición suave para el cambio de color */
+    background-color: transparent;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, backdrop-filter 0.2s ease; /* Transición suave para el cambio de color */
 }
 
 .navbar.active {
-    background-color: var(--navbar-bg-color); /* Color de fondo cuando el menú está activo */
+    background-color: rgba(31, 33, 38, 0.96); /* Color de fondo cuando el menú está activo */
 }
 
 /* Estilo cuando se hace scroll */
 .navbar.scrolled {
-    background-color: var(--navbar-bg-color); /* Cambia el color de fondo al hacer scroll */
+    background-color: rgba(31, 33, 38, 0.96); /* Cambia el color de fondo al hacer scroll */
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
 }
 
 .navbar-container {
@@ -221,6 +224,7 @@ body {
 
 
 .banner-three .banner-text {
+    width: 100%;
     width: 100%;
     max-width: 100%;
     text-align: center; /* Centra el texto dentro del contenedor */

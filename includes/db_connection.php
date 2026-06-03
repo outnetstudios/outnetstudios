@@ -1,15 +1,13 @@
 <?php
-$host = 'sql211.infinityfree.com';
-$user = 'if0_37283474';
-$password = '2joscH5xCwnO';
-$dbname = 'if0_37283474_outnetstudios';
-$port = '3306'; // Verifica si este puerto es el correcto
+$config = require __DIR__ . '/../config/env.php';
+$db = $config['db'];
 
-$conn = new mysqli($host, $user, $pass, $db);
+$conn = new mysqli($db['host'], $db['user'], $db['password'], $db['dbname'], $db['port']);
 
 // Verifica la conexión
 if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
+    error_log('MySQL connection failed: ' . $conn->connect_error);
+    die('No se pudo conectar a la base de datos.');
 }
 
 // Función para obtener datos de la tabla "contacto"

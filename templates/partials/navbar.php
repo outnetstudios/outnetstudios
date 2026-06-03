@@ -1,13 +1,12 @@
-<!-- navbar.html -->
 <nav class="navbar">
     <div class="navbar-container">
-        <a href="index.html" class="navbar-logo">
+        <a href="index.php" class="navbar-logo">
             <img src="https://outnetstudios.github.io/outnetstudios/img/logo.svg" alt="Logo">
         </a>
         <div class="navbar-menu" id="navbarMenu">
-            <a href="index.html" class="navbar-item">Home</a>
-            <a href="mission.html" class="navbar-item">Misión</a>
-            <a href="hireus.html" class="navbar-item" id="hire-us-link">Contáctanos</a>
+            <a href="index.php" class="navbar-item">Home</a>
+            <a href="mission.php" class="navbar-item">Misión</a>
+            <a href="hireus.php" class="navbar-item" id="hire-us-link">Contáctanos</a>
         </div>
         <button class="navbar-toggle" id="navbarToggle">
             <img src="img/menu.svg" alt="Menu Icon" class="icon menu-icon">
