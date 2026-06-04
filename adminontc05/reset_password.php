@@ -58,8 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $reset) {
         .link { margin-top:1rem; text-align:center; }
         .link a { color:#a2c7ff; text-decoration:none; }
     </style>
+    <link rel="stylesheet" href="../css/auth-admin-theme.css">
 </head>
-<body>
+<body class="auth-shell">
     <div class="panel">
         <h2>Restablecer contraseña</h2>
 

@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+require_once __DIR__ . '/../../includes/plan_helpers.php';
+
 class MailService
 {
     private ?SmtpMailer $mailer = null;
@@ -136,11 +138,12 @@ class MailService
         }
 
         $subject = 'Nuevo contacto desde Outnet Studios';
+        $planLabel = \formatPlanInteresLabel((string)($contactData['plan_interes'] ?? ''));
         $htmlBody = '<h1>Nuevo prospecto</h1>' .
             '<p><strong>Nombre:</strong> ' . htmlspecialchars($contactData['nombre_apellido'], ENT_QUOTES, 'UTF-8') . '</p>' .
             '<p><strong>Email:</strong> ' . htmlspecialchars($contactData['email'], ENT_QUOTES, 'UTF-8') . '</p>' .
             '<p><strong>Teléfono:</strong> ' . htmlspecialchars($contactData['telefono'], ENT_QUOTES, 'UTF-8') . '</p>' .
-            '<p><strong>Plan de Interés:</strong> ' . htmlspecialchars($contactData['plan_interes'], ENT_QUOTES, 'UTF-8') . '</p>' .
+            '<p><strong>Plan de Interés:</strong> ' . htmlspecialchars($planLabel, ENT_QUOTES, 'UTF-8') . '</p>' .
             '<p><strong>Empresa:</strong> ' . htmlspecialchars($contactData['nombre_empresa'], ENT_QUOTES, 'UTF-8') . '</p>' .
             '<p><strong>Sector:</strong> ' . htmlspecialchars($contactData['sector'], ENT_QUOTES, 'UTF-8') . '</p>' .
             '<p><strong>Descripción:</strong> ' . nl2br(htmlspecialchars($contactData['descripcion'], ENT_QUOTES, 'UTF-8')) . '</p>';
@@ -149,7 +152,7 @@ class MailService
             "Nombre: {$contactData['nombre_apellido']}\n" .
             "Email: {$contactData['email']}\n" .
             "Teléfono: {$contactData['telefono']}\n" .
-            "Plan de Interés: {$contactData['plan_interes']}\n" .
+            "Plan de Interés: {$planLabel}\n" .
             "Empresa: {$contactData['nombre_empresa']}\n" .
             "Sector: {$contactData['sector']}\n" .
             "Descripción: {$contactData['descripcion']}\n";

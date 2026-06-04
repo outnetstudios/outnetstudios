@@ -151,8 +151,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border: 1px solid rgba(255, 65, 65, 0.24);
         }
     </style>
+    <link rel="stylesheet" href="../css/auth-admin-theme.css">
 </head>
-<body>
+<body class="auth-shell">
     <div class="login-container">
         <h2>Iniciar sesión</h2>
         <p>Accede al panel administrativo para revisar prospectos y gestionar datos.</p>
@@ -175,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button class="button-primary" type="submit">Iniciar Sesión</button>
         </form>
         <div style="text-align:center; margin-top:1rem;">
-            <a href="forgot_password.php" style="color:#a2c7ff; text-decoration:none;">¿Olvidaste tu contraseña?</a>
+            <a class="auth-link" href="forgot_password.php">¿Olvidaste tu contraseña?</a>
         </div>
     </div>
 </body>

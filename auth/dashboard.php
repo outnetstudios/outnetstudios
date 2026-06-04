@@ -8,6 +8,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 }
 
 require_once __DIR__ . '/../includes/db_connection.php';
+require_once __DIR__ . '/../includes/plan_helpers.php';
 
 // Obtener datos de la tabla "contacto"
 $contactData = getContactData($conn);
@@ -153,8 +154,9 @@ $contactData = getContactData($conn);
             }
         }
     </style>
+    <link rel="stylesheet" href="../css/auth-admin-theme.css">
 </head>
-<body>
+<body class="dashboard-shell">
     <div class="dashboard-container">
         <div class="dashboard-header">
             <div>
@@ -184,7 +186,7 @@ $contactData = getContactData($conn);
                             $nombre = htmlspecialchars($row['nombre_apellido'] ?? '', ENT_QUOTES, 'UTF-8');
                             $email = htmlspecialchars($row['email'] ?? '', ENT_QUOTES, 'UTF-8');
                             $telefono = htmlspecialchars($row['telefono'] ?? '', ENT_QUOTES, 'UTF-8');
-                            $plan = htmlspecialchars($row['plan_interes'] ?? '', ENT_QUOTES, 'UTF-8');
+                            $plan = htmlspecialchars(formatPlanInteresLabel($row['plan_interes'] ?? ''), ENT_QUOTES, 'UTF-8');
                             $empresa = htmlspecialchars($row['nombre_empresa'] ?? '', ENT_QUOTES, 'UTF-8');
                             $sector = htmlspecialchars($row['sector'] ?? '', ENT_QUOTES, 'UTF-8');
                             $descripcion = nl2br(htmlspecialchars($row['descripcion'] ?? '', ENT_QUOTES, 'UTF-8'));

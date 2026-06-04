@@ -103,8 +103,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #ffb3b3;
         }
     </style>
+    <link rel="stylesheet" href="../css/auth-admin-theme.css">
 </head>
-<body>
+<body class="auth-shell">
     <div class="login-panel">
         <h2>Admin Outnet Studios</h2>
 
@@ -122,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit">Ingresar</button>
         </form>
         <div style="text-align:center; margin-top:1rem;">
-            <a href="forgot_password.php" style="color:#a2c7ff; text-decoration:none;">¿Olvidaste tu contraseña?</a>
+            <a class="auth-link" href="forgot_password.php">¿Olvidaste tu contraseña?</a>
         </div>
     </div>
 </body>

@@ -8,6 +8,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 $displayName = $_SESSION['username'] ?? 'Administrador';
 require_once __DIR__ . '/../includes/db_connection.php';
+require_once __DIR__ . '/../includes/plan_helpers.php';
 
 $contacts = [];
 $result = getContactData($conn);
@@ -39,8 +40,9 @@ if ($result) {
         tbody tr:hover{background:rgba(255,255,255,0.06)}
         .empty{padding:2rem;text-align:center;color:rgba(255,255,255,0.7)}
     </style>
+    <link rel="stylesheet" href="../css/auth-admin-theme.css">
 </head>
-<body>
+<body class="dashboard-shell">
     <div class="card">
         <div class="header-row">
             <div>
@@ -73,7 +75,7 @@ if ($result) {
                                 <td><?php echo htmlspecialchars($contact['nombre_apellido'], ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td><?php echo htmlspecialchars($contact['email'], ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td><?php echo htmlspecialchars($contact['telefono'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                <td><?php echo htmlspecialchars($contact['plan_interes'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars(formatPlanInteresLabel($contact['plan_interes'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td><?php echo htmlspecialchars($contact['nombre_empresa'], ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td><?php echo htmlspecialchars($contact['sector'], ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td><?php echo nl2br(htmlspecialchars($contact['descripcion'], ENT_QUOTES, 'UTF-8')); ?></td>

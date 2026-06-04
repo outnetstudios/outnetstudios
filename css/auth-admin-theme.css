@@ -1,0 +1,287 @@
+:root {
+    --brand-primary: #0051FF;
+    --brand-primary-deep: #0e0edb;
+    --brand-surface: rgba(31, 33, 38, 0.86);
+    --brand-surface-strong: rgba(8, 10, 20, 0.92);
+    --brand-border: rgba(168, 185, 255, 0.18);
+    --brand-text: #f6f8ff;
+    --brand-muted: rgba(246, 248, 255, 0.74);
+    --brand-accent: #F5A200;
+    --brand-error-bg: rgba(255, 90, 90, 0.14);
+    --brand-error-text: #ffb3b3;
+    --brand-success-bg: rgba(0, 255, 138, 0.12);
+    --brand-success-text: #c8ffdc;
+}
+
+body.auth-shell,
+body.dashboard-shell {
+    min-height: 100vh;
+    height: auto;
+    margin: 0;
+    color: var(--brand-text);
+    font-family: 'Inter', sans-serif;
+    background:
+        radial-gradient(circle at top, rgba(0, 81, 255, 0.20), transparent 28%),
+        radial-gradient(circle at 80% 15%, rgba(245, 162, 0, 0.10), transparent 20%),
+        linear-gradient(180deg, #080a14 0%, #070b18 55%, #060812 100%);
+}
+
+body.auth-shell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+body.dashboard-shell {
+    display: block;
+    padding: 2rem 1rem 3rem;
+}
+
+body.auth-shell .login-container,
+body.auth-shell .login-panel,
+body.auth-shell .panel,
+body.dashboard-shell .dashboard-container,
+body.dashboard-shell .card {
+    background: var(--brand-surface);
+    border: 1px solid var(--brand-border);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(18px);
+}
+
+body.auth-shell .login-container,
+body.auth-shell .login-panel,
+body.auth-shell .panel {
+    width: min(100%, 440px);
+    padding: 2rem;
+    border-radius: 32px;
+}
+
+body.dashboard-shell .dashboard-container,
+body.dashboard-shell .card {
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 32px;
+    overflow: hidden;
+}
+
+body.auth-shell h1,
+body.auth-shell h2,
+body.dashboard-shell h1 {
+    margin-top: 0;
+    letter-spacing: -0.03em;
+}
+
+body.auth-shell h2 {
+    font-size: clamp(1.7rem, 3vw, 2.15rem);
+    text-align: center;
+}
+
+body.auth-shell p,
+body.dashboard-shell p {
+    color: var(--brand-muted);
+}
+
+body.auth-shell label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #d8e0ff;
+    font-size: 0.95rem;
+}
+
+body.auth-shell input[type="text"],
+body.auth-shell input[type="password"],
+body.auth-shell input[type="email"],
+body.auth-shell input {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 14px 18px;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--brand-text);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+body.auth-shell input:focus {
+    border-color: rgba(245, 162, 0, 0.7);
+    box-shadow: 0 0 0 4px rgba(245, 162, 0, 0.14);
+    transform: translateY(-1px);
+}
+
+body.auth-shell button,
+body.dashboard-shell .button-primary,
+body.dashboard-shell .button,
+body.dashboard-shell a.button-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 28px;
+    background: linear-gradient(90deg, var(--brand-primary), var(--brand-primary-deep));
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+}
+
+body.auth-shell button:hover,
+body.dashboard-shell .button-primary:hover,
+body.dashboard-shell .button:hover {
+    transform: translateY(-1px);
+    opacity: 0.96;
+    box-shadow: 0 16px 34px rgba(0, 81, 255, 0.18);
+}
+
+body.auth-shell .error-message,
+body.auth-shell .message.error {
+    margin: 1rem 0;
+    padding: 0.95rem 1rem;
+    border-radius: 22px;
+    background: var(--brand-error-bg);
+    color: var(--brand-error-text);
+    border: 1px solid rgba(255, 90, 90, 0.24);
+}
+
+body.auth-shell .message.success {
+    margin: 1rem 0;
+    padding: 0.95rem 1rem;
+    border-radius: 22px;
+    background: var(--brand-success-bg);
+    color: var(--brand-success-text);
+    border: 1px solid rgba(0, 255, 138, 0.24);
+}
+
+body.auth-shell a {
+    color: #a2c7ff;
+    text-decoration: none;
+}
+
+body.auth-shell a.auth-link {
+    color: #a2c7ff;
+}
+
+body.auth-shell a:hover {
+    color: var(--brand-accent);
+}
+
+body.dashboard-shell .dashboard-container,
+body.dashboard-shell .card {
+    background: linear-gradient(180deg, rgba(31, 33, 38, 0.92), rgba(8, 10, 20, 0.92));
+}
+
+body.dashboard-shell .dashboard-header,
+body.dashboard-shell .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+    background:
+        linear-gradient(135deg, rgba(0, 81, 255, 0.18), rgba(245, 162, 0, 0.08)),
+        rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.dashboard-shell .dashboard-header h1,
+body.dashboard-shell .header-row h1 {
+    margin: 0;
+    font-size: clamp(1.8rem, 2.3vw, 2.4rem);
+    color: #fff;
+}
+
+body.dashboard-shell .dashboard-header p,
+body.dashboard-shell .header-row p {
+    margin: 0.5rem 0 0;
+    color: var(--brand-muted);
+}
+
+body.dashboard-shell .table-scroll,
+body.dashboard-shell .table-wrap {
+    overflow-x: auto;
+}
+
+body.dashboard-shell table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+body.dashboard-shell .dashboard-table {
+    min-width: 860px;
+}
+
+body.dashboard-shell th,
+body.dashboard-shell td {
+    padding: 1rem 1.1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #e9ecff;
+}
+
+body.dashboard-shell thead tr {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+body.dashboard-shell th {
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    color: #d8e0ff;
+}
+
+body.dashboard-shell tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+body.dashboard-shell tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.035);
+}
+
+body.dashboard-shell tbody tr:hover {
+    background: rgba(0, 81, 255, 0.08);
+}
+
+body.dashboard-shell .empty {
+    padding: 2rem;
+    text-align: center;
+    color: var(--brand-muted);
+}
+
+body.dashboard-shell .dashboard-header a.button-primary,
+body.dashboard-shell .header-row a.button {
+    background: linear-gradient(90deg, var(--brand-primary), var(--brand-primary-deep));
+}
+
+@media (max-width: 900px) {
+    body.dashboard-shell .dashboard-header,
+    body.dashboard-shell .header-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    body.dashboard-shell .dashboard-table {
+        min-width: 720px;
+    }
+}
+
+@media (max-width: 640px) {
+    body.auth-shell,
+    body.dashboard-shell {
+        padding: 1rem;
+    }
+
+    body.dashboard-shell th,
+    body.dashboard-shell td {
+        padding: 0.85rem;
+    }
+
+    body.dashboard-shell .dashboard-table {
+        min-width: 100%;
+    }
+}
