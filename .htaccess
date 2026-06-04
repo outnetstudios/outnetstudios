@@ -1,27 +1,13 @@
-﻿<IfModule mod_rewrite.c>
+<IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # If behind Cloudflare, respect the original scheme
-  RewriteCond %{HTTP:CF-Visitor} "\"scheme\":\"https\"" [OR]
-  RewriteCond %{HTTP:X-Forwarded-Proto} https [OR]
-  RewriteCond %{HTTPS} on
-  RewriteRule ^ - [L]
-
-  # Redirect all to HTTPS
-  RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/ # allow Let's Encrypt challenges
+  # Redirect non-HTTPS requests, but let ACME challenges through.
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # Keep legacy HTML entry points working.
+  RewriteRule ^(index|hireus|mission)\.html$ /$1.php [L,R=301]
 </IfModule>
 
-# Security headers
-<IfModule mod_headers.c>
-  Header always set X-Frame-Options "SAMEORIGIN"
-  Header always set X-Content-Type-Options "nosniff"
-  Header always set Referrer-Policy "no-referrer-when-downgrade"
-  Header always set X-XSS-Protection "1; mode=block"
-</IfModule>
 DirectoryIndex index.php
-
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteRule ^(index|hireus|mission)\.html$ /$1.php [L,R=301]
-</IfModule>
