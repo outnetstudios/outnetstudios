@@ -1,3 +1,4 @@
 database-structure.md
 config/env.php
 old/
+config/env.local.php
