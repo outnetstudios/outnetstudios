@@ -2,5 +2,5 @@ database-structure.md
 old/
 config/env.local.php
 docs/catalogo-productos-plan.md
-db/migrations/001_create_catalog_tables.sql
 .env
+db/
