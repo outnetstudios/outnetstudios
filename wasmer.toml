@@ -1,0 +1,11 @@
+[package]
+name = "outnetstudios"
+version = "0.1.0"
+description = "Outnet Studios - Catalog Product Creator"
+
+[module]
+source = "/"
+runtime = "php83"
+
+[[module.route]]
+prefix = "/"
