@@ -81,7 +81,7 @@ function uploadImage(array $file, string $subfolder = ''): ?string
 function imageUrl(?string $path): string
 {
     if (!$path) return '';
-    return 'asset.php?p=' . urlencode($path);
+    return '/asset.php?p=' . urlencode($path);
 }
 
 function compressImage(string $path, string $mime): void
