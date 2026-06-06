@@ -23,7 +23,7 @@ class Database
                 ]);
             } catch (PDOException $e) {
                 error_log('PDO connection failed: ' . $e->getMessage());
-                die('No se pudo conectar a la base de datos.');
+                throw $e;
             }
         }
 

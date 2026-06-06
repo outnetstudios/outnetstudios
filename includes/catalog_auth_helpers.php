@@ -1,9 +1,27 @@
 <?php
 require_once __DIR__ . '/../src/Repositories/CatalogUserRepository.php';
+require_once __DIR__ . '/../src/Database.php';
+require_once __DIR__ . '/../src/Session/DatabaseSessionHandler.php';
 
 function catalogSessionStart()
 {
     if (session_status() === PHP_SESSION_NONE) {
+        session_name('CATALOG_SESSION');
+        session_set_cookie_params([
+            'lifetime' => 86400 * 7,
+            'path' => '/',
+            'domain' => '',
+            'secure' => true,
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ]);
+        try {
+            $pdo = Database::getConnection();
+            $handler = new DatabaseSessionHandler($pdo);
+            session_set_save_handler($handler, true);
+        } catch (\Throwable $e) {
+            error_log('DB session handler init failed: ' . $e->getMessage());
+        }
         session_start();
     }
 }
@@ -21,8 +39,10 @@ function catalogLogin(int $userId, string $email, string $name)
 function catalogLogout()
 {
     catalogSessionStart();
-    unset($_SESSION['catalog_loggedin'], $_SESSION['catalog_user_id'], $_SESSION['catalog_user_email'], $_SESSION['catalog_user_name']);
+    $_SESSION = [];
     session_regenerate_id(true);
+    session_destroy();
+    setcookie(session_name(), '', time() - 42000, '/');
 }
 
 function isCatalogLoggedIn(): bool
@@ -57,7 +77,6 @@ function catalogGetUserEmail(): ?string
     return $_SESSION['catalog_user_email'] ?? null;
 }
 
-// Backwards compatible alias
 function requireCatalogLogin()
 {
     return catalogRequireLogin();
