@@ -29,7 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         if ($contactRepository->save($data)) {
-            $mailService->sendContactNotification($data);
+            try {
+                $mailService->sendContactNotification($data);
+            } catch (Exception $e) {
+                error_log('Contact notification failed (non-blocking): ' . $e->getMessage());
+            }
             $response = [
                 'success' => true,
                 'message' => 'Tus datos fueron enviados correctamente. Gracias por contactarnos.',
