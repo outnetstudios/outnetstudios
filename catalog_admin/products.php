@@ -115,9 +115,9 @@ $totalCount = count($products);
 <td class="p-md">
 <div class="flex items-center gap-3">
 <?php if (!empty($p['main_image'])): ?>
-<img src="<?= htmlspecialchars(imageUrl($p['main_image']), ENT_QUOTES, 'UTF-8') ?>" class="w-10 h-10 rounded-lg object-cover border border-outline-variant/30">
+<img src="<?= htmlspecialchars(imageUrl($p['main_image']), ENT_QUOTES, 'UTF-8') ?>" class="w-14 h-14 rounded-lg object-contain border border-outline-variant/30 bg-surface-container-high">
 <?php else: ?>
-<div class="w-10 h-10 rounded-lg bg-surface-container-high overflow-hidden flex items-center justify-center"><span class="material-symbols-outlined text-on-surface-variant/40 text-[20px]">package</span></div>
+<div class="w-14 h-14 rounded-lg bg-surface-container-high overflow-hidden flex items-center justify-center"><span class="material-symbols-outlined text-on-surface-variant/40 text-[20px]">package</span></div>
 <?php endif; ?>
 <span class="font-title-sm text-on-surface font-semibold group-hover:text-primary transition-colors"><?= htmlspecialchars($p['name'], ENT_QUOTES, 'UTF-8') ?></span>
 </div>

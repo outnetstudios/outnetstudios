@@ -90,7 +90,7 @@ $catalogName = htmlspecialchars($catalog['name'], ENT_QUOTES, 'UTF-8');
 <div class="space-y-xs">
 <label class="font-label-caps text-label-caps text-primary uppercase ml-xs">Categoría</label>
 <div class="relative">
-<select class="w-full h-14 bg-white/5 border border-outline-variant/30 rounded-[20px] px-md text-on-surface appearance-none focus:ring-1 focus:ring-primary focus:border-primary transition-all outline-none" id="category_id" name="category_id">
+<select class="w-full h-14 bg-surface-container-high border border-outline-variant/30 rounded-[20px] px-md text-on-surface appearance-none focus:ring-1 focus:ring-primary focus:border-primary transition-all outline-none" id="category_id" name="category_id">
 <option value="0">Sin categoría</option>
 <?php foreach ($categories as $cat): ?>
 <option value="<?= $cat['id'] ?>" <?= (int)$cat['id'] === $categoryId ? 'selected' : '' ?>><?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?></option>
