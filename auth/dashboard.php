@@ -96,17 +96,18 @@ $contactData = getContactData($conn);
         }
 
         th, td {
-            padding: 1rem 1.1rem;
+            padding: 0.75rem 1rem;
             text-align: left;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             color: #e9ecff;
         }
 
         th {
-            font-size: 0.95rem;
+            font-size: 0.78rem;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
-            font-weight: 700;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+            color: #b0b8d4;
         }
 
         tbody tr {
@@ -127,6 +128,7 @@ $contactData = getContactData($conn);
 
         .table-scroll {
             overflow-x: auto;
+            padding: 0.5rem 0 0;
         }
 
         @media (max-width: 900px) {
@@ -164,6 +166,11 @@ $contactData = getContactData($conn);
                 <p>Revisa los prospectos y datos de contacto desde un mismo lugar.</p>
             </div>
             <a href="logout.php" class="button-primary">Cerrar sesión</a>
+        </div>
+        <div class="module-nav">
+            <a class="module-nav__item is-active" href="dashboard.php">Prospectos</a>
+            <a class="module-nav__item" href="../catalog_users.php">Usuarios catálogo</a>
+            <span class="module-nav__item is-disabled">Catálogos</span>
         </div>
         <div class="table-scroll">
             <table class="dashboard-table">

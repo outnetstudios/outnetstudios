@@ -1,13 +1,29 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # Redirect non-HTTPS requests, but let ACME challenges through.
+  # Let ACME challenges and OPTIONS through without redirects
+  RewriteCond %{REQUEST_URI} ^/\.well-known/acme-challenge/ [OR]
+  RewriteCond %{REQUEST_METHOD} OPTIONS
+  RewriteRule ^ - [L]
+
+  # Redirect non-HTTPS requests to HTTPS (preserve whatever Host header the client used)
   RewriteCond %{HTTPS} !=on
   RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
+  # Allow /catalogo-productos without trailing slash to resolve to directory index
+  RewriteRule ^catalogo-productos$ /catalogo-productos/ [R=301,L]
+
   # Keep legacy HTML entry points working.
   RewriteRule ^(index|hireus|mission)\.html$ /$1.php [L,R=301]
+</IfModule>
+
+# Security headers
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+  Header set X-Frame-Options "DENY"
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "no-referrer-when-downgrade"
 </IfModule>
 
 DirectoryIndex index.php

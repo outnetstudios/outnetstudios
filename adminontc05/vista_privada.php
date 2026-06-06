@@ -52,6 +52,12 @@ if ($result) {
             <a class="button" href="logout.php">Cerrar sesión</a>
         </div>
 
+        <div class="module-nav">
+            <a class="module-nav__item is-active" href="vista_privada.php">Prospectos</a>
+            <a class="module-nav__item" href="../catalog_users.php">Usuarios catálogo</a>
+            <span class="module-nav__item is-disabled">Catálogos</span>
+        </div>
+
         <div class="table-wrap">
             <?php if (count($contacts) === 0): ?>
                 <div class="empty">No hay prospectos registrados aún.</div>

@@ -13,6 +13,10 @@
     --brand-success-text: #c8ffdc;
 }
 
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 body.auth-shell,
 body.dashboard-shell {
     min-height: 100vh;
@@ -55,6 +59,79 @@ body.auth-shell .panel {
     width: min(100%, 440px);
     padding: 2rem;
     border-radius: 32px;
+    min-width: 0;
+}
+
+body.auth-shell .auth-panel {
+    min-width: 0;
+}
+
+body.auth-shell .auth-panel .auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: 100%;
+    max-width: 100%;
+}
+
+body.auth-shell .auth-panel .form-group {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    flex-shrink: 1;
+}
+
+body.auth-shell .auth-panel .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #d8e0ff;
+    font-size: 0.95rem;
+}
+
+body.auth-shell .auth-panel input,
+body.auth-shell .auth-panel textarea,
+body.auth-shell .auth-panel select {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 14px 18px;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--brand-text);
+    font-size: 1rem;
+    outline: none;
+    box-sizing: border-box;
+}
+
+body.auth-shell .auth-panel button.button-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 28px;
+    background: linear-gradient(90deg, var(--brand-primary), var(--brand-primary-deep));
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+body.auth-shell .auth-panel input:focus,
+body.auth-shell .auth-panel textarea:focus,
+body.auth-shell .auth-panel select:focus {
+    border-color: rgba(245, 162, 0, 0.7);
+    box-shadow: 0 0 0 4px rgba(245, 162, 0, 0.14);
+}
+
+body.auth-shell .auth-panel button.button-primary:hover {
+    transform: translateY(-1px);
+    opacity: 0.96;
+    box-shadow: 0 16px 34px rgba(0, 81, 255, 0.18);
 }
 
 body.dashboard-shell .dashboard-container,
@@ -89,12 +166,27 @@ body.auth-shell label {
     font-size: 0.95rem;
 }
 
+body.auth-shell .form-group {
+    margin-bottom: 1.25rem;
+}
+
+body.auth-shell .login-container p,
+body.auth-shell .login-panel p {
+    margin: 0 0 1.5rem;
+    color: var(--brand-muted);
+    text-align: center;
+    line-height: 1.6;
+}
+
 body.auth-shell input[type="text"],
 body.auth-shell input[type="password"],
 body.auth-shell input[type="email"],
-body.auth-shell input {
+body.auth-shell input,
+body.auth-shell textarea,
+body.auth-shell select {
     display: block;
     width: 100%;
+    max-width: 100%;
     min-width: 0;
     padding: 14px 18px;
     border-radius: 28px;
@@ -104,6 +196,14 @@ body.auth-shell input {
     font-size: 1rem;
     outline: none;
     transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+body.auth-shell input,
+body.auth-shell textarea,
+body.auth-shell select,
+body.auth-shell button {
+    box-sizing: border-box;
+    max-width: 100%;
 }
 
 body.auth-shell input:focus {
@@ -188,6 +288,20 @@ body.dashboard-shell .header-row {
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+body.dashboard-shell .dashboard-container,
+body.dashboard-shell .card,
+.module-panel {
+    overflow: hidden;
+}
+
+@media (max-width: 900px) {
+    body.dashboard-shell .dashboard-header,
+    body.dashboard-shell .header-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
 body.dashboard-shell .dashboard-header h1,
 body.dashboard-shell .header-row h1 {
     margin: 0;
@@ -217,7 +331,7 @@ body.dashboard-shell .dashboard-table {
 
 body.dashboard-shell th,
 body.dashboard-shell td {
-    padding: 1rem 1.1rem;
+    padding: 0.75rem 1rem;
     text-align: left;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     color: #e9ecff;
@@ -228,11 +342,11 @@ body.dashboard-shell thead tr {
 }
 
 body.dashboard-shell th {
-    font-size: 0.95rem;
+    font-size: 0.78rem;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-weight: 700;
-    color: #d8e0ff;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    color: #b0b8d4;
 }
 
 body.dashboard-shell tbody tr {
@@ -256,6 +370,128 @@ body.dashboard-shell .empty {
 body.dashboard-shell .dashboard-header a.button-primary,
 body.dashboard-shell .header-row a.button {
     background: linear-gradient(90deg, var(--brand-primary), var(--brand-primary-deep));
+}
+
+body.dashboard-shell .module-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 1rem 2rem 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+body.dashboard-shell .module-nav__item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    color: #e9ecff;
+    text-decoration: none;
+}
+
+body.dashboard-shell .module-nav__item:hover,
+body.dashboard-shell .module-nav__item.is-active {
+    border-color: rgba(0, 81, 255, 0.4);
+    background: rgba(0, 81, 255, 0.12);
+    color: #fff;
+}
+
+body.dashboard-shell .module-nav__item.is-disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+body.dashboard-shell .module-grid {
+    display: grid;
+    gap: 1.5rem;
+    padding: 0 2rem 2rem;
+}
+
+body.dashboard-shell .module-panel {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 28px;
+}
+
+body.dashboard-shell .module-panel h2 {
+    margin-top: 0;
+    font-size: 1.25rem;
+    color: #f6f8ff;
+}
+
+body.dashboard-shell .module-form {
+    display: grid;
+    gap: 1rem;
+}
+
+body.dashboard-shell .module-form .grid-two {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    min-width: 0;
+}
+
+body.dashboard-shell .module-form .grid-two > div {
+    min-width: 0;
+    width: 100%;
+}
+
+body.dashboard-shell .module-form label {
+    margin-bottom: 0.45rem;
+}
+
+body.dashboard-shell .module-form input,
+body.dashboard-shell .module-form select,
+body.dashboard-shell .module-form textarea {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+body.dashboard-shell .module-form .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    min-width: 0;
+}
+
+body.dashboard-shell .module-form .form-actions button {
+    max-width: 100%;
+    min-width: 0;
+}
+
+body.dashboard-shell .user-table {
+    width: 100%;
+    min-width: 0;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+
+body.dashboard-shell .scroll-wrap {
+    overflow-x: auto;
+}
+
+body.dashboard-shell .module-note {
+    padding: 1rem 1.2rem;
+    border-radius: 22px;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(246, 248, 255, 0.84);
+}
+
+body.dashboard-shell .flash-password {
+    margin-top: 0.75rem;
+    padding: 0.9rem 1rem;
+    border-radius: 18px;
+    background: rgba(245, 162, 0, 0.12);
+    border: 1px solid rgba(245, 162, 0, 0.22);
+    color: #fff3cf;
 }
 
 @media (max-width: 900px) {
