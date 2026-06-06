@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <input type="file" id="cover_image" name="cover_image" accept="image/jpeg,image/png,image/webp,image/gif" class="form-input file:bg-surface-variant/30 file:border-0 file:rounded-full file:px-sm file:py-1 file:text-label-caps file:text-primary file:cursor-pointer">
 <?php if (!empty($catalog['cover_image'])): ?>
 <div class="flex items-center gap-sm mt-xs">
-<img src="../<?= htmlspecialchars($catalog['cover_image'], ENT_QUOTES, 'UTF-8') ?>" class="w-14 h-14 rounded-lg object-cover border border-outline-variant/30">
+<img src="<?= htmlspecialchars(imageUrl($catalog['cover_image']), ENT_QUOTES, 'UTF-8') ?>" class="w-14 h-14 rounded-lg object-cover border border-outline-variant/30">
 <span class="text-body-sm text-on-surface-variant/60">Imagen actual</span>
 </div>
 <?php endif; ?>
@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <input type="file" id="back_cover_image" name="back_cover_image" accept="image/jpeg,image/png,image/webp,image/gif" class="form-input file:bg-surface-variant/30 file:border-0 file:rounded-full file:px-sm file:py-1 file:text-label-caps file:text-primary file:cursor-pointer">
 <?php if (!empty($catalog['back_cover_image'])): ?>
 <div class="flex items-center gap-sm mt-xs">
-<img src="../<?= htmlspecialchars($catalog['back_cover_image'], ENT_QUOTES, 'UTF-8') ?>" class="w-14 h-14 rounded-lg object-cover border border-outline-variant/30">
+<img src="<?= htmlspecialchars(imageUrl($catalog['back_cover_image']), ENT_QUOTES, 'UTF-8') ?>" class="w-14 h-14 rounded-lg object-cover border border-outline-variant/30">
 <span class="text-body-sm text-on-surface-variant/60">Imagen actual</span>
 </div>
 <?php endif; ?>

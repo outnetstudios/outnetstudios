@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../src/Repositories/CatalogRepository.php';
 require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
+require_once __DIR__ . '/../includes/upload_helper.php';
 
 catalogRequireLogin();
 $repo = new CatalogRepository();
@@ -95,7 +96,7 @@ $totalCount = count($catalogs);
                                             <div class="flex items-center gap-md">
                                                 <div class="w-12 h-16 rounded-lg bg-surface-container-high overflow-hidden border border-outline-variant/30 group-hover:border-primary/50 transition-colors shadow-sm flex items-center justify-center">
                                                     <?php if (!empty($c['cover_image'])): ?>
-                                                    <img src="../<?= htmlspecialchars($c['cover_image'], ENT_QUOTES, 'UTF-8') ?>" class="w-full h-full object-cover">
+                                                    <img src="<?= htmlspecialchars(imageUrl($c['cover_image']), ENT_QUOTES, 'UTF-8') ?>" class="w-full h-full object-cover">
                                                     <?php else: ?>
                                                     <span class="material-symbols-outlined text-on-surface-variant/40">image</span>
                                                     <?php endif; ?>

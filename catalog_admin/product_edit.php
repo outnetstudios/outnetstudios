@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <input class="w-full h-14 bg-white/5 border border-outline-variant/30 rounded-[20px] px-md text-on-surface file:bg-surface-variant/30 file:border-0 file:rounded-full file:px-sm file:py-1 file:text-label-caps file:text-primary file:cursor-pointer focus:ring-1 focus:ring-primary focus:border-primary transition-all outline-none" type="file" id="main_image" name="main_image" accept="image/jpeg,image/png,image/webp,image/gif">
 <?php if ($mainImage): ?>
 <div class="flex items-center gap-sm mt-xs">
-<img src="../<?= htmlspecialchars($mainImage, ENT_QUOTES, 'UTF-8') ?>" class="w-14 h-14 rounded-lg object-cover border border-outline-variant/30">
+<img src="<?= htmlspecialchars(imageUrl($mainImage), ENT_QUOTES, 'UTF-8') ?>" class="w-14 h-14 rounded-lg object-cover border border-outline-variant/30">
 <span class="text-body-sm text-on-surface-variant/60">Imagen actual</span>
 </div>
 <?php endif; ?>

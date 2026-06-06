@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
+require_once __DIR__ . '/../includes/upload_helper.php';
 require_once __DIR__ . '/../src/Repositories/CatalogRepository.php';
 require_once __DIR__ . '/../src/Repositories/ProductRepository.php';
 require_once __DIR__ . '/../src/Repositories/CategoryRepository.php';
@@ -114,7 +115,7 @@ $totalCount = count($products);
 <td class="p-md">
 <div class="flex items-center gap-3">
 <?php if (!empty($p['main_image'])): ?>
-<img src="../<?= htmlspecialchars($p['main_image'], ENT_QUOTES, 'UTF-8') ?>" class="w-10 h-10 rounded-lg object-cover border border-outline-variant/30">
+<img src="<?= htmlspecialchars(imageUrl($p['main_image']), ENT_QUOTES, 'UTF-8') ?>" class="w-10 h-10 rounded-lg object-cover border border-outline-variant/30">
 <?php else: ?>
 <div class="w-10 h-10 rounded-lg bg-surface-container-high overflow-hidden flex items-center justify-center"><span class="material-symbols-outlined text-on-surface-variant/40 text-[20px]">package</span></div>
 <?php endif; ?>
