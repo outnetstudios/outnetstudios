@@ -1,6 +1,7 @@
 <?php
 
 // Helper: clean a value — if it looks like an un-interpolated Wasmer var, return null
+if (!function_exists('envVal')) {
 function envVal(string $key): ?string
 {
     $val = getenv($key);
@@ -11,6 +12,7 @@ function envVal(string $key): ?string
     // Placeholder from env.example.php
     if (str_contains($val, '_HERE') || str_contains($val, 'YOUR_')) return null;
     return $val;
+}
 }
 
 // 1. Read .env file from project root (Wasmer's "Paste a .env" feature)
