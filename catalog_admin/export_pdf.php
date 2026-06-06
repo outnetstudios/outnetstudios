@@ -64,6 +64,7 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
     justify-content: center;
     align-items: center;
 }
+.print-page-bleed .page-content { display: none; }
 .preview-index-list { list-style: none; padding: 0; margin: 0; }
 .preview-index-list li { padding: 0.4rem 0; border-bottom: 1px solid #eee; font-size: 0.95rem; }
 .index-num { font-weight: 700; margin-right: 0.5rem; }

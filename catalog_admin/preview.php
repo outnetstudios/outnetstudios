@@ -99,6 +99,7 @@ if ($currentPage) {
         justify-content: center;
         align-items: center;
     }
+    .preview-page[style*="background:"] .page-content { display: none; }
     @media (max-width: 768px) { .preview-sheet { width: 100%; height: auto; min-height: auto; } .preview-product-detail { flex-direction: column; } .preview-prod-img { width: 100%; height: 150px; } .preview-products-grid-4 { grid-template-columns: repeat(2, 1fr); } }
     @media print { .page-with-bg { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; } }
     </style>
