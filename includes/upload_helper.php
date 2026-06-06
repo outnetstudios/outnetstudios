@@ -66,8 +66,11 @@ function compressImage(string $path, string $mime): void
     imagedestroy($src);
     if ($ratio < 1) imagedestroy($dst);
     if (file_exists($tmp) && filesize($tmp) > 0) {
-        unlink($path);
-        rename($tmp, $path);
+        $renamed = rename($tmp, $path);
+        if (!$renamed) {
+            // rename failed (e.g. Wasmer filesystem), clean up tmp
+            unlink($tmp);
+        }
     }
 }
 
