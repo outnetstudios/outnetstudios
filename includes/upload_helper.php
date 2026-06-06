@@ -24,6 +24,7 @@ function uploadImage(array $file, string $subfolder = ''): ?string
     $filename = uniqid() . '.' . $ext;
     $dest = $folder . '/' . $filename;
     if (!move_uploaded_file($file['tmp_name'], $dest)) return null;
+    chmod($dest, 0644);
     compressImage($dest, $file['type']);
     $relPath = 'uploads/catalog' . ($subfolder ? '/' . trim($subfolder, '/') : '') . '/' . $filename;
     return $relPath;
@@ -67,8 +68,10 @@ function compressImage(string $path, string $mime): void
     if ($ratio < 1) imagedestroy($dst);
     if (file_exists($tmp) && filesize($tmp) > 0) {
         $renamed = rename($tmp, $path);
-        if (!$renamed) {
-            // rename failed (e.g. Wasmer filesystem), clean up tmp
+        if ($renamed) {
+            chmod($path, 0644);
+        } else {
+            // rename failed, clean up tmp
             unlink($tmp);
         }
     }
