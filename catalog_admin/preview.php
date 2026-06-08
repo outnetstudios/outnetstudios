@@ -217,8 +217,8 @@ function applyZoom() {
     if (zoomLabel) zoomLabel.textContent = pct + '%';
 }
 
-function zoomIn() { zoom = Math.min(zoom + 0.25, 3); applyZoom(); saveZoom(); }
-function zoomOut() { zoom = Math.max(zoom - 0.25, 0.25); applyZoom(); saveZoom(); }
+function zoomIn() { zoom = Math.min(zoom + 0.10, 3); applyZoom(); saveZoom(); }
+function zoomOut() { zoom = Math.max(zoom - 0.10, 0.10); applyZoom(); saveZoom(); }
 
 function zoomFit() {
     const container = document.getElementById('previewContainer');
