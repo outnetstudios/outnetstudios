@@ -20,40 +20,18 @@ function uploadImage(array $file, string $subfolder = ''): ?string
     $content = file_get_contents($file['tmp_name']);
     if ($content === false) return null;
 
-    // Determine MIME type from actual content (more reliable than $_FILES)
+    // Detect actual MIME from content
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $mime = $finfo->buffer($content);
-    // Re-check against allowed types using the actual content
     if (!in_array($mime, $allowed)) return null;
 
     // Generate virtual path
     $filename = uniqid() . '.' . $ext;
     $relPath = 'uploads/catalog' . ($subfolder ? '/' . trim($subfolder, '/') : '') . '/' . $filename;
 
-    // Try filesystem first
-    $uploadBasePath = __DIR__ . '/../uploads/catalog';
-    $folder = $uploadBasePath . ($subfolder ? '/' . trim($subfolder, '/') : '');
-    if (!is_dir($folder)) @mkdir($folder, 0755, true);
-    $dest = $folder . '/' . $filename;
-    $fsOk = file_put_contents($dest, $content, LOCK_EX) !== false;
-    if ($fsOk) @chmod($dest, 0644);
-
-    // Verify filesystem write actually persisted
-    if ($fsOk && file_exists($dest) && filesize($dest) > 0) {
-        // Check if getimagesize can read it (fails on WASI)
-        $imgOk = @getimagesize($dest);
-        if ($imgOk) {
-            compressImage($dest, $mime);
-            return $relPath;
-        }
-        // WASI: file appears but content not readable — fall through to DB
-        @unlink($dest);
-    }
-
-    // Store in database as fallback
+    // Always store in database (survives Wasmer restarts)
     try {
         $pdo = Database::getConnection();
-        // Ensure table exists
         $pdo->exec('CREATE TABLE IF NOT EXISTS catalog_assets (
             id INT AUTO_INCREMENT PRIMARY KEY,
             path VARCHAR(500) NOT NULL UNIQUE,
@@ -67,20 +45,32 @@ function uploadImage(array $file, string $subfolder = ''): ?string
         $stmt = $pdo->prepare('INSERT INTO catalog_assets (path, data, mime, size) VALUES (?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE data = VALUES(data), mime = VALUES(mime), size = VALUES(size)');
         $stmt->execute([$relPath, $content, $mime, strlen($content)]);
-
-        // If there's an old file on disk (from a previous attempt), clean it up
-        if (file_exists($dest)) @unlink($dest);
-
-        return $relPath;
     } catch (\Throwable $e) {
         error_log('DB image storage failed: ' . $e->getMessage());
         return null;
     }
+
+    // Also write to filesystem as cache (lost on restart, but helps current instance)
+    $uploadBasePath = __DIR__ . '/../uploads/catalog';
+    $folder = $uploadBasePath . ($subfolder ? '/' . trim($subfolder, '/') : '');
+    if (!is_dir($folder)) @mkdir($folder, 0755, true);
+    $dest = $folder . '/' . $filename;
+    $fsOk = file_put_contents($dest, $content, LOCK_EX) !== false;
+    if ($fsOk) {
+        @chmod($dest, 0644);
+        // Try to compress (only works if instance filesystem is writable)
+        $imgOk = @getimagesize($dest);
+        if ($imgOk) compressImage($dest, $mime);
+    }
+
+    return $relPath;
 }
 
 function imageUrl(?string $path): string
 {
     if (!$path) return '';
+    // If it's an absolute URL (http:// or https://), return as-is
+    if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) return $path;
     return '/asset.php?p=' . urlencode($path);
 }
 
@@ -133,7 +123,7 @@ function compressImage(string $path, string $mime): void
 function deleteImage(?string $path): void
 {
     if (!$path) return;
-    // Delete from filesystem if exists
+    // Delete from filesystem
     $full = __DIR__ . '/../' . $path;
     if (file_exists($full)) @unlink($full);
     // Delete from database
