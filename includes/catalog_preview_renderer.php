@@ -5,32 +5,15 @@ require_once __DIR__ . '/../src/Repositories/ProductRepository.php';
 require_once __DIR__ . '/../includes/upload_helper.php';
 
 /**
- * Calculate how many products fit on one category page by scanning the candidate
- * products (which may span multiple categories). Each distinct category adds a header
- * (~42px) and dividers (~17px). Each row of 4 product cards takes ~218px.
- */
-function productsThatFit(array $candidate): int
-{
-    $avail = 828 - 80 - 46; // page - padding - title ≈ 702px
-
-    $cats = [];
-    foreach ($candidate as $p) $cats[(int)$p['category_id']] = true;
-    $n = count($cats);
-    $avail -= $n * 42;                 // headers
-    $avail -= max(0, $n - 1) * 17;     // dividers
-
-    $row = 218; // card + gap
-    return max(4, intdiv($avail, $row) * 4);
-}
-
-/**
  * Build expanded page list: category pages consume products sequentially from a flat
- * pool (sorted by category → product). `productsThatFit()` decides how many go on each
- * page so nothing overflows or gets clipped. Non-category pages pass through unchanged.
+ * pool (sorted by category → product). Each category page takes up to 12 products
+ * (~3 rows of 4 on Letter). Non-category pages pass through unchanged.
+ * `overflow: hidden` on .preview-sheet / .print-page clips any minimal excess.
  */
 function buildExpandedPages(array $pages, array $products, array $categories): array
 {
     $expanded = [];
+    $perPage = 12;
 
     $pool = array_values(array_filter($products, fn($p) => $p['status'] === 'active'));
 
@@ -59,9 +42,7 @@ function buildExpandedPages(array $pages, array $products, array $categories): a
             continue;
         }
 
-        $remaining = array_slice($pool, $idx);
-        $take = productsThatFit($remaining);
-        $chunk = array_slice($pool, $idx, $take);
+        $chunk = array_slice($pool, $idx, $perPage);
         $idx += count($chunk);
         $page['_assigned_products'] = $chunk;
         $expanded[] = $page;
