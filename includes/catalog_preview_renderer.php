@@ -169,13 +169,6 @@ function renderIndex(array $page, array $categories, array $allExpandedPages = [
         </div>
     </div>';
 }
-    return '<div class="preview-page preview-index page-with-bg"' . pageBgStyle($page) . '>' . pageBgImg($page) . '
-        <div class="page-content">
-            <h2 class="preview-title-md">' . $title . '</h2>
-            <ol class="preview-index-list">' . $items . '</ol>
-        </div>
-    </div>';
-}
 
 function renderCategoryPage(array $page, array $content, array $categories): string
 {
