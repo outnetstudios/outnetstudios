@@ -79,7 +79,7 @@ function pageBgImg(array $page): string
     return '';
 }
 
-function renderPageContent(array $page, array $categories): string
+function renderPageContent(array $page, array $categories, array $allExpandedPages = []): string
 {
     $content = $page['content_json'] ? json_decode($page['content_json'], true) : [];
     $html = '';
@@ -91,7 +91,7 @@ function renderPageContent(array $page, array $categories): string
             $html = renderCover($page, $content);
             break;
         case 'index':
-            $html = renderIndex($page);
+            $html = renderIndex($page, $categories, $allExpandedPages);
             break;
         case 'category':
             $html = renderCategoryPage($page, $content, $categories);
@@ -122,20 +122,53 @@ function renderCover(array $page, array $content): string
     </div>';
 }
 
-function renderIndex(array $page): string
+function renderIndex(array $page, array $categories, array $allExpandedPages = []): string
 {
     $title = htmlspecialchars($page['title'] ?? 'Índice', ENT_QUOTES, 'UTF-8');
-    $pageRepo = new CatalogPageRepository();
-    $allPages = $pageRepo->allByCatalog((int)$page['catalog_id']);
+
+    if (empty($allExpandedPages)) {
+        return '<div class="preview-page preview-index page-with-bg"' . pageBgStyle($page) . '>' . pageBgImg($page) . '
+            <div class="page-content"><h2 class="preview-title-md">' . $title . '</h2>
+            <p style="color:#888;padding:1rem 0;">Sin páginas.</p></div>
+        </div>';
+    }
+
+    $catMap = [];
+    foreach ($categories as $c) {
+        $catMap[(int)$c['id']] = $c['name'];
+    }
+
     $items = '';
     $num = 0;
-    foreach ($allPages as $p) {
+    foreach ($allExpandedPages as $p) {
         if (in_array($p['page_type'], ['index', 'cover', 'back_cover'], true)) continue;
         $num++;
-        $label = $GLOBALS['pageTypeLabels'][$p['page_type']] ?? $p['page_type'];
-        $pageTitle = $p['title'] ?: $label;
-        $items .= '<li><span class="index-num">' . $num . '.</span> ' . htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') . '</li>';
+
+        if ($p['page_type'] === 'category') {
+            $assigned = $p['_assigned_products'] ?? [];
+            $names = [];
+            $seen = [];
+            foreach ($assigned as $prod) {
+                $cid = (int)$prod['category_id'];
+                if (isset($seen[$cid])) continue;
+                $seen[$cid] = true;
+                $names[] = htmlspecialchars($catMap[$cid] ?? 'Sin categoría', ENT_QUOTES, 'UTF-8');
+            }
+            $entryText = !empty($names) ? implode(', ', $names) : 'Categoría';
+        } else {
+            $entryText = htmlspecialchars($p['title'] ?: ($GLOBALS['pageTypeLabels'][$p['page_type']] ?? $p['page_type']), ENT_QUOTES, 'UTF-8');
+        }
+
+        $items .= '<li><span class="index-num">' . $num . '.</span> ' . $entryText . '</li>';
     }
+
+    return '<div class="preview-page preview-index page-with-bg"' . pageBgStyle($page) . '>' . pageBgImg($page) . '
+        <div class="page-content">
+            <h2 class="preview-title-md">' . $title . '</h2>
+            <ul class="preview-index-list">' . $items . '</ul>
+        </div>
+    </div>';
+}
     return '<div class="preview-page preview-index page-with-bg"' . pageBgStyle($page) . '>' . pageBgImg($page) . '
         <div class="page-content">
             <h2 class="preview-title-md">' . $title . '</h2>

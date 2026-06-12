@@ -42,7 +42,7 @@ if ($pageIndex > $totalPages) $pageIndex = max(1, $totalPages);
 $currentPage = $expandedPages[$pageIndex - 1] ?? null;
 $pageContent = '';
 if ($currentPage) {
-    $pageContent = renderPageContent($currentPage, $categories);
+    $pageContent = renderPageContent($currentPage, $categories, $expandedPages);
 }
 ?>
 <?php $pageTitle = 'Vista previa - ' . $catalogName; require_once __DIR__ . '/../templates/partials/admin_head.php'; ?>

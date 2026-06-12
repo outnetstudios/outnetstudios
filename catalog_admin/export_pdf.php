@@ -124,7 +124,7 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
 <div class="print-page preview-empty">Este catálogo no tiene páginas.</div>
 <?php else: ?>
 <?php foreach ($expandedPages as $p): ?>
-<div class="print-page<?= !empty($p['background_image']) ? ' print-page-bleed' : '' ?>"><?= renderPageContent($p, $categories) ?></div>
+<div class="print-page<?= !empty($p['background_image']) ? ' print-page-bleed' : '' ?>"><?= renderPageContent($p, $categories, $expandedPages) ?></div>
 <?php endforeach; ?>
 <?php endif; ?>
 </div>
