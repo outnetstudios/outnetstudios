@@ -27,8 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($page['page_type'] === 'banner') {
         $newContent['text'] = trim($_POST['banner_text'] ?? '');
         $newContent['subtitle'] = trim($_POST['banner_subtitle'] ?? '');
-    } elseif ($page['page_type'] === 'category') {
-        $newContent['category_id'] = (int)($_POST['category_id'] ?? 0);
     } elseif ($page['page_type'] === 'product') {
         $newContent['product_id'] = (int)($_POST['product_id'] ?? 0);
     }
@@ -81,20 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <input type="text" id="banner_subtitle" name="banner_subtitle" class="form-input" value="<?= htmlspecialchars($content['subtitle'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
 </div>
 </div>
-<?php elseif ($page['page_type'] === 'category'): ?>
-<div>
-<label class="form-label" for="category_id">Categoría</label>
-<select id="category_id" name="category_id" class="form-input">
-<option value="0">Sin categoría</option>
-<?php
-$catRepo = new \CategoryRepository();
-$cats = $catRepo->allByCatalog((int)$page['catalog_id']);
-foreach ($cats as $cat): ?>
-<option value="<?= $cat['id'] ?>" <?= (int)($content['category_id'] ?? 0) === (int)$cat['id'] ? 'selected' : '' ?>><?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?></option>
-<?php endforeach; ?>
-</select>
-</div>
-<?php elseif ($page['page_type'] === 'product'): ?>
+    <?php elseif ($page['page_type'] === 'product'): ?>
 <div>
 <label class="form-label" for="product_id">Producto</label>
 <select id="product_id" name="product_id" class="form-input">

@@ -31,14 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!in_array($pageType, $validTypes)) $pageType = 'custom';
 
     $title = trim($_POST['title'] ?? '');
-    $categoryId = (int)($_POST['category_id'] ?? 0);
     $productId = (int)($_POST['product_id'] ?? 0);
     $bannerText = trim($_POST['banner_text'] ?? '');
     $bannerSubtitle = trim($_POST['banner_subtitle'] ?? '');
 
     $content = [];
     if ($pageType === 'category') {
-        $content['category_id'] = $categoryId;
         if ($title === '') $title = 'Categoría';
     } elseif ($pageType === 'product') {
         $content['product_id'] = $productId;
@@ -110,17 +108,7 @@ $typeIcons = ['cover'=>'book', 'index'=>'format_list_bulleted', 'category'=>'fol
 <input type="text" id="title" name="title" class="form-input" placeholder="Título de la página">
 </div>
 
-<div id="field-category" style="display:none;">
-<label class="form-label" for="category_id">Categoría a mostrar</label>
-<select id="category_id" name="category_id" class="form-input">
-<option value="0">Seleccionar categoría</option>
-<?php foreach ($categories as $cat): ?>
-<option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?></option>
-<?php endforeach; ?>
-</select>
-</div>
-
-<div id="field-product" style="display:none;">
+    <div id="field-product" style="display:none;">
 <label class="form-label" for="product_id">Producto a mostrar</label>
 <select id="product_id" name="product_id" class="form-input">
 <option value="0">Seleccionar producto</option>
@@ -162,7 +150,6 @@ foreach ($allProducts as $prod): ?>
 <script>
 function toggleFields() {
 var type = document.getElementById('page_type').value;
-document.getElementById('field-category').style.display = type === 'category' ? 'block' : 'none';
 document.getElementById('field-product').style.display = type === 'product' ? 'block' : 'none';
 document.getElementById('field-banner').style.display = type === 'banner' ? 'block' : 'none';
 }

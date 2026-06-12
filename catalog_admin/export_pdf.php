@@ -45,7 +45,7 @@ unset($ep);
 }
 *, *::before, *::after { box-sizing: border-box; }
 body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: #fff; color: #1a1a2e; }
-.print-page { page-break-after: always; padding: 2cm; width: 215.9mm; min-height: 279.4mm; display: flex; flex-direction: column; background: #ffffff; }
+.print-page { page-break-after: always; padding: 2cm; width: 215.9mm; min-height: 279.4mm; overflow: hidden; display: flex; flex-direction: column; background: #ffffff; }
 .print-page:last-child { page-break-after: auto; }
 .print-page-bleed { padding: 0; }
 .print-page-bleed .page-content { padding: 2cm; }
