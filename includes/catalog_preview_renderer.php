@@ -5,47 +5,37 @@ require_once __DIR__ . '/../src/Repositories/ProductRepository.php';
 require_once __DIR__ . '/../includes/upload_helper.php';
 
 /**
- * Calculate max products that fit on one category page (Letter 828px height).
- * Available content area after padding (40px×2) + title (~46px) = ~692px.
- * Each distinct category adds ~40px header, ~17px divider between categories.
- * Each product row (4 cards) = ~214px (card ~202px + grid gap 12px).
+ * Calculate how many products fit on one category page by scanning the candidate
+ * products (which may span multiple categories). Each distinct category adds a header
+ * (~42px) and dividers (~17px). Each row of 4 product cards takes ~218px.
  */
-function maxProductsOnCategoryPage(array $candidateProducts): int
+function productsThatFit(array $candidate): int
 {
-    $available = 828 - 80 - 46; // 692px for category sections
+    $avail = 828 - 80 - 46; // page - padding - title ≈ 702px
 
-    $catIds = [];
-    foreach ($candidateProducts as $p) {
-        $catIds[(int)$p['category_id']] = true;
-    }
-    $numCats = count($catIds);
-    $available -= $numCats * 40;             // headers
-    $available -= max(0, ($numCats - 1)) * 17; // dividers between categories
+    $cats = [];
+    foreach ($candidate as $p) $cats[(int)$p['category_id']] = true;
+    $n = count($cats);
+    $avail -= $n * 42;                 // headers
+    $avail -= max(0, $n - 1) * 17;     // dividers
 
-    $rowHeight = 214;
-    $maxRows = max(1, intdiv($available, $rowHeight));
-
-    return $maxRows * 4; // 4 products per row
+    $row = 218; // card + gap
+    return max(4, intdiv($avail, $row) * 4);
 }
 
 /**
- * Build expanded page list: category pages consume products from a flat sequential
- * pool (sorted by category order then product order). Each page fits as many products
- * as possible without overflow; the rest flow to the next category page.
- * Non-category pages pass through unchanged.
+ * Build expanded page list: category pages consume products sequentially from a flat
+ * pool (sorted by category → product). `productsThatFit()` decides how many go on each
+ * page so nothing overflows or gets clipped. Non-category pages pass through unchanged.
  */
 function buildExpandedPages(array $pages, array $products, array $categories): array
 {
     $expanded = [];
 
-    // Active products only
     $pool = array_values(array_filter($products, fn($p) => $p['status'] === 'active'));
 
-    // Sort pool by category sort_order, then product sort_order
     $catOrder = [];
-    foreach ($categories as $i => $c) {
-        $catOrder[(int)$c['id']] = $i;
-    }
+    foreach ($categories as $i => $c) $catOrder[(int)$c['id']] = $i;
     usort($pool, function ($a, $b) use ($catOrder) {
         $ao = $catOrder[(int)$a['category_id']] ?? 999;
         $bo = $catOrder[(int)$b['category_id']] ?? 999;
@@ -53,8 +43,8 @@ function buildExpandedPages(array $pages, array $products, array $categories): a
         return (int)$a['sort_order'] - (int)$b['sort_order'];
     });
 
-    $poolIndex = 0;
-    $totalProducts = count($pool);
+    $idx = 0;
+    $total = count($pool);
 
     foreach ($pages as $page) {
         if ($page['page_type'] !== 'category') {
@@ -63,16 +53,16 @@ function buildExpandedPages(array $pages, array $products, array $categories): a
             continue;
         }
 
-        if ($poolIndex >= $totalProducts) {
+        if ($idx >= $total) {
             $page['_assigned_products'] = [];
             $expanded[] = $page;
             continue;
         }
 
-        $remaining = array_slice($pool, $poolIndex);
-        $perPage = maxProductsOnCategoryPage($remaining);
-        $chunk = array_slice($pool, $poolIndex, $perPage);
-        $poolIndex += count($chunk);
+        $remaining = array_slice($pool, $idx);
+        $take = productsThatFit($remaining);
+        $chunk = array_slice($pool, $idx, $take);
+        $idx += count($chunk);
         $page['_assigned_products'] = $chunk;
         $expanded[] = $page;
     }
