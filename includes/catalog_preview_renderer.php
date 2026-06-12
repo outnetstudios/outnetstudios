@@ -6,22 +6,23 @@ require_once __DIR__ . '/../includes/upload_helper.php';
 
 /**
  * Calculate max products that fit on one category page (Letter 828px height).
- * Products flow sequentially mixing categories; each distinct category adds ~55px header
- * and ~30px divider. Available content height ~648px, each product row ~215px (4 per row).
+ * Available content area after padding (40px×2) + title (~46px) = ~692px.
+ * Each distinct category adds ~40px header, ~17px divider between categories.
+ * Each product row (4 cards) = ~214px (card ~202px + grid gap 12px).
  */
 function maxProductsOnCategoryPage(array $candidateProducts): int
 {
-    $available = 828 - 80 - 46; // height - padding - title
+    $available = 828 - 80 - 46; // 692px for category sections
 
     $catIds = [];
     foreach ($candidateProducts as $p) {
         $catIds[(int)$p['category_id']] = true;
     }
     $numCats = count($catIds);
-    $available -= $numCats * 55;           // headers
-    $available -= max(0, ($numCats - 1)) * 30; // dividers between categories
+    $available -= $numCats * 40;             // headers
+    $available -= max(0, ($numCats - 1)) * 17; // dividers between categories
 
-    $rowHeight = 215;
+    $rowHeight = 214;
     $maxRows = max(1, intdiv($available, $rowHeight));
 
     return $maxRows * 4; // 4 products per row
