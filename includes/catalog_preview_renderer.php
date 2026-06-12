@@ -55,61 +55,28 @@ function buildExpandedPages(array $pages, array $products, array $categories): a
     $poolIndex = 0;
     $totalProducts = count($pool);
 
-    while ($poolIndex < $totalProducts) {
+    foreach ($pages as $page) {
+        if ($page['page_type'] !== 'category') {
+            $page['_assigned_products'] = [];
+            $expanded[] = $page;
+            continue;
+        }
+
+        if ($poolIndex >= $totalProducts) {
+            $page['_assigned_products'] = [];
+            $expanded[] = $page;
+            continue;
+        }
+
         $remaining = array_slice($pool, $poolIndex);
         $perPage = maxProductsOnCategoryPage($remaining);
         $chunk = array_slice($pool, $poolIndex, $perPage);
         $poolIndex += count($chunk);
-        // Create a virtual sub-page for the expanded list
-        $expanded[] = [
-            '_assigned_products' => $chunk,
-            '_virtual' => true,
-        ];
+        $page['_assigned_products'] = $chunk;
+        $expanded[] = $page;
     }
 
-    // Now merge with real pages
-    $result = [];
-    $catIndex = 0;
-    $virtualCount = count($expanded);
-
-    foreach ($pages as $page) {
-        if ($page['page_type'] !== 'category') {
-            $page['_assigned_products'] = [];
-            $result[] = $page;
-            continue;
-        }
-
-        if ($catIndex >= $virtualCount) {
-            $page['_assigned_products'] = [];
-            $result[] = $page;
-            continue;
-        }
-
-        $vp = $expanded[$catIndex];
-        $page['_assigned_products'] = $vp['_assigned_products'];
-        $result[] = $page;
-        $catIndex++;
-    }
-
-    // Append remaining virtual pages if more category chunks than DB pages
-    while ($catIndex < $virtualCount) {
-        $vp = $expanded[$catIndex];
-        $result[] = [
-            'id' => 0,
-            'catalog_id' => $pages[0]['catalog_id'] ?? 0,
-            'user_id' => $pages[0]['user_id'] ?? 0,
-            'page_type' => 'category',
-            'title' => 'Categoría',
-            'content_json' => '',
-            'background_image' => null,
-            'sort_order' => 0,
-            'created_at' => '',
-            '_assigned_products' => $vp['_assigned_products'],
-        ];
-        $catIndex++;
-    }
-
-    return $result;
+    return $expanded;
 }
 
 $pageTypeLabels = [
