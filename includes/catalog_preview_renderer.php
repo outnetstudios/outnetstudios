@@ -7,7 +7,7 @@ require_once __DIR__ . '/../includes/upload_helper.php';
 /**
  * Build expanded page list: category pages consume products from a flat sequential
  * pool (sorted by category order then product order). Each category page gets up to
- * PRODUCTS_PER_CATEGORY_PAGE products, mixing categories naturally.
+ * 12 products (~3 rows of 4 on Letter), mixing categories naturally.
  * Non-category pages pass through unchanged.
  */
 function buildExpandedPages(array $pages, array $products, array $categories): array
@@ -128,11 +128,13 @@ function renderIndex(array $page): string
     $pageRepo = new CatalogPageRepository();
     $allPages = $pageRepo->allByCatalog((int)$page['catalog_id']);
     $items = '';
-    foreach ($allPages as $i => $p) {
-        if ($p['page_type'] === 'index') continue;
+    $num = 0;
+    foreach ($allPages as $p) {
+        if (in_array($p['page_type'], ['index', 'cover', 'back_cover'], true)) continue;
+        $num++;
         $label = $GLOBALS['pageTypeLabels'][$p['page_type']] ?? $p['page_type'];
         $pageTitle = $p['title'] ?: $label;
-        $items .= '<li><span class="index-num">' . ($i + 1) . '.</span> ' . htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') . '</li>';
+        $items .= '<li><span class="index-num">' . $num . '.</span> ' . htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') . '</li>';
     }
     return '<div class="preview-page preview-index page-with-bg"' . pageBgStyle($page) . '>' . pageBgImg($page) . '
         <div class="page-content">
