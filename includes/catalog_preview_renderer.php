@@ -4,80 +4,52 @@ require_once __DIR__ . '/../src/Repositories/CategoryRepository.php';
 require_once __DIR__ . '/../src/Repositories/ProductRepository.php';
 require_once __DIR__ . '/../includes/upload_helper.php';
 
-const PRODUCTS_PER_CATEGORY_PAGE = 8;
-
 /**
- * Build expanded page list where category pages auto-flow products across pages.
- * Each category page renders up to PRODUCTS_PER_CATEGORY_PAGE products;
- * overflow creates additional virtual pages.
+ * Build expanded page list: category pages consume products from a flat sequential
+ * pool (sorted by category order then product order). Each category page gets up to
+ * PRODUCTS_PER_CATEGORY_PAGE products, mixing categories naturally.
+ * Non-category pages pass through unchanged.
  */
 function buildExpandedPages(array $pages, array $products, array $categories): array
 {
     $expanded = [];
-    $productsPerPage = PRODUCTS_PER_CATEGORY_PAGE;
+    $productsPerPage = 12; // ~3 rows of 4 on Letter
 
     // Active products only
-    $active = array_values(array_filter($products, fn($p) => $p['status'] === 'active'));
+    $pool = array_values(array_filter($products, fn($p) => $p['status'] === 'active'));
 
-    // Build pool per category
-    $pool = [];
-    foreach ($active as $p) {
-        $cid = (int)$p['category_id'];
-        if (!isset($pool[$cid])) $pool[$cid] = [];
-        $pool[$cid][] = $p;
+    // Sort pool by category sort_order, then product sort_order
+    $catOrder = [];
+    foreach ($categories as $i => $c) {
+        $catOrder[(int)$c['id']] = $i;
     }
+    usort($pool, function ($a, $b) use ($catOrder) {
+        $ao = $catOrder[(int)$a['category_id']] ?? 999;
+        $bo = $catOrder[(int)$b['category_id']] ?? 999;
+        if ($ao !== $bo) return $ao - $bo;
+        return (int)$a['sort_order'] - (int)$b['sort_order'];
+    });
+
+    $poolIndex = 0;
+    $totalProducts = count($pool);
 
     foreach ($pages as $page) {
         if ($page['page_type'] !== 'category') {
-            $page['_assigned_products'] = null;
-            $expanded[] = $page;
-            continue;
-        }
-
-        $content = $page['content_json'] ? json_decode($page['content_json'], true) : [];
-        $catId = (int)($content['category_id'] ?? 0);
-
-        // Collect products for this page — either from a specific category or all
-        $candidates = [];
-        if ($catId > 0) {
-            if (isset($pool[$catId]) && !empty($pool[$catId])) {
-                $candidates = $pool[$catId];
-                $pool[$catId] = []; // consumed
-            }
-        } else {
-            // All categories, ordered by category sort_order
-            $sortedCats = $categories;
-            usort($sortedCats, fn($a, $b) => (int)$a['sort_order'] - (int)$b['sort_order']);
-            foreach ($sortedCats as $c) {
-                $cid = (int)$c['id'];
-                if (isset($pool[$cid]) && !empty($pool[$cid])) {
-                    $candidates = array_merge($candidates, $pool[$cid]);
-                    $pool[$cid] = [];
-                }
-            }
-            // Also include uncategorized
-            if (isset($pool[0]) && !empty($pool[0])) {
-                $candidates = array_merge($candidates, $pool[0]);
-                $pool[0] = [];
-            }
-        }
-
-        if (empty($candidates)) {
             $page['_assigned_products'] = [];
             $expanded[] = $page;
             continue;
         }
 
-        $chunks = array_chunk($candidates, $productsPerPage);
-        foreach ($chunks as $i => $chunk) {
-            $p = $page;
-            $p['_assigned_products'] = $chunk;
-            if ($i > 0) {
-                $base = $page['title'] ?? 'Categoría';
-                $p['title'] = $base . ' (' . ($i + 1) . ')';
-            }
-            $expanded[] = $p;
+        if ($poolIndex >= $totalProducts) {
+            $page['_assigned_products'] = [];
+            $expanded[] = $page;
+            continue;
         }
+
+        $chunk = array_slice($pool, $poolIndex, $productsPerPage);
+        $poolIndex += count($chunk);
+        $page['_assigned_products'] = $chunk;
+        $expanded[] = $page;
     }
 
     return $expanded;
@@ -174,27 +146,35 @@ function renderCategoryPage(array $page, array $content, array $categories): str
 {
     $title = htmlspecialchars($page['title'] ?? 'Categoría', ENT_QUOTES, 'UTF-8');
     $assigned = $page['_assigned_products'] ?? [];
-    $catId = (int)($content['category_id'] ?? 0);
 
-    // Determine which category header to show
     $catMap = [];
     foreach ($categories as $c) {
         $catMap[(int)$c['id']] = $c;
     }
 
-    $showCatId = $catId;
-    if ($showCatId <= 0 && !empty($assigned)) {
-        $showCatId = (int)$assigned[0]['category_id'];
+    // Group assigned products by category
+    $grouped = [];
+    foreach ($assigned as $prod) {
+        $cid = (int)$prod['category_id'];
+        if (!isset($grouped[$cid])) $grouped[$cid] = [];
+        $grouped[$cid][] = $prod;
     }
 
     $grid = '';
+    $sectionIndex = 0;
+    foreach ($grouped as $cid => $prods) {
+        $catName = 'Sin categoría';
+        $catDesc = '';
+        $catImage = null;
+        if ($cid > 0 && isset($catMap[$cid])) {
+            $catName = htmlspecialchars($catMap[$cid]['name'], ENT_QUOTES, 'UTF-8');
+            $catDesc = !empty($catMap[$cid]['description']) ? htmlspecialchars($catMap[$cid]['description'], ENT_QUOTES, 'UTF-8') : '';
+            $catImage = !empty($catMap[$cid]['image']) ? $catMap[$cid]['image'] : null;
+        }
 
-    // Category header
-    if ($showCatId > 0 && isset($catMap[$showCatId])) {
-        $cat = $catMap[$showCatId];
-        $catName = htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8');
-        $catDesc = !empty($cat['description']) ? htmlspecialchars($cat['description'], ENT_QUOTES, 'UTF-8') : '';
-        $catImage = !empty($cat['image']) ? $cat['image'] : null;
+        if ($sectionIndex > 0) {
+            $grid .= '<div class="preview-category-divider"><span class="preview-divider-line"></span><span class="preview-divider-text">' . $catName . '</span><span class="preview-divider-line"></span></div>';
+        }
 
         $grid .= '<div class="preview-category-section">';
         $grid .= '<div class="preview-category-header">';
@@ -206,7 +186,7 @@ function renderCategoryPage(array $page, array $content, array $categories): str
         $grid .= '</div></div>';
 
         $grid .= '<div class="preview-products-grid-4">';
-        foreach ($assigned as $prod) {
+        foreach ($prods as $prod) {
             $pName = htmlspecialchars($prod['name'], ENT_QUOTES, 'UTF-8');
             $pPrice = $prod['price'] !== null ? number_format((float)$prod['price'], 2) : '';
             $pSku = htmlspecialchars($prod['sku'] ?? '', ENT_QUOTES, 'UTF-8');
@@ -226,6 +206,7 @@ function renderCategoryPage(array $page, array $content, array $categories): str
         }
         $grid .= '</div>';
         $grid .= '</div>';
+        $sectionIndex++;
     }
 
     if (empty($grid)) {
