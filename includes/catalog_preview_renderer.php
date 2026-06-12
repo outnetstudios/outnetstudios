@@ -7,13 +7,13 @@ require_once __DIR__ . '/../includes/upload_helper.php';
 /**
  * Build expanded page list: category pages consume products from a flat sequential
  * pool (sorted by category order then product order). Each category page gets up to
- * 12 products (~3 rows of 4 on Letter), mixing categories naturally.
+ * 8 products (~2 rows of 4 on Letter), mixing categories naturally.
  * Non-category pages pass through unchanged.
  */
 function buildExpandedPages(array $pages, array $products, array $categories): array
 {
     $expanded = [];
-    $productsPerPage = 12; // ~3 rows of 4 on Letter
+    $productsPerPage = 8; // ~2 rows of 4 on Letter
 
     // Active products only
     $pool = array_values(array_filter($products, fn($p) => $p['status'] === 'active'));
