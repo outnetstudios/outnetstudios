@@ -5,15 +5,37 @@ require_once __DIR__ . '/../src/Repositories/ProductRepository.php';
 require_once __DIR__ . '/../includes/upload_helper.php';
 
 /**
+ * Calculate max products that fit on one category page (Letter 828px height).
+ * Products flow sequentially mixing categories; each distinct category adds ~55px header
+ * and ~30px divider. Available content height ~648px, each product row ~215px (4 per row).
+ */
+function maxProductsOnCategoryPage(array $candidateProducts): int
+{
+    $available = 828 - 80 - 46; // height - padding - title
+
+    $catIds = [];
+    foreach ($candidateProducts as $p) {
+        $catIds[(int)$p['category_id']] = true;
+    }
+    $numCats = count($catIds);
+    $available -= $numCats * 55;           // headers
+    $available -= max(0, ($numCats - 1)) * 30; // dividers between categories
+
+    $rowHeight = 215;
+    $maxRows = max(1, intdiv($available, $rowHeight));
+
+    return $maxRows * 4; // 4 products per row
+}
+
+/**
  * Build expanded page list: category pages consume products from a flat sequential
- * pool (sorted by category order then product order). Each category page gets up to
- * 8 products (~2 rows of 4 on Letter), mixing categories naturally.
+ * pool (sorted by category order then product order). Each page fits as many products
+ * as possible without overflow; the rest flow to the next category page.
  * Non-category pages pass through unchanged.
  */
 function buildExpandedPages(array $pages, array $products, array $categories): array
 {
     $expanded = [];
-    $productsPerPage = 8; // ~2 rows of 4 on Letter
 
     // Active products only
     $pool = array_values(array_filter($products, fn($p) => $p['status'] === 'active'));
@@ -33,26 +55,61 @@ function buildExpandedPages(array $pages, array $products, array $categories): a
     $poolIndex = 0;
     $totalProducts = count($pool);
 
+    while ($poolIndex < $totalProducts) {
+        $remaining = array_slice($pool, $poolIndex);
+        $perPage = maxProductsOnCategoryPage($remaining);
+        $chunk = array_slice($pool, $poolIndex, $perPage);
+        $poolIndex += count($chunk);
+        // Create a virtual sub-page for the expanded list
+        $expanded[] = [
+            '_assigned_products' => $chunk,
+            '_virtual' => true,
+        ];
+    }
+
+    // Now merge with real pages
+    $result = [];
+    $catIndex = 0;
+    $virtualCount = count($expanded);
+
     foreach ($pages as $page) {
         if ($page['page_type'] !== 'category') {
             $page['_assigned_products'] = [];
-            $expanded[] = $page;
+            $result[] = $page;
             continue;
         }
 
-        if ($poolIndex >= $totalProducts) {
+        if ($catIndex >= $virtualCount) {
             $page['_assigned_products'] = [];
-            $expanded[] = $page;
+            $result[] = $page;
             continue;
         }
 
-        $chunk = array_slice($pool, $poolIndex, $productsPerPage);
-        $poolIndex += count($chunk);
-        $page['_assigned_products'] = $chunk;
-        $expanded[] = $page;
+        $vp = $expanded[$catIndex];
+        $page['_assigned_products'] = $vp['_assigned_products'];
+        $result[] = $page;
+        $catIndex++;
     }
 
-    return $expanded;
+    // Append remaining virtual pages if more category chunks than DB pages
+    while ($catIndex < $virtualCount) {
+        $vp = $expanded[$catIndex];
+        $result[] = [
+            'id' => 0,
+            'catalog_id' => $pages[0]['catalog_id'] ?? 0,
+            'user_id' => $pages[0]['user_id'] ?? 0,
+            'page_type' => 'category',
+            'title' => 'Categoría',
+            'content_json' => '',
+            'background_image' => null,
+            'sort_order' => 0,
+            'created_at' => '',
+            '_assigned_products' => $vp['_assigned_products'],
+        ];
+        $catIndex++;
+    }
+
+    return $result;
 }
 
 $pageTypeLabels = [
