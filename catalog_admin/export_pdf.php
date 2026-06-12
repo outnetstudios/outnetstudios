@@ -25,6 +25,11 @@ $pages = $pageRepo->allByCatalog($catalogId);
 $categories = $categoryRepo->allByCatalog($catalogId);
 $products = $productRepo->allByCatalog($catalogId);
 $catalogName = htmlspecialchars($catalog['name'], ENT_QUOTES, 'UTF-8');
+
+// Expand pages: category pages auto-flow products
+$expandedPages = buildExpandedPages($pages, $products, $categories);
+foreach ($expandedPages as &$ep) { $ep['_all_products'] = $products; }
+unset($ep);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -115,11 +120,11 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
 </div>
 </div>
 <div class="print-content">
-<?php if (empty($pages)): ?>
+<?php if (empty($expandedPages)): ?>
 <div class="print-page preview-empty">Este catálogo no tiene páginas.</div>
 <?php else: ?>
-<?php foreach ($pages as $p): ?>
-<div class="print-page<?= !empty($p['background_image']) ? ' print-page-bleed' : '' ?>"><?= renderPageContent($p, $categories, $products) ?></div>
+<?php foreach ($expandedPages as $p): ?>
+<div class="print-page<?= !empty($p['background_image']) ? ' print-page-bleed' : '' ?>"><?= renderPageContent($p, $categories) ?></div>
 <?php endforeach; ?>
 <?php endif; ?>
 </div>

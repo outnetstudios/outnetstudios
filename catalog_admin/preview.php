@@ -26,16 +26,23 @@ $pages = $pageRepo->allByCatalog($catalogId);
 $categories = $categoryRepo->allByCatalog($catalogId);
 $products = $productRepo->allByCatalog($catalogId);
 $catalogName = htmlspecialchars($catalog['name'], ENT_QUOTES, 'UTF-8');
-$totalPages = count($pages);
+
+// Expand pages: category pages auto-flow products
+$expandedPages = buildExpandedPages($pages, $products, $categories);
+// Pass all products for product detail lookups
+foreach ($expandedPages as &$ep) { $ep['_all_products'] = $products; }
+unset($ep);
+
+$totalPages = count($expandedPages);
 
 $pageIndex = (int)($_GET['page'] ?? 1);
 if ($pageIndex < 1) $pageIndex = 1;
 if ($pageIndex > $totalPages) $pageIndex = max(1, $totalPages);
 
-$currentPage = $pages[$pageIndex - 1] ?? null;
+$currentPage = $expandedPages[$pageIndex - 1] ?? null;
 $pageContent = '';
 if ($currentPage) {
-    $pageContent = renderPageContent($currentPage, $categories, $products);
+    $pageContent = renderPageContent($currentPage, $categories);
 }
 ?>
 <?php $pageTitle = 'Vista previa - ' . $catalogName; require_once __DIR__ . '/../templates/partials/admin_head.php'; ?>
