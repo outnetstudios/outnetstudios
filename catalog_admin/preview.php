@@ -51,7 +51,7 @@ if ($currentPage) {
     body { margin: 0; min-height: 100vh; background: #0f1320; color: #dee2f4; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; }
     .preview-sheet { width: 640px; height: 828px; background: #ffffff; color: #1a1a2e; border-radius: 4px; box-shadow: 0 4px 24px rgba(0,0,0,0.6); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease; transform-origin: top center; position: relative; flex-shrink: 0; }
     .preview-sheet .preview-page { flex: 1; display: flex; flex-direction: column; }
-    .page-content { padding: 1.25rem; }
+    .page-content { padding: 2.75rem; }
     .preview-cover-content { max-width: 560px; margin: 0 auto; }
     .preview-title-lg { font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 800; margin: 0 0 0.5rem; letter-spacing: -0.03em; }
     .preview-subtitle { font-size: 1.1rem; }
@@ -69,10 +69,10 @@ if ($currentPage) {
     .preview-category-divider { display: flex; align-items: center; gap: 0.75rem; margin: 0.5rem 0; }
     .preview-divider-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,0,0,0.12), transparent); }
     .preview-divider-text { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #999; white-space: nowrap; }
-    .preview-products-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.25rem; }
+    .preview-products-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.1875rem; }
     .preview-product-card { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.125rem; border-radius: 8px; background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.08); }
-    .preview-product-img { width: 100%; aspect-ratio: 1; border-radius: 6px; object-fit: contain; background: #f5f5f5; max-height: 104px; }
-    .preview-product-img-placeholder { display: flex; align-items: center; justify-content: center; height: 104px; }
+    .preview-product-img { width: 100%; aspect-ratio: 1; border-radius: 6px; object-fit: contain; background: #f5f5f5; max-height: 96px; }
+    .preview-product-img-placeholder { display: flex; align-items: center; justify-content: center; height: 96px; }
     .preview-product-img-placeholder span { font-size: 2rem; color: #ccc; }
     .preview-product-info h4 { margin: 0 0 0.15rem; font-size: 0.85rem; line-height: 1.3; }
     .preview-product-info p { margin: 0.15rem 0; font-size: 0.72rem; color: #666; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }

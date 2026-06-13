@@ -11,12 +11,12 @@ require_once __DIR__ . '/../includes/upload_helper.php';
  */
 function fitCount(array $candidate): int
 {
-    $availTotal = 828 - 40 - 46; // 742px (padding 20×2 + título)
-    $rowH = 171;                 // card 167 + gap 4
+    $availTotal = 828 - 88 - 46; // 694px (padding 44×2 + título)
+    $rowH = 162;                 // card 159 + gap 3
     $headerH = 42;               // category header
     $dividerH = 17;              // divider between categories
 
-    $n = min(12, count($candidate));
+    $n = count($candidate);
     do {
         $chunk = array_slice($candidate, 0, $n);
         $cats = [];
@@ -26,8 +26,8 @@ function fitCount(array $candidate): int
         $avail = $availTotal - $used;
         $rows = max(1, intdiv($avail, $rowH));
         $maxFit = $rows * 4;
-        if ($maxFit >= $n) return $n; // n products all fully fit
-        $n = $maxFit;                 // reduce and retry (fewer cats)
+        if ($maxFit >= $n) return $n;
+        $n = $maxFit;
     } while (true);
 }
 
