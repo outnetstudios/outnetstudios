@@ -29,7 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'reord
     $ids = array_filter(array_map('intval', explode(',', $order)));
     if ($catId >= 0 && !empty($ids)) {
         foreach ($ids as $i => $pid) {
-            $productRepo->update($pid, ['sort_order' => $i, 'category_id' => $catId]);
+            $prod = $productRepo->findById($pid);
+            if ($prod) {
+                $prod['sort_order'] = $i;
+                $productRepo->update($pid, $prod);
+            }
         }
     }
     header('Content-Type: application/json');
