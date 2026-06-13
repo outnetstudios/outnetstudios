@@ -57,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'stock' => $stock,
             'status' => $status,
             'main_image' => $mainImage,
+            'sort_order' => $product['sort_order'],
         ]);
         header('Location: products.php?catalog_id=' . $catalogId);
         exit;

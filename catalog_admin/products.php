@@ -21,33 +21,51 @@ $productRepo = new ProductRepository();
 $categoryRepo = new CategoryRepository();
 $products = $productRepo->allByCatalog($catalogId);
 $categories = $categoryRepo->allByCatalog($catalogId);
-$catMap = [];
-foreach ($categories as $c) {
-    $catMap[(int)$c['id']] = $c['name'];
+
+// Handle AJAX reorder
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'reorder') {
+    $catId = (int)($_POST['category_id'] ?? -1);
+    $order = $_POST['order'] ?? '';
+    $ids = array_filter(array_map('intval', explode(',', $order)));
+    if ($catId >= 0 && !empty($ids)) {
+        foreach ($ids as $i => $pid) {
+            $productRepo->update($pid, ['sort_order' => $i, 'category_id' => $catId]);
+        }
+    }
+    header('Content-Type: application/json');
+    echo json_encode(['ok' => true]);
+    exit;
 }
+
 $catalogName = htmlspecialchars($catalog['name'], ENT_QUOTES, 'UTF-8');
 $currencySym = $catalog['currency'] === 'USD' ? '$' : 'C$';
 
-if (isset($_GET['move'], $_GET['move_id'])) {
-    $moveId = (int)$_GET['move_id'];
-    $moveProd = $productRepo->findById($moveId);
-    if ($moveProd && (int)$moveProd['catalog_id'] === $catalogId) {
-        $dir = $_GET['move'] === 'up' ? -1 : 1;
-        $currentOrder = (int)$moveProd['sort_order'];
-        $newOrder = $currentOrder + $dir;
-        $all = $productRepo->allByCatalog($catalogId);
-        foreach ($all as $p) {
-            if ((int)$p['sort_order'] === $newOrder && (int)$p['id'] !== $moveId) {
-                $productRepo->update((int)$p['id'], ['sort_order' => $currentOrder] + $p);
-                break;
-            }
-        }
-        $productRepo->update($moveId, ['sort_order' => $newOrder] + $moveProd);
-    }
-    header('Location: products.php?catalog_id=' . $catalogId);
-    exit;
+// Sort products by category order then sort_order (matches preview order)
+$catOrderMap = [];
+foreach ($categories as $i => $c) $catOrderMap[(int)$c['id']] = $i;
+usort($products, function ($a, $b) use ($catOrderMap) {
+    $ao = $catOrderMap[(int)$a['category_id']] ?? -1;
+    $bo = $catOrderMap[(int)$b['category_id']] ?? -1;
+    if ($ao !== $bo) return $ao - $bo;
+    return (int)$a['sort_order'] - (int)$b['sort_order'];
+});
+
+// Group products by category
+$sections = [];
+$uncategorized = [];
+$catProducts = [];
+foreach ($products as $p) {
+    $cid = (int)$p['category_id'];
+    if ($cid <= 0) { $uncategorized[] = $p; continue; }
+    if (!isset($catProducts[$cid])) $catProducts[$cid] = [];
+    $catProducts[$cid][] = $p;
 }
-$products = $productRepo->allByCatalog($catalogId);
+if (!empty($uncategorized)) $sections[] = ['id' => 0, 'name' => 'Sin categoría', 'products' => $uncategorized];
+foreach ($categories as $cat) {
+    $cid = (int)$cat['id'];
+    if (!empty($catProducts[$cid])) $sections[] = ['id' => $cid, 'name' => $cat['name'], 'products' => $catProducts[$cid]];
+}
+
 $totalCount = count($products);
 ?>
 <!DOCTYPE html>
@@ -118,9 +136,23 @@ $totalCount = count($products);
 </tr>
 </thead>
 <tbody class="divide-y divide-outline-variant/5">
-<?php foreach ($products as $i => $p): ?>
-<tr class="hover:bg-surface-variant/10 transition-colors group" data-category="<?= htmlspecialchars($catMap[(int)$p['category_id']] ?? 'Sin categoría', ENT_QUOTES, 'UTF-8') ?>">
-<td class="p-md text-body-sm font-medium opacity-50"><?= $i + 1 ?></td>
+<?php $globalIdx = 0; foreach ($sections as $si => $section): 
+$secName = htmlspecialchars($section['name'], ENT_QUOTES, 'UTF-8');
+$secProdCount = count($section['products']);
+$secId = (int)$section['id'];
+?>
+<tr class="section-header" data-section-id="<?= $secId ?>">
+<td colspan="8" class="px-md py-2 bg-surface-container-low/40">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary"><?= $secId === 0 ? 'help' : 'folder' ?></span>
+<span class="font-title-sm text-title-sm text-on-surface font-semibold"><?= $secName ?></span>
+<span class="text-label-caps text-on-surface-variant/50">(<?= $secProdCount ?>)</span>
+</div>
+</td>
+</tr>
+<?php foreach ($section['products'] as $i => $p): $globalIdx++; ?>
+<tr class="hover:bg-surface-variant/10 transition-colors group draggable-row" draggable="true" data-product-id="<?= (int)$p['id'] ?>" data-section-id="<?= $secId ?>" data-category="<?= $secName ?>">
+<td class="p-md text-body-sm font-medium opacity-50 drag-handle cursor-grab active:cursor-grabbing"><?= $i + 1 ?></td>
 <td class="p-md">
 <div class="flex items-center gap-3">
 <?php if (!empty($p['main_image'])): ?>
@@ -132,7 +164,7 @@ $totalCount = count($products);
 </div>
 </td>
 <td class="p-md text-body-sm font-mono text-outline"><?= htmlspecialchars($p['sku'] ?? '-', ENT_QUOTES, 'UTF-8') ?></td>
-<td class="p-md"><span class="bg-surface-container px-3 py-1 rounded-full text-[11px] font-bold text-secondary uppercase tracking-wider"><?= htmlspecialchars($catMap[(int)$p['category_id']] ?? 'Sin categoría', ENT_QUOTES, 'UTF-8') ?></span></td>
+<td class="p-md"><span class="bg-surface-container px-3 py-1 rounded-full text-[11px] font-bold text-secondary uppercase tracking-wider"><?= $secName ?></span></td>
 <td class="p-md font-bold text-[#ffd966]"><?= $p['price'] !== null ? $currencySym . number_format((float)$p['price'], 2) : '-' ?></td>
 <td class="p-md text-body-sm"><?= $p['stock'] !== null ? (int)$p['stock'] . ' ud.' : '-' ?></td>
 <td class="p-md">
@@ -149,6 +181,7 @@ $totalCount = count($products);
 </div>
 </td>
 </tr>
+<?php endforeach; ?>
 <?php endforeach; ?>
 </tbody>
 </table>
@@ -167,10 +200,6 @@ $totalCount = count($products);
 </section>
 </main>
 <script>
-document.querySelectorAll('tbody tr').forEach(row => {
-row.addEventListener('mouseenter', () => { row.style.transform = 'translateY(-2px)'; row.style.transition = 'transform 0.2s ease'; });
-row.addEventListener('mouseleave', () => { row.style.transform = 'translateY(0)'; });
-});
 let activeCategory = '';
 function filterByCategory(val) {
 activeCategory = val;
@@ -182,12 +211,83 @@ applyFilters();
 }
 function applyFilters() {
 const q = (window._searchVal || '').toLowerCase();
-document.querySelectorAll('tbody tr').forEach(row => {
+document.querySelectorAll('.draggable-row').forEach(row => {
 const catMatch = !activeCategory || row.dataset.category === activeCategory;
 const searchMatch = !q || row.textContent.toLowerCase().includes(q);
 row.style.display = catMatch && searchMatch ? '' : 'none';
 });
+// Hide empty section headers
+document.querySelectorAll('.section-header').forEach(header => {
+const sid = header.dataset.sectionId;
+const visible = [...document.querySelectorAll(`.draggable-row[data-section-id="${sid}"]`)].some(r => r.style.display !== 'none');
+header.style.display = visible ? '' : 'none';
+});
 }
+
+// Drag and drop
+let dragSrcRow = null;
+document.addEventListener('dragstart', function(e) {
+const row = e.target.closest('.draggable-row');
+if (!row) return;
+dragSrcRow = row;
+row.classList.add('opacity-40');
+e.dataTransfer.effectAllowed = 'move';
+});
+document.addEventListener('dragend', function(e) {
+const row = e.target.closest('.draggable-row');
+if (row) row.classList.remove('opacity-40');
+dragSrcRow = null;
+document.querySelectorAll('.drop-target').forEach(r => r.classList.remove('drop-target'));
+});
+document.addEventListener('dragover', function(e) {
+const row = e.target.closest('.draggable-row');
+if (!row || row === dragSrcRow) return;
+if (row.dataset.sectionId !== dragSrcRow.dataset.sectionId) {
+e.dataTransfer.dropEffect = 'none';
+return;
+}
+e.preventDefault();
+e.dataTransfer.dropEffect = 'move';
+document.querySelectorAll('.drop-target').forEach(r => r.classList.remove('drop-target'));
+row.classList.add('drop-target');
+});
+document.addEventListener('dragleave', function(e) {
+const row = e.target.closest('.draggable-row');
+if (row) row.classList.remove('drop-target');
+});
+document.addEventListener('drop', function(e) {
+e.preventDefault();
+const row = e.target.closest('.draggable-row');
+if (!row || row === dragSrcRow || row.dataset.sectionId !== dragSrcRow.dataset.sectionId) return;
+row.classList.remove('drop-target');
+const tbody = row.closest('tbody');
+const rows = [...tbody.querySelectorAll(`.draggable-row[data-section-id="${row.dataset.sectionId}"]`)];
+const fromIdx = rows.indexOf(dragSrcRow);
+const toIdx = rows.indexOf(row);
+if (fromIdx === toIdx) return;
+// Move in DOM
+if (fromIdx < toIdx) {
+dragSrcRow.parentNode.insertBefore(dragSrcRow, row.nextSibling);
+} else {
+dragSrcRow.parentNode.insertBefore(dragSrcRow, row);
+}
+// Update order numbers
+const updatedRows = [...tbody.querySelectorAll(`.draggable-row[data-section-id="${row.dataset.sectionId}"]`)];
+updatedRows.forEach((r, idx) => {
+const td = r.querySelector('td:first-child');
+if (td) td.textContent = idx + 1;
+});
+// Send AJAX
+const ids = updatedRows.map(r => r.dataset.productId).join(',');
+const formData = new FormData();
+formData.append('action', 'reorder');
+formData.append('category_id', row.dataset.sectionId);
+formData.append('order', ids);
+fetch('products.php?catalog_id=<?= $catalogId ?>', {
+method: 'POST',
+body: formData
+});
+});
 </script>
 </body>
 </html>
