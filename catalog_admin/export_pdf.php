@@ -177,18 +177,32 @@ function preloadImages(callback) {
         tasks.push(function(done) {
             if (img.complete && img.naturalWidth > 0) { done(); return; }
             var retries = 0;
-            var maxRetries = 3;
+            var maxRetries = 2;
+            var imgDone = false;
+            var imgTimer;
+            function safeDone() { if (!imgDone) { imgDone = true; clearTimeout(imgTimer); done(); } }
             function attempt() {
-                img.onload = function() { done(); };
+                clearTimeout(imgTimer);
+                imgTimer = setTimeout(function() {
+                    retries++;
+                    if (retries <= maxRetries) {
+                        setTimeout(attempt, 1000 * retries);
+                    } else {
+                        safeDone();
+                    }
+                }, 5000);
+                img.onload = function() { safeDone(); };
                 img.onerror = function() {
+                    clearTimeout(imgTimer);
                     retries++;
                     if (retries < maxRetries) {
                         setTimeout(attempt, 1000 * retries);
                     } else {
-                        done();
+                        safeDone();
                     }
                 };
-                img.src = img.src;
+                var sep = img.src.indexOf('?') > -1 ? '&' : '?';
+                img.src = img.src.split('#')[0] + sep + 't=' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
             }
             attempt();
         });
@@ -204,19 +218,33 @@ function preloadImages(callback) {
                 seen[url] = true;
                 tasks.push(function(done) {
                     var retries = 0;
-                    var maxRetries = 3;
+                    var maxRetries = 2;
+                    var bgDone = false;
+                    var bgTimer;
+                    function safeDone() { if (!bgDone) { bgDone = true; clearTimeout(bgTimer); done(); } }
                     function tryLoad() {
+                        clearTimeout(bgTimer);
+                        bgTimer = setTimeout(function() {
+                            retries++;
+                            if (retries <= maxRetries) {
+                                setTimeout(tryLoad, 1000 * retries);
+                            } else {
+                                safeDone();
+                            }
+                        }, 5000);
                         var tmp = new Image();
-                        tmp.onload = function() { done(); };
+                        tmp.onload = function() { safeDone(); };
                         tmp.onerror = function() {
+                            clearTimeout(bgTimer);
                             retries++;
                             if (retries < maxRetries) {
                                 setTimeout(tryLoad, 1000 * retries);
                             } else {
-                                done();
+                                safeDone();
                             }
                         };
-                        tmp.src = url;
+                        var sep = url.indexOf('?') > -1 ? '&' : '?';
+                        tmp.src = url.split('#')[0] + sep + 't=' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
                     }
                     tryLoad();
                 });
@@ -266,7 +294,7 @@ window.addEventListener('load', function() {
 
 window.addEventListener('resize', fitPrintPages);
 
-// Max safety timeout: print anyway after 20 seconds even if images fail
+// Max safety timeout: print anyway after 12 seconds even if images fail
 setTimeout(function() {
     if (!printReady) {
         printReady = true;
@@ -279,7 +307,7 @@ setTimeout(function() {
         var progressPct = document.getElementById('progressPct');
         if (progressPct) progressPct.textContent = '100%';
     }
-}, 20000);
+}, 12000);
 </script>
 </body>
 </html>
