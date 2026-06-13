@@ -13,8 +13,8 @@ function fitCount(array $candidate): int
 {
     $pageH = 1056;
     $pad = 88;                // padding 44×2
-    $firstCat = 52;           // header(40) + section gap(12)
-    $extraCat = 60;           // content gap(8) + header(40) + section gap(12)
+    $firstCat = 60;           // header(40) + section gap(20)
+    $extraCat = 68;           // content gap(8) + header(40) + section gap(20)
     $rowH = 209;              // card ~189 + row-gap 20 (desc removed, card shorter)
     $rowGap = 20;             // CSS row-gap in px
 
