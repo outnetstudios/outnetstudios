@@ -15,6 +15,7 @@ $name = trim($_POST['name'] ?? '');
 $slug = trim($_POST['slug'] ?? '');
 $description = trim($_POST['description'] ?? '');
 $status = in_array($_POST['status'] ?? 'draft', ['draft','published']) ? $_POST['status'] : 'draft';
+$currency = $_POST['currency'] === 'USD' ? 'USD' : 'NIO';
 
 if ($slug === '') {
     $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $name));
@@ -33,6 +34,7 @@ $id = $repo->create([
     'cover_image' => $coverImage,
     'back_cover_image' => $backCoverImage,
     'status' => $status,
+    'currency' => $currency,
 ]);
 
 if ($id) {

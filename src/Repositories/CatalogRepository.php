@@ -28,7 +28,7 @@ class CatalogRepository
 
     public function create(array $data): int
     {
-        $query = 'INSERT INTO catalogs (user_id, name, slug, description, cover_image, back_cover_image, status, created_at) VALUES (:user_id, :name, :slug, :description, :cover_image, :back_cover_image, :status, NOW())';
+        $query = 'INSERT INTO catalogs (user_id, name, slug, description, cover_image, back_cover_image, status, currency, created_at) VALUES (:user_id, :name, :slug, :description, :cover_image, :back_cover_image, :status, :currency, NOW())';
         $stmt = $this->connection->prepare($query);
         $stmt->execute([
             ':user_id' => $data['user_id'],
@@ -38,13 +38,14 @@ class CatalogRepository
             ':cover_image' => $data['cover_image'] ?? null,
             ':back_cover_image' => $data['back_cover_image'] ?? null,
             ':status' => $data['status'] ?? 'draft',
+            ':currency' => $data['currency'] ?? 'NIO',
         ]);
         return (int)$this->connection->lastInsertId();
     }
 
     public function update(int $id, array $data): bool
     {
-        $query = 'UPDATE catalogs SET name = :name, slug = :slug, description = :description, cover_image = :cover_image, back_cover_image = :back_cover_image, status = :status, updated_at = NOW() WHERE id = :id';
+        $query = 'UPDATE catalogs SET name = :name, slug = :slug, description = :description, cover_image = :cover_image, back_cover_image = :back_cover_image, status = :status, currency = :currency, updated_at = NOW() WHERE id = :id';
         $stmt = $this->connection->prepare($query);
         return $stmt->execute([
             ':name' => $data['name'],
@@ -53,6 +54,7 @@ class CatalogRepository
             ':cover_image' => $data['cover_image'] ?? null,
             ':back_cover_image' => $data['back_cover_image'] ?? null,
             ':status' => $data['status'] ?? 'draft',
+            ':currency' => $data['currency'] ?? 'NIO',
             ':id' => $id,
         ]);
     }

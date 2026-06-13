@@ -78,7 +78,9 @@ function buildExpandedPages(array $pages, array $products, array $categories): a
     return $expanded;
 }
 
-$currencySymbol = 'C$';
+function currencySymbol(?string $currency): string {
+    return $currency === 'USD' ? '$' : 'C$';
+}
 
 $pageTypeLabels = [
     'cover' => 'Portada',

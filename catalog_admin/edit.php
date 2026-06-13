@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $slug = trim($_POST['slug'] ?? '');
     $description = trim($_POST['description'] ?? '');
     $status = in_array($_POST['status'] ?? 'draft', ['draft','published','archived']) ? $_POST['status'] : 'draft';
+    $currency = $_POST['currency'] === 'USD' ? 'USD' : 'NIO';
 
     if ($name === '') {
         $error = 'El nombre es obligatorio.';
@@ -42,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'slug' => $slug,
             'description' => $description,
             'status' => $status,
+            'currency' => $currency,
             'cover_image' => $coverImage,
             'back_cover_image' => $backCoverImage,
         ]);
@@ -92,6 +94,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <span class="text-body-sm text-on-surface-variant/60">Imagen actual</span>
 </div>
 <?php endif; ?>
+</div>
+<div>
+<label class="form-label" for="currency">Moneda</label>
+<select id="currency" name="currency" class="form-input">
+<option value="NIO" <?= ($catalog['currency'] ?? 'NIO') === 'NIO' ? 'selected' : '' ?>>Córdobas (C$)</option>
+<option value="USD" <?= ($catalog['currency'] ?? 'NIO') === 'USD' ? 'selected' : '' ?>>Dólares ($)</option>
+</select>
 </div>
 <div>
 <label class="form-label" for="status">Estado</label>

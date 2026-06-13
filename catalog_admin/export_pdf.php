@@ -25,6 +25,7 @@ $pages = $pageRepo->allByCatalog($catalogId);
 $categories = $categoryRepo->allByCatalog($catalogId);
 $products = $productRepo->allByCatalog($catalogId);
 $catalogName = htmlspecialchars($catalog['name'], ENT_QUOTES, 'UTF-8');
+$GLOBALS['currencySymbol'] = currencySymbol($catalog['currency'] ?? null);
 
 // Expand pages: category pages auto-flow products
 $expandedPages = buildExpandedPages($pages, $products, $categories);

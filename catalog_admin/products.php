@@ -26,6 +26,7 @@ foreach ($categories as $c) {
     $catMap[(int)$c['id']] = $c['name'];
 }
 $catalogName = htmlspecialchars($catalog['name'], ENT_QUOTES, 'UTF-8');
+$currencySym = $catalog['currency'] === 'USD' ? '$' : 'C$';
 
 if (isset($_GET['move'], $_GET['move_id'])) {
     $moveId = (int)$_GET['move_id'];
@@ -124,7 +125,7 @@ $totalCount = count($products);
 </td>
 <td class="p-md text-body-sm font-mono text-outline"><?= htmlspecialchars($p['sku'] ?? '-', ENT_QUOTES, 'UTF-8') ?></td>
 <td class="p-md"><span class="bg-surface-container px-3 py-1 rounded-full text-[11px] font-bold text-secondary uppercase tracking-wider"><?= htmlspecialchars($catMap[(int)$p['category_id']] ?? 'Sin categoría', ENT_QUOTES, 'UTF-8') ?></span></td>
-<td class="p-md font-bold text-[#ffd966]"><?= $p['price'] !== null ? '$' . number_format((float)$p['price'], 2) : '-' ?></td>
+<td class="p-md font-bold text-[#ffd966]"><?= $p['price'] !== null ? $currencySym . number_format((float)$p['price'], 2) : '-' ?></td>
 <td class="p-md text-body-sm"><?= $p['stock'] !== null ? (int)$p['stock'] . ' ud.' : '-' ?></td>
 <td class="p-md">
 <?php $st = $p['status']; ?>

@@ -32,6 +32,13 @@ $navbarBackUrl = 'index.php';
 <input type="file" id="back_cover_image" name="back_cover_image" accept="image/jpeg,image/png,image/webp,image/gif" class="form-input file:bg-surface-variant/30 file:border-0 file:rounded-full file:px-sm file:py-1 file:text-label-caps file:text-primary file:cursor-pointer">
 </div>
 <div>
+<label class="form-label" for="currency">Moneda</label>
+<select id="currency" name="currency" class="form-input">
+<option value="NIO">Córdobas (C$)</option>
+<option value="USD">Dólares ($)</option>
+</select>
+</div>
+<div>
 <label class="form-label" for="status">Estado</label>
 <select id="status" name="status" class="form-input">
 <option value="draft">Borrador</option>
