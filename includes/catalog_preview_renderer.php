@@ -15,7 +15,8 @@ function fitCount(array $candidate): int
     $pad = 88;                // padding 44×2
     $firstCat = 52;           // header(40) + section gap(12)
     $extraCat = 98;           // content gap(8) + divider-margin(8+14+8) + content gap(8) + header(40) + section gap(12)
-    $rowH = 246;              // card ~226 + row-gap 20
+    $rowH = 229;              // card ~209 + row-gap 20 (4 rows = 16 prods for 1 cat)
+    $rowGap = 20;             // CSS row-gap in px
 
     $availTotal = $pageH - $pad; // 968 before first cat overhead
 
@@ -45,7 +46,7 @@ function fitCount(array $candidate): int
             $rem -= $take;
         }
         $overhead = $firstCat + max(0, $nc - 1) * $extraCat;
-        $rowsAvail = max(1, intdiv($availTotal - $overhead, $rowH));
+        $rowsAvail = max(1, intdiv($availTotal - $overhead + $rowGap, $rowH));
         if ($totalRows <= $rowsAvail) return $floorN;
     }
     return 0;
