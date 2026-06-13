@@ -152,7 +152,10 @@ $secId = (int)$section['id'];
 </tr>
 <?php foreach ($section['products'] as $i => $p): $globalIdx++; ?>
 <tr class="hover:bg-surface-variant/10 transition-colors group draggable-row" draggable="true" data-product-id="<?= (int)$p['id'] ?>" data-section-id="<?= $secId ?>" data-category="<?= $secName ?>">
-<td class="p-md text-body-sm font-medium opacity-50 drag-handle cursor-grab active:cursor-grabbing"><?= $i + 1 ?></td>
+<td class="p-md text-body-sm font-medium text-on-surface-variant/40 drag-handle cursor-grab active:cursor-grabbing" style="white-space:nowrap;">
+<span class="material-symbols-outlined text-[16px] align-middle">drag_indicator</span>
+<span class="align-middle opacity-50"><?= $i + 1 ?></span>
+</td>
 <td class="p-md">
 <div class="flex items-center gap-3">
 <?php if (!empty($p['main_image'])): ?>
