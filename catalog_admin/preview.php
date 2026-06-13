@@ -50,10 +50,10 @@ if ($currentPage) {
     <style>
     *, *::before, *::after { box-sizing: border-box; }
     body { margin: 0; min-height: 100vh; background: #0f1320; color: #dee2f4; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; }
-    .preview-sheet { width: 640px; height: 828px; background: #ffffff; color: #1a1a2e; border-radius: 4px; box-shadow: 0 4px 24px rgba(0,0,0,0.6); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease; transform-origin: top center; position: relative; flex-shrink: 0; }
+    .preview-sheet { width: 816px; height: 1056px; background: #ffffff; color: #1a1a2e; border-radius: 4px; box-shadow: 0 4px 24px rgba(0,0,0,0.6); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease; transform-origin: top center; position: relative; flex-shrink: 0; }
     .preview-sheet .preview-page { flex: 1; display: flex; flex-direction: column; }
     .page-content { padding: 2.75rem; }
-    .preview-cover-content { max-width: 560px; margin: 0 auto; }
+    .preview-cover-content { max-width: 700px; margin: 0 auto; }
     .preview-title-lg { font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 800; margin: 0 0 0.5rem; letter-spacing: -0.03em; }
     .preview-subtitle { font-size: 1.1rem; }
     .preview-title-md { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 700; margin: 0 0 0.5rem; }
@@ -71,9 +71,9 @@ if ($currentPage) {
     .preview-divider-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,0,0,0.12), transparent); }
     .preview-divider-text { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #999; white-space: nowrap; }
     .preview-products-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.25rem; }
-    .preview-product-card { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.375rem; border-radius: 8px; background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.08); height: 178px; overflow: hidden; }
-    .preview-product-img { width: 100%; height: 90px; border-radius: 6px; object-fit: cover; background: #f5f5f5; flex-shrink: 0; }
-    .preview-product-img-placeholder { display: flex; align-items: center; justify-content: center; height: 90px; flex-shrink: 0; }
+    .preview-product-card { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.375rem; border-radius: 8px; background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.08); overflow: hidden; }
+    .preview-product-img { width: 100%; aspect-ratio: 1; border-radius: 6px; object-fit: cover; background: #f5f5f5; flex-shrink: 0; }
+    .preview-product-img-placeholder { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .preview-product-img-placeholder span { font-size: 2rem; color: #ccc; }
     .preview-product-info { flex: 1; display: flex; flex-direction: column; min-height: 0; }
     .preview-product-info h4 { margin: 0 0 0.125rem; font-size: 0.85rem; line-height: 1.3; }
@@ -233,7 +233,7 @@ function zoomFit() {
     const container = document.getElementById('previewContainer');
     if (!container || !sheet) { zoom = 1; applyZoom(); saveZoom(); return; }
     const cw = container.clientWidth - 48;
-    zoom = Math.min(cw / 640, 1);
+    zoom = Math.min(cw / 816, 1);
     zoom = Math.round(zoom * 100) / 100;
     applyZoom();
     saveZoom();
