@@ -91,7 +91,7 @@ $totalCount = count($products);
 <div class="p-md border-b border-outline-variant/10 flex flex-wrap gap-md justify-between items-center bg-surface-container-highest/20">
 <h2 class="font-title-sm text-title-sm text-primary flex items-center gap-xs"><span class="material-symbols-outlined">list_alt</span>Inventario de Productos</h2>
 <div class="flex items-center gap-2 flex-wrap">
-<select id="categoryFilter" onchange="filterByCategory(this.value)" class="bg-surface-variant/20 border border-outline-variant/30 rounded-full px-md py-1 text-body-sm text-on-surface focus:outline-none focus:border-primary/50">
+<select id="categoryFilter" onchange="filterByCategory(this.value)" class="bg-surface-container-high border border-outline-variant/30 rounded-full px-md py-1 text-body-sm text-on-surface appearance-none focus:outline-none focus:border-primary/50" style="padding-right:2rem;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a0a8c8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 0.75rem center;">
 <option value="">Todas las categorías</option>
 <?php foreach ($categories as $cat): ?>
 <option value="<?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?></option>
