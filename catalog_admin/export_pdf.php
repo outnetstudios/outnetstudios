@@ -83,8 +83,8 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
 .preview-category-divider { display: flex; align-items: center; gap: 0.75rem; margin: 0.5rem 0; }
 .preview-divider-line { flex: 1; height: 1px; background: #ddd; }
 .preview-divider-text { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #888; white-space: nowrap; }
-.preview-products-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.375rem; }
-.preview-product-card { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.25rem; border: 1px solid #ddd; border-radius: 6px; }
+.preview-products-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.25rem; }
+.preview-product-card { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.125rem; border: 1px solid #ddd; border-radius: 6px; }
 .preview-product-img { width: 100%; aspect-ratio: 1; border-radius: 6px; object-fit: contain; background: #f5f5f5; max-height: 104px; }
 .preview-product-img-placeholder { display: flex; align-items: center; justify-content: center; background: #f0f0f0; height: 104px; }
 .preview-product-img-placeholder span { font-size: 2rem; color: #ccc; }
