@@ -62,7 +62,7 @@ if ($currentPage) {
     .index-num { font-weight: 700; margin-right: 0.5rem; }
     .preview-cat-name { font-size: 0.95rem; color: #888; margin-top: -0.5rem; margin-bottom: 1rem; }
     .preview-category-content { display: flex; flex-direction: column; gap: 0.75rem; overflow: hidden; flex: 1; }
-    .preview-category-section { display: flex; flex-direction: column; gap: 0.375rem; }
+    .preview-category-section { display: flex; flex-direction: column; gap: 0.5rem; }
     .preview-category-header { display: flex; align-items: center; gap: 0.5rem; }
     .preview-cat-thumb { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; border: 1px solid rgba(0,0,0,0.08); }
     .preview-cat-title { font-size: 1.15rem; font-weight: 700; margin: 0; }
@@ -72,8 +72,8 @@ if ($currentPage) {
     .preview-divider-text { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #999; white-space: nowrap; }
     .preview-products-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.25rem; }
     .preview-product-card { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.375rem; border-radius: 8px; background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.08); }
-    .preview-product-img { width: 100%; aspect-ratio: 1; border-radius: 6px; object-fit: contain; background: #f5f5f5; max-height: 88px; }
-    .preview-product-img-placeholder { display: flex; align-items: center; justify-content: center; height: 88px; }
+    .preview-product-img { width: 100%; height: 87px; border-radius: 6px; object-fit: contain; background: #f5f5f5; }
+    .preview-product-img-placeholder { display: flex; align-items: center; justify-content: center; height: 87px; }
     .preview-product-img-placeholder span { font-size: 2rem; color: #ccc; }
     .preview-product-info h4 { margin: 0 0 0.15rem; font-size: 0.85rem; line-height: 1.3; }
     .preview-product-info p { margin: 0.15rem 0; font-size: 0.72rem; color: #666; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
