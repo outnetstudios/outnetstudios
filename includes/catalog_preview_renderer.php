@@ -11,24 +11,45 @@ require_once __DIR__ . '/../includes/upload_helper.php';
  */
 function fitCount(array $candidate): int
 {
-    $availTotal = 1056 - 88 - 40; // 928px (padding 44×2 + título ~40px)
-    $rowH = 259;                 // card ~255 + gap 4 (image 167×167 square)
-    $headerH = 42;               // category header
-    $dividerH = 17;              // divider between categories
+    $pageH = 1056;
+    $pad = 88;                // padding 44×2
+    $title = 43;              // h2 height + margin-bottom
+    $firstCat = 48;           // section gap(4) + header(40) + section gap(4)
+    $extraCat = 86;           // content gap(8) + divider (8+14+8) + section gap(4) + header(40) + section gap(4)
+    $rowH = 219;              // card 215 + gap 4
 
-    $n = count($candidate);
-    do {
-        $chunk = array_slice($candidate, 0, $n);
-        $cats = [];
-        foreach ($chunk as $p) $cats[(int)$p['category_id']] = true;
-        $nc = count($cats);
-        $used = $nc * $headerH + max(0, $nc - 1) * $dividerH;
-        $avail = $availTotal - $used;
-        $rows = max(1, intdiv($avail, $rowH));
-        $maxFit = $rows * 4;
-        if ($maxFit >= $n) return $n;
-        $n = $maxFit;
-    } while (true);
+    $availTotal = $pageH - $pad - $title; // 925 before any cat overhead
+
+    // Build ordered map of category → product list from $candidate
+    $byCat = [];
+    $catOrder = [];
+    foreach ($candidate as $i => $p) {
+        $cid = (int)$p['category_id'];
+        if (!isset($byCat[$cid])) { $byCat[$cid] = []; $catOrder[] = $cid; }
+        $byCat[$cid][] = $p;
+    }
+
+    $total = count($candidate);
+    // Determine the fit by trying n = total down to 0
+    for ($n = $total; $n >= 0; $n--) {
+        $floorN = $n;
+        // Walk through categories sequentially and see how many rows this n consumes
+        $rem = $floorN;
+        $nc = 0;
+        $totalRows = 0;
+        foreach ($catOrder as $cid) {
+            $cnt = count($byCat[$cid]);
+            if ($rem <= 0) break;
+            $take = min($cnt, $rem);
+            $nc++;
+            $totalRows += (int)ceil($take / 4);
+            $rem -= $take;
+        }
+        $overhead = $firstCat + max(0, $nc - 1) * $extraCat;
+        $rowsAvail = max(1, intdiv($availTotal - $overhead, $rowH));
+        if ($totalRows <= $rowsAvail) return $floorN;
+    }
+    return 0;
 }
 
 /**
