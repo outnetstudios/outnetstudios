@@ -78,6 +78,8 @@ function buildExpandedPages(array $pages, array $products, array $categories): a
     return $expanded;
 }
 
+$currencySymbol = 'C$';
+
 $pageTypeLabels = [
     'cover' => 'Portada',
     'index' => 'Índice',
@@ -251,7 +253,7 @@ function renderCategoryPage(array $page, array $content, array $categories): str
                     <h4>' . $pName . '</h4>
                     ' . ($pSku ? '<span class="preview-sku">' . $pSku . '</span>' : '') . '
                     <p>' . $pDesc . '</p>
-                    ' . ($pPrice ? '<div class="preview-price">$' . $pPrice . '</div>' : '') . '
+                    ' . ($pPrice ? '<div class="preview-price">' . $GLOBALS['currencySymbol'] . $pPrice . '</div>' : '') . '
                 </div>
             </div>';
         }
@@ -311,7 +313,7 @@ function renderProductPage(array $page, array $content, array $products): string
                 <div class="preview-prod-info">
                     <h2>' . $pName . '</h2>
                     ' . ($pSku ? '<span class="preview-sku">SKU: ' . $pSku . '</span>' : '') . '
-                    ' . ($pPrice ? '<div class="preview-price-lg">$' . $pPrice . '</div>' : '') . '
+                    ' . ($pPrice ? '<div class="preview-price-lg">' . $GLOBALS['currencySymbol'] . $pPrice . '</div>' : '') . '
                     ' . ($pStock !== null ? '<span class="preview-stock">Stock: ' . $pStock . '</span>' : '') . '
                     <p>' . nl2br($pDesc) . '</p>
                 </div>
