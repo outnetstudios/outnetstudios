@@ -267,7 +267,7 @@ function renderCategoryPage(array $page, array $content, array $categories): str
             $pSku = htmlspecialchars($prod['sku'] ?? '', ENT_QUOTES, 'UTF-8');
             $pDesc = htmlspecialchars(mb_substr($prod['description'] ?? '', 0, 80), ENT_QUOTES, 'UTF-8');
             $imgSrc = !empty($prod['main_image']) ? imageUrl($prod['main_image']) : '';
-            $imgTag = $imgSrc ? '<img src="' . htmlspecialchars($imgSrc, ENT_QUOTES, 'UTF-8') . '" class="preview-product-img" alt="' . $pName . '">' : '<div class="preview-product-img preview-product-img-placeholder"><span class="material-symbols-outlined">inventory_2</span></div>';
+            $imgTag = $imgSrc ? '<img src="' . htmlspecialchars($imgSrc, ENT_QUOTES, 'UTF-8') . '" class="preview-product-img" alt="' . $pName . '">' : '<div class="preview-product-img preview-product-img-placeholder"><span class="material-symbols-outlined">image</span></div>';
 
             $grid .= '<div class="preview-product-card">
                 ' . $imgTag . '
@@ -326,7 +326,7 @@ function renderProductPage(array $page, array $content, array $products): string
     $pDesc = htmlspecialchars($prod['description'] ?? '', ENT_QUOTES, 'UTF-8');
     $pStock = $prod['stock'] !== null ? (int)$prod['stock'] : null;
     $imgSrc = !empty($prod['main_image']) ? imageUrl($prod['main_image']) : '';
-    $imgTag = $imgSrc ? '<img src="' . htmlspecialchars($imgSrc, ENT_QUOTES, 'UTF-8') . '" class="preview-prod-img" alt="' . $pName . '">' : '<div class="preview-prod-img preview-prod-img-placeholder"><span class="material-symbols-outlined">inventory_2</span></div>';
+    $imgTag = $imgSrc ? '<img src="' . htmlspecialchars($imgSrc, ENT_QUOTES, 'UTF-8') . '" class="preview-prod-img" alt="' . $pName . '">' : '<div class="preview-prod-img preview-prod-img-placeholder"><span class="material-symbols-outlined">image</span></div>';
     return '<div class="preview-page preview-product page-with-bg"' . pageBgStyle($page) . '>' . pageBgImg($page) . '
         <div class="page-content">
             <div class="preview-product-detail">
