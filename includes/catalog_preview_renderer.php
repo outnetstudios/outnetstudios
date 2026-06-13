@@ -103,14 +103,6 @@ function currencySymbol(?string $currency): string {
     return $currency === 'USD' ? '$' : 'C$';
 }
 
-function imgSrc(?string $path): string
-{
-    if (!empty($GLOBALS['_embed_images'])) {
-        return imageBase64($path);
-    }
-    return imageUrl($path);
-}
-
 $pageTypeLabels = [
     'cover' => 'Portada',
     'index' => 'Índice',
@@ -124,7 +116,7 @@ $pageTypeLabels = [
 function pageBgStyle(array $page): string
 {
     if (!empty($page['background_image'])) {
-        $src = imgSrc($page['background_image']);
+        $src = imageUrl($page['background_image']);
         return ' style="background:url(' . htmlspecialchars($src, ENT_QUOTES, 'UTF-8') . ') center/cover no-repeat;background-position:center center;"';
     }
     return '';
@@ -258,7 +250,7 @@ function renderCategoryPage(array $page, array $content, array $categories): str
         $grid .= '<div class="preview-category-section">';
         $grid .= '<div class="preview-category-header">';
         if ($catImage) {
-            $grid .= '<img src="' . htmlspecialchars(imgSrc($catImage), ENT_QUOTES, 'UTF-8') . '" class="preview-cat-thumb" alt="">';
+            $grid .= '<img src="' . htmlspecialchars(imageUrl($catImage), ENT_QUOTES, 'UTF-8') . '" class="preview-cat-thumb" alt="">';
         }
         $grid .= '<div><h3 class="preview-cat-title">' . $catName . '</h3>';
         if ($catDesc) $grid .= '<p class="preview-cat-desc">' . $catDesc . '</p>';
@@ -269,7 +261,7 @@ function renderCategoryPage(array $page, array $content, array $categories): str
             $pName = htmlspecialchars($prod['name'], ENT_QUOTES, 'UTF-8');
             $pPrice = $prod['price'] !== null ? number_format((float)$prod['price'], 2) : '';
             $pSku = htmlspecialchars($prod['sku'] ?? '', ENT_QUOTES, 'UTF-8');
-            $imgSrc = !empty($prod['main_image']) ? imgSrc($prod['main_image']) : '';
+            $imgSrc = !empty($prod['main_image']) ? imageUrl($prod['main_image']) : '';
             $imgTag = $imgSrc ? '<img src="' . htmlspecialchars($imgSrc, ENT_QUOTES, 'UTF-8') . '" class="preview-product-img" alt="' . $pName . '">' : '<div class="preview-product-img preview-product-img-placeholder"><span class="material-symbols-outlined">image</span></div>';
 
             $grid .= '<div class="preview-product-card">
@@ -327,7 +319,7 @@ function renderProductPage(array $page, array $content, array $products): string
     $pSku = htmlspecialchars($prod['sku'] ?? '', ENT_QUOTES, 'UTF-8');
     $pDesc = htmlspecialchars($prod['description'] ?? '', ENT_QUOTES, 'UTF-8');
     $pStock = $prod['stock'] !== null ? (int)$prod['stock'] : null;
-    $imgSrc = !empty($prod['main_image']) ? imgSrc($prod['main_image']) : '';
+    $imgSrc = !empty($prod['main_image']) ? imageUrl($prod['main_image']) : '';
     $imgTag = $imgSrc ? '<img src="' . htmlspecialchars($imgSrc, ENT_QUOTES, 'UTF-8') . '" class="preview-prod-img" alt="' . $pName . '">' : '<div class="preview-prod-img preview-prod-img-placeholder"><span class="material-symbols-outlined">image</span></div>';
     return '<div class="preview-page preview-product page-with-bg"' . pageBgStyle($page) . '>' . pageBgImg($page) . '
         <div class="page-content">

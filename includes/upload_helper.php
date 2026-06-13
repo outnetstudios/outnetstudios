@@ -69,39 +69,9 @@ function uploadImage(array $file, string $subfolder = ''): ?string
 function imageUrl(?string $path): string
 {
     if (!$path) return '';
+    // If it's an absolute URL (http:// or https://), return as-is
     if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) return $path;
     return '/asset.php?p=' . urlencode($path);
-}
-
-function imageBase64(?string $path): string
-{
-    if (!$path) return '';
-    if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) return $path;
-    $full = __DIR__ . '/../' . $path;
-    if (file_exists($full)) {
-        $data = @file_get_contents($full);
-        if ($data !== false) {
-            $ext = strtolower(pathinfo($full, PATHINFO_EXTENSION));
-            $mime = match ($ext) {
-                'jpg', 'jpeg' => 'image/jpeg',
-                'png' => 'image/png',
-                'webp' => 'image/webp',
-                'gif' => 'image/gif',
-                default => null,
-            };
-            if ($mime) return 'data:' . $mime . ';base64,' . base64_encode($data);
-        }
-    }
-    try {
-        $pdo = Database::getConnection();
-        $stmt = $pdo->prepare('SELECT data, mime FROM catalog_assets WHERE path = ?');
-        $stmt->execute([$path]);
-        $row = $stmt->fetch();
-        if ($row) {
-            return 'data:' . $row['mime'] . ';base64,' . base64_encode($row['data']);
-        }
-    } catch (\Throwable $e) {}
-    return imageUrl($path);
 }
 
 function compressImage(string $path, string $mime): void
