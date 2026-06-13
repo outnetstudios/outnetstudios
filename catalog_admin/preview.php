@@ -62,7 +62,7 @@ if ($currentPage) {
     .index-num { font-weight: 700; margin-right: 0.5rem; }
     .preview-cat-name { font-size: 0.95rem; color: #888; margin-top: -0.5rem; margin-bottom: 1rem; }
     .preview-category-content { display: flex; flex-direction: column; gap: 0.5rem; overflow: hidden; flex: 1; }
-    .preview-category-section { display: flex; flex-direction: column; gap: 0.25rem; }
+    .preview-category-section { display: flex; flex-direction: column; gap: 0.75rem; }
     .preview-category-header { display: flex; align-items: center; gap: 0.5rem; }
     .preview-cat-thumb { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; border: 1px solid rgba(0,0,0,0.08); }
     .preview-cat-title { font-size: 1.15rem; font-weight: 700; margin: 0; }
@@ -71,7 +71,7 @@ if ($currentPage) {
     .preview-divider-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,0,0,0.12), transparent); }
     .preview-divider-text { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #999; white-space: nowrap; }
     .preview-products-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.25rem; }
-    .preview-product-card { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.375rem; border-radius: 8px; background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.08); overflow: hidden; }
+    .preview-product-card { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.375rem; border-radius: 8px; background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.08); overflow: hidden; max-width: 150px; justify-self: center; }
     .preview-product-img { width: 138px; height: 138px; border-radius: 6px; object-fit: cover; background: #f5f5f5; flex-shrink: 0; align-self: center; }
     .preview-product-img-placeholder { display: flex; align-items: center; justify-content: center; width: 138px; height: 138px; flex-shrink: 0; align-self: center; }
     .preview-product-img-placeholder span { font-size: 2rem; color: #ccc; }
