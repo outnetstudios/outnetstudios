@@ -4,6 +4,8 @@ require_once __DIR__ . '/../src/Repositories/CatalogRepository.php';
 require_once __DIR__ . '/../src/Repositories/CatalogPageRepository.php';
 require_once __DIR__ . '/../src/Repositories/CategoryRepository.php';
 require_once __DIR__ . '/../src/Repositories/ProductRepository.php';
+// Embed all images as base64 data URIs so the HTML is self-contained: zero network requests.
+$GLOBALS['_embed_images'] = true;
 require_once __DIR__ . '/../includes/catalog_preview_renderer.php';
 
 catalogRequireLogin();
@@ -167,147 +169,33 @@ function handlePrintClick() {
     if (printReady) { window.print(); return; }
 }
 
-function preloadImages(callback) {
-    var container = document.querySelector('.print-wrapper');
-    if (!container) { callback(); return; }
-
-    var tasks = [];
-
-    container.querySelectorAll('img').forEach(function(img) {
-        tasks.push(function(done) {
-            if (img.complete && img.naturalWidth > 0) { done(); return; }
-            var retries = 0;
-            var maxRetries = 2;
-            var imgDone = false;
-            var imgTimer;
-            function safeDone() { if (!imgDone) { imgDone = true; clearTimeout(imgTimer); done(); } }
-            function attempt() {
-                clearTimeout(imgTimer);
-                imgTimer = setTimeout(function() {
-                    retries++;
-                    if (retries <= maxRetries) {
-                        setTimeout(attempt, 1000 * retries);
-                    } else {
-                        safeDone();
-                    }
-                }, 5000);
-                img.onload = function() { safeDone(); };
-                img.onerror = function() {
-                    clearTimeout(imgTimer);
-                    retries++;
-                    if (retries < maxRetries) {
-                        setTimeout(attempt, 1000 * retries);
-                    } else {
-                        safeDone();
-                    }
-                };
-                var sep = img.src.indexOf('?') > -1 ? '&' : '?';
-                img.src = img.src.split('#')[0] + sep + 't=' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
-            }
-            attempt();
-        });
-    });
-
-    var seen = {};
-    container.querySelectorAll('[style*="background:"], [style*="background-image"]').forEach(function(el) {
-        var s = el.getAttribute('style') || '';
-        var matches = s.match(/url\(['"]?([^)'"]+)['"]?\)/g);
-        if (matches) matches.forEach(function(m) {
-            var url = m.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
-            if (url && !seen[url]) {
-                seen[url] = true;
-                tasks.push(function(done) {
-                    var retries = 0;
-                    var maxRetries = 2;
-                    var bgDone = false;
-                    var bgTimer;
-                    function safeDone() { if (!bgDone) { bgDone = true; clearTimeout(bgTimer); done(); } }
-                    function tryLoad() {
-                        clearTimeout(bgTimer);
-                        bgTimer = setTimeout(function() {
-                            retries++;
-                            if (retries <= maxRetries) {
-                                setTimeout(tryLoad, 1000 * retries);
-                            } else {
-                                safeDone();
-                            }
-                        }, 5000);
-                        var tmp = new Image();
-                        tmp.onload = function() { safeDone(); };
-                        tmp.onerror = function() {
-                            clearTimeout(bgTimer);
-                            retries++;
-                            if (retries < maxRetries) {
-                                setTimeout(tryLoad, 1000 * retries);
-                            } else {
-                                safeDone();
-                            }
-                        };
-                        var sep = url.indexOf('?') > -1 ? '&' : '?';
-                        tmp.src = url.split('#')[0] + sep + 't=' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
-                    }
-                    tryLoad();
-                });
-            }
-        });
-    });
-
-    var total = tasks.length;
-    var loaded = 0;
-    var progressBar = document.getElementById('progressBar');
-    var progressPct = document.getElementById('progressPct');
-    var progressLabel = document.getElementById('progressLabel');
+function readyToPrint() {
+    if (printReady) return;
+    printReady = true;
     var printBtn = document.getElementById('printBtn');
-
-    if (total === 0) {
-        if (progressLabel) progressLabel.textContent = 'PDF listo';
-        if (progressBar) progressBar.style.width = '100%';
-        if (progressPct) progressPct.textContent = '100%';
-        if (printBtn) { printBtn.disabled = false; printBtn.textContent = 'Abrir diálogo de PDF'; }
-        setTimeout(callback, 300);
-        return;
-    }
-
-    function oneDone() {
-        loaded++;
-        var pct = Math.round((loaded / total) * 100);
-        if (progressBar) progressBar.style.width = pct + '%';
-        if (progressPct) progressPct.textContent = pct + '%';
-        if (progressLabel) progressLabel.textContent = 'Cargando ' + loaded + '/' + total;
-        if (loaded >= total) {
-            if (progressLabel) progressLabel.textContent = 'PDF listo';
-            if (printBtn) { printBtn.disabled = false; printBtn.textContent = 'Abrir diálogo de PDF'; }
-            setTimeout(callback, 500);
-        }
-    }
-
-    tasks.forEach(function(task) { task(oneDone); });
+    if (printBtn) { printBtn.disabled = false; printBtn.textContent = 'Abrir diálogo de PDF'; }
+    var progressLabel = document.getElementById('progressLabel');
+    if (progressLabel) progressLabel.textContent = 'PDF listo';
+    var progressBar = document.getElementById('progressBar');
+    if (progressBar) progressBar.style.width = '100%';
+    var progressPct = document.getElementById('progressPct');
+    if (progressPct) progressPct.textContent = '100%';
+    setTimeout(function(){ window.print(); }, 300);
 }
 
+// Images are embedded as base64 data URIs (zero network requests).
+// The 'load' event fires once all images are decoded.
 window.addEventListener('load', function() {
     fitPrintPages();
-    preloadImages(function() {
-        printReady = true;
-        setTimeout(function(){ window.print(); }, 300);
-    });
+    readyToPrint();
 });
 
 window.addEventListener('resize', fitPrintPages);
 
-// Max safety timeout: print anyway after 12 seconds even if images fail
+// Safety timeout: 5 second fallback
 setTimeout(function() {
-    if (!printReady) {
-        printReady = true;
-        var printBtn = document.getElementById('printBtn');
-        if (printBtn) { printBtn.disabled = false; printBtn.textContent = 'Abrir diálogo de PDF'; }
-        var progressLabel = document.getElementById('progressLabel');
-        if (progressLabel) progressLabel.textContent = 'PDF listo';
-        var progressBar = document.getElementById('progressBar');
-        if (progressBar) progressBar.style.width = '100%';
-        var progressPct = document.getElementById('progressPct');
-        if (progressPct) progressPct.textContent = '100%';
-    }
-}, 12000);
+    if (!printReady) { readyToPrint(); }
+}, 5000);
 </script>
 </body>
 </html>
