@@ -134,18 +134,50 @@ if ($currentPage) {
         .preview-footer { padding: 0.5rem 1.5rem; }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
+        .preview-sheet {
+            width: 100% !important;
+            height: auto !important;
+            transform: none !important;
+            border-radius: 0;
+            box-shadow: none;
+        }
+        .page-content { padding: 1rem; }
+        .preview-products-grid-4 {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        .preview-product-card { max-width: none; }
+        .preview-product-img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1;
+            max-width: 140px;
+        }
+        .preview-product-img-placeholder {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1;
+            max-width: 140px;
+        }
+        .preview-category-content { gap: 0.75rem; }
+        .preview-cat-thumb { width: 32px; height: 32px; }
+        .preview-cat-title { font-size: 1rem; }
+        .preview-cat-desc { font-size: 0.75rem; }
+        .preview-product-info h4 { font-size: 0.8rem; }
+        .preview-price { font-size: 0.85rem; }
+        .preview-sku { font-size: 0.6rem; }
+        .preview-title-lg { font-size: 1.8rem; }
+        .preview-title-md { font-size: 1.1rem; }
+        #previewContainer.with-pages { padding: 0.5rem 0.5rem 5rem; }
+        .preview-header { padding: 0.35rem 0.75rem; }
+        .preview-footer { padding: 0.35rem 0.5rem; }
         .preview-product-detail { flex-direction: column; }
-        .preview-prod-img { width: 100%; height: 150px; }
-        .preview-products-grid-4 { grid-template-columns: repeat(2, 1fr); }
-        .preview-header-actions .preview-btn:not(.preview-btn-always) { display: none; }
-        .preview-header-actions .preview-btn-mobile { display: inline-flex; }
-    }
-    @media (max-width: 480px) {
-        .preview-products-grid-4 { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
-        .preview-product-card { padding: 0.5rem; }
-        .page-content { padding: 1.5rem; }
-        .preview-header-title { font-size: 0.85rem; max-width: 100px; }
+        .preview-prod-img { width: 100%; height: auto; aspect-ratio: 1; max-width: 160px; align-self: center; }
+        .preview-btn-zoom { display: none; }
+        .preview-page-num { width: 1.5rem; height: 1.5rem; font-size: 0.65rem; }
+        .preview-index-list li { font-size: 0.85rem; }
+        .preview-banner-text { font-size: 1.4rem; }
     }
     @media print { .page-with-bg { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; } }
     </style>
@@ -156,10 +188,10 @@ if ($currentPage) {
 <div class="preview-header">
     <span class="preview-header-title"><?= $catalogName ?></span>
     <div class="preview-header-actions">
-        <button onclick="zoomOut()" class="preview-btn preview-btn-always" title="Alejar"><span class="material-symbols-outlined preview-btn-icon">zoom_out</span><span class="preview-btn-label">Alejar</span></button>
-        <span class="preview-zoom-label" id="zoomLevel">100%</span>
-        <button onclick="zoomIn()" class="preview-btn preview-btn-always" title="Acercar"><span class="material-symbols-outlined preview-btn-icon">zoom_in</span><span class="preview-btn-label">Acercar</span></button>
-        <button onclick="zoomFit()" class="preview-btn preview-btn-always" title="Ajustar al ancho"><span class="material-symbols-outlined preview-btn-icon">fit_width</span><span class="preview-btn-label">Ajustar</span></button>
+        <button onclick="zoomOut()" class="preview-btn preview-btn-always preview-btn-zoom" title="Alejar"><span class="material-symbols-outlined preview-btn-icon">zoom_out</span><span class="preview-btn-label">Alejar</span></button>
+        <span class="preview-zoom-label preview-btn-zoom" id="zoomLevel">100%</span>
+        <button onclick="zoomIn()" class="preview-btn preview-btn-always preview-btn-zoom" title="Acercar"><span class="material-symbols-outlined preview-btn-icon">zoom_in</span><span class="preview-btn-label">Acercar</span></button>
+        <button onclick="zoomFit()" class="preview-btn preview-btn-always preview-btn-zoom" title="Ajustar al ancho"><span class="material-symbols-outlined preview-btn-icon">fit_width</span><span class="preview-btn-label">Ajustar</span></button>
         <a href="export_pdf.php?catalog_id=<?= $catalogId ?>" target="_blank" class="preview-btn preview-btn-always" title="Exportar PDF"><span class="material-symbols-outlined preview-btn-icon">picture_as_pdf</span><span class="preview-btn-label">PDF</span></a>
         <a href="pages.php?catalog_id=<?= $catalogId ?>" class="preview-btn" title="Editar páginas"><span class="material-symbols-outlined preview-btn-icon">edit_note</span><span class="preview-btn-label">Editar</span></a>
         <a href="index.php" class="preview-btn" title="Volver a catálogos"><span class="material-symbols-outlined preview-btn-icon">arrow_back</span><span class="preview-btn-label">Catálogos</span></a>
@@ -210,7 +242,12 @@ const sheet = document.getElementById('previewSheet');
 const zoomLabel = document.getElementById('zoomLevel');
 const storageKey = 'catalog_zoom_<?= $catalogId ?>';
 
+function isMobile() {
+    return window.innerWidth < 768;
+}
+
 function saveZoom() {
+    if (isMobile()) return;
     try { localStorage.setItem(storageKey, zoom); } catch(e) {}
 }
 
@@ -221,15 +258,21 @@ function loadZoom() {
 
 function applyZoom() {
     if (!sheet) return;
+    if (isMobile()) {
+        sheet.style.transform = '';
+        if (zoomLabel) zoomLabel.textContent = '100%';
+        return;
+    }
     const pct = Math.round(zoom * 100);
     sheet.style.transform = 'scale(' + zoom + ')';
     if (zoomLabel) zoomLabel.textContent = pct + '%';
 }
 
-function zoomIn() { zoom = Math.min(zoom + 0.10, 3); applyZoom(); saveZoom(); }
-function zoomOut() { zoom = Math.max(zoom - 0.10, 0.10); applyZoom(); saveZoom(); }
+function zoomIn() { if (isMobile()) return; zoom = Math.min(zoom + 0.10, 3); applyZoom(); saveZoom(); }
+function zoomOut() { if (isMobile()) return; zoom = Math.max(zoom - 0.10, 0.10); applyZoom(); saveZoom(); }
 
 function zoomFit() {
+    if (isMobile()) return;
     const container = document.getElementById('previewContainer');
     if (!container || !sheet) { zoom = 1; applyZoom(); saveZoom(); return; }
     const cw = container.clientWidth - 48;
@@ -239,13 +282,19 @@ function zoomFit() {
     saveZoom();
 }
 
-const saved = loadZoom();
-if (saved !== null && saved > 0) { zoom = saved; applyZoom(); }
-else { zoomFit(); }
+if (isMobile()) {
+    if (zoomLabel) zoomLabel.textContent = '100%';
+} else {
+    const saved = loadZoom();
+    if (saved !== null && saved > 0) { zoom = saved; applyZoom(); }
+    else { zoomFit(); }
+}
 
 window.addEventListener('resize', function() {
+    if (isMobile()) return;
     const s = loadZoom();
-    if (s === null) zoomFit();
+    if (s !== null) { zoom = s; applyZoom(); }
+    else { zoomFit(); }
 });
 
 // Touch swipe navigation
