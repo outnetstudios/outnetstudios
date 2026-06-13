@@ -85,9 +85,9 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
 .preview-divider-line { flex: 1; height: 1px; background: #ddd; }
 .preview-divider-text { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #888; white-space: nowrap; }
 .preview-products-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.1875rem; }
-.preview-product-card { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.125rem; border: 1px solid #ddd; border-radius: 6px; }
-.preview-product-img { width: 100%; aspect-ratio: 1; border-radius: 6px; object-fit: contain; background: #f5f5f5; max-height: 96px; }
-.preview-product-img-placeholder { display: flex; align-items: center; justify-content: center; background: #f0f0f0; height: 96px; }
+.preview-product-card { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.375rem; border: 1px solid #ddd; border-radius: 6px; }
+.preview-product-img { width: 100%; aspect-ratio: 1; border-radius: 6px; object-fit: contain; background: #f5f5f5; max-height: 88px; }
+.preview-product-img-placeholder { display: flex; align-items: center; justify-content: center; background: #f0f0f0; height: 88px; }
 .preview-product-img-placeholder span { font-size: 2rem; color: #ccc; }
 .preview-product-info h4 { margin: 0 0 0.15rem; font-size: 0.85rem; line-height: 1.3; }
 .preview-product-info p { margin: 0.15rem 0; font-size: 0.72rem; color: #666; }
