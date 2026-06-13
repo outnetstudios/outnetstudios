@@ -124,8 +124,17 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
 <h2 style="margin:0 0 0.3rem;font-size:1.2rem;">Generando PDF: <?= $catalogName ?></h2>
 <p style="margin:0;font-size:0.85rem;color:rgba(255,255,255,0.6);">Se abrirá el cuadro de diálogo para guardar el PDF. Selecciona "Guardar como PDF" y haz clic en guardar.</p>
 <p style="margin:0.5rem 0 0;font-size:0.8rem;color:rgba(255,255,255,0.45);">⚠️ Importante: en el diálogo de impresión, activa la opción <strong>"Imprimir imágenes y colores de fondo"</strong> (Chrome) o equivalente para que las imágenes de portada/fondos se vean en el PDF.</p>
+<div id="progressSection" style="margin:0.75rem auto 0;max-width:400px;">
+<div style="display:flex;justify-content:space-between;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:0.25rem;">
+<span id="progressLabel">Preparando PDF...</span>
+<span id="progressPct">0%</span>
+</div>
+<div style="width:100%;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;">
+<div id="progressBar" style="width:0%;height:100%;background:linear-gradient(90deg,#6c8cff,#5ce1e6);border-radius:3px;transition:width 0.3s;"></div>
+</div>
+</div>
 <div class="no-print-btn-wrap" style="display:flex;justify-content:center;gap:0.5rem;margin-top:1rem;">
-<button onclick="window.print()" style="padding:0.5rem 1.5rem;border-radius:999px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-size:0.9rem;white-space:nowrap;">Abrir diálogo de PDF</button>
+<button id="printBtn" onclick="handlePrintClick()" style="padding:0.5rem 1.5rem;border-radius:999px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-size:0.9rem;white-space:nowrap;" disabled>Abrir diálogo de PDF</button>
 <a href="preview.php?catalog_id=<?= $catalogId ?>" style="padding:0.5rem 1.5rem;border-radius:999px;border:1px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.9rem;white-space:nowrap;">Volver</a>
 </div>
 </div>
@@ -142,6 +151,8 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
 <?php endif; ?>
 </div>
 <script>
+var printReady = false;
+
 function fitPrintPages() {
     var wrapper = document.querySelector('.print-wrapper');
     if (!wrapper) return;
@@ -151,11 +162,125 @@ function fitPrintPages() {
     var scale = Math.min((avail - 8) / 816, 1);
     wrapper.style.transform = scale < 1 ? 'scale(' + scale + ')' : '';
 }
+
+function handlePrintClick() {
+    if (printReady) { window.print(); return; }
+}
+
+function preloadImages(callback) {
+    var container = document.querySelector('.print-wrapper');
+    if (!container) { callback(); return; }
+
+    var tasks = [];
+
+    container.querySelectorAll('img').forEach(function(img) {
+        tasks.push(function(done) {
+            if (img.complete && img.naturalWidth > 0) { done(); return; }
+            var retries = 0;
+            var maxRetries = 3;
+            function tryLoad() {
+                img.onload = function() { done(); };
+                img.onerror = function() {
+                    retries++;
+                    if (retries < maxRetries) {
+                        setTimeout(function() {
+                            img.src = img.src;
+                        }, 1000 * retries);
+                    } else {
+                        done();
+                    }
+                };
+            }
+            tryLoad();
+        });
+    });
+
+    var seen = {};
+    container.querySelectorAll('[style*="background:"], [style*="background-image"]').forEach(function(el) {
+        var s = el.getAttribute('style') || '';
+        var matches = s.match(/url\(['"]?([^)'"]+)['"]?\)/g);
+        if (matches) matches.forEach(function(m) {
+            var url = m.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
+            if (url && !seen[url]) {
+                seen[url] = true;
+                tasks.push(function(done) {
+                    var retries = 0;
+                    var maxRetries = 3;
+                    function tryLoad() {
+                        var tmp = new Image();
+                        tmp.onload = function() { done(); };
+                        tmp.onerror = function() {
+                            retries++;
+                            if (retries < maxRetries) {
+                                setTimeout(tryLoad, 1000 * retries);
+                            } else {
+                                done();
+                            }
+                        };
+                        tmp.src = url;
+                    }
+                    tryLoad();
+                });
+            }
+        });
+    });
+
+    var total = tasks.length;
+    var loaded = 0;
+    var progressBar = document.getElementById('progressBar');
+    var progressPct = document.getElementById('progressPct');
+    var progressLabel = document.getElementById('progressLabel');
+    var printBtn = document.getElementById('printBtn');
+
+    if (total === 0) {
+        if (progressLabel) progressLabel.textContent = 'PDF listo';
+        if (progressBar) progressBar.style.width = '100%';
+        if (progressPct) progressPct.textContent = '100%';
+        if (printBtn) { printBtn.disabled = false; printBtn.textContent = 'Abrir diálogo de PDF'; }
+        setTimeout(callback, 300);
+        return;
+    }
+
+    function oneDone() {
+        loaded++;
+        var pct = Math.round((loaded / total) * 100);
+        if (progressBar) progressBar.style.width = pct + '%';
+        if (progressPct) progressPct.textContent = pct + '%';
+        if (progressLabel) progressLabel.textContent = 'Cargando ' + loaded + '/' + total;
+        if (loaded >= total) {
+            if (progressLabel) progressLabel.textContent = 'PDF listo';
+            if (printBtn) { printBtn.disabled = false; printBtn.textContent = 'Abrir diálogo de PDF'; }
+            setTimeout(callback, 500);
+        }
+    }
+
+    tasks.forEach(function(task) { task(oneDone); });
+}
+
 window.addEventListener('load', function() {
     fitPrintPages();
-    setTimeout(function(){ window.print(); }, 1000);
+    preloadImages(function() {
+        printReady = true;
+        setTimeout(function(){ window.print(); }, 300);
+    });
 });
+
 window.addEventListener('resize', fitPrintPages);
+
+// Max safety timeout: print anyway after 20 seconds even if images fail
+setTimeout(function() {
+    if (!printReady) {
+        printReady = true;
+        var printBtn = document.getElementById('printBtn');
+        if (printBtn) { printBtn.disabled = false; printBtn.textContent = 'Abrir diálogo de PDF'; }
+        var progressLabel = document.getElementById('progressLabel');
+        if (progressLabel) progressLabel.textContent = 'PDF listo';
+        var progressBar = document.getElementById('progressBar');
+        if (progressBar) progressBar.style.width = '100%';
+        var progressPct = document.getElementById('progressPct');
+        if (progressPct) progressPct.textContent = '100%';
+    }
+}, 20000);
 </script>
 </body>
 </html>
