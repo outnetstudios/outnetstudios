@@ -49,7 +49,7 @@ unset($ep);
 }
 *, *::before, *::after { box-sizing: border-box; }
 body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: #0f1320; color: #1a1a2e; overflow-x: hidden; }
-.print-wrapper { display: flex; flex-direction: column; align-items: center; padding: 0.5rem; }
+.print-wrapper { display: flex; flex-direction: column; align-items: center; padding: 0.5rem; transform-origin: top center; }
 .print-page { page-break-after: always; width: 215.9mm; min-height: 279.4mm; overflow: hidden; display: flex; flex-direction: column; background: #ffffff; margin: 1rem 0; border-radius: 4px; box-shadow: 0 4px 24px rgba(0,0,0,0.4); flex-shrink: 0; }
 .print-page:last-child { page-break-after: auto; }
 .print-page-bleed { padding: 0; }
@@ -112,8 +112,8 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
 .preview-price-lg { font-size: 1.3rem; font-weight: 700; margin: 0.5rem 0; }
 .preview-stock { font-size: 0.85rem; color: #666; }
 .preview-empty { text-align: center; padding: 4rem 2rem; font-size: 1.2rem; }
-.print-content { padding-top: 180px; }
-@media print { body { background: #fff; color: #000; overflow: visible; } .no-print { display: none !important; } .print-content { padding-top: 0 !important; } .print-wrapper { padding: 0; } .print-page { margin: 0; border-radius: 0; box-shadow: none; } }
+.print-content { padding-top: 180px; display: flex; flex-direction: column; align-items: center; overflow: hidden; }
+@media print { body { background: #fff; color: #000; overflow: visible; } .no-print { display: none !important; } .print-content { padding-top: 0 !important; } .print-wrapper { padding: 0; transform: none !important; } .print-page { margin: 0; border-radius: 0; box-shadow: none; } }
 @media (max-width: 480px) { .no-print { padding: 1rem !important; } .no-print h2 { font-size: 1rem !important; } .no-print p { font-size: 0.75rem !important; } .no-print-btn-wrap { flex-direction: column; align-items: center; gap: 0.5rem; } .no-print-btn-wrap a { margin-left: 0 !important; } }
 </style>
 </head>
@@ -142,9 +142,20 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
 <?php endif; ?>
 </div>
 <script>
+function fitPrintPages() {
+    var wrapper = document.querySelector('.print-wrapper');
+    if (!wrapper) return;
+    var parent = wrapper.parentElement;
+    var avail = parent ? parent.clientWidth : window.innerWidth;
+    avail = Math.max(avail, 320);
+    var scale = Math.min((avail - 8) / 816, 1);
+    wrapper.style.transform = scale < 1 ? 'scale(' + scale + ')' : '';
+}
 window.addEventListener('load', function() {
+    fitPrintPages();
     setTimeout(function(){ window.print(); }, 1000);
 });
+window.addEventListener('resize', fitPrintPages);
 </script>
 </body>
 </html>
