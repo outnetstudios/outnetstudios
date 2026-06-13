@@ -87,12 +87,12 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
 .preview-divider-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,0,0,0.12), transparent); }
 .preview-divider-text { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #999; white-space: nowrap; }
 .preview-products-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.25rem; }
-.preview-product-card { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.375rem; border-radius: 8px; background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.08); height: 159px; overflow: hidden; }
-.preview-product-img { width: 100%; height: 86px; border-radius: 6px; object-fit: contain; background: #f5f5f5; }
-.preview-product-img-placeholder { display: flex; align-items: center; justify-content: center; background: #f0f0f0; height: 86px; }
+.preview-product-card { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.375rem; border-radius: 8px; background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.08); height: 176px; overflow: hidden; }
+.preview-product-img { width: 100%; height: 90px; border-radius: 6px; object-fit: contain; background: #f5f5f5; }
+.preview-product-img-placeholder { display: flex; align-items: center; justify-content: center; background: #f0f0f0; height: 90px; }
 .preview-product-img-placeholder span { font-size: 2rem; color: #ccc; }
 .preview-product-info h4 { margin: 0 0 0.125rem; font-size: 0.85rem; line-height: 1.3; }
-.preview-product-info p { margin: 0.125rem 0; font-size: 0.72rem; color: #666; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.preview-product-info p { margin: 0.125rem 0; font-size: 0.72rem; color: #666; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .preview-sku { font-size: 0.65rem; color: #999; }
 .preview-price { font-weight: 700; font-size: 0.9rem; margin-top: 0.125rem; }
 .preview-banner { text-align: center; justify-content: center; background: linear-gradient(135deg, #f8f9ff, #eef1ff); }
