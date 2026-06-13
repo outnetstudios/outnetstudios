@@ -13,12 +13,11 @@ function fitCount(array $candidate): int
 {
     $pageH = 1056;
     $pad = 88;                // padding 44×2
-    $title = 43;              // h2 height + margin-bottom
     $firstCat = 48;           // section gap(4) + header(40) + section gap(4)
-    $extraCat = 86;           // content gap(8) + divider (8+14+8) + section gap(4) + header(40) + section gap(4)
-    $rowH = 219;              // card 215 + gap 4
+    $extraCat = 86;           // content gap(8) + divider(8+14+8) + section gap(4) + header(40) + section gap(4)
+    $rowH = 230;              // card 226 + gap 4 (image 138×138)
 
-    $availTotal = $pageH - $pad - $title; // 925 before any cat overhead
+    $availTotal = $pageH - $pad; // 968 before first cat overhead
 
     // Build ordered map of category → product list from $candidate
     $byCat = [];
@@ -220,7 +219,6 @@ function renderIndex(array $page, array $categories, array $allExpandedPages = [
 
 function renderCategoryPage(array $page, array $content, array $categories): string
 {
-    $title = htmlspecialchars($page['title'] ?? 'Categoría', ENT_QUOTES, 'UTF-8');
     $assigned = $page['_assigned_products'] ?? [];
 
     $catMap = [];
@@ -291,7 +289,6 @@ function renderCategoryPage(array $page, array $content, array $categories): str
 
     return '<div class="preview-page preview-category page-with-bg"' . pageBgStyle($page) . '>' . pageBgImg($page) . '
         <div class="page-content">
-            <h2 class="preview-title-md">' . $title . '</h2>
             <div class="preview-category-content">' . $grid . '</div>
         </div>
     </div>';
