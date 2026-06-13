@@ -95,6 +95,12 @@ $totalCount = count($products);
 <input id="tableSearch" class="bg-surface-variant/20 border border-outline-variant/30 rounded-full px-md py-1 text-body-sm text-on-surface placeholder-on-surface-variant/50 focus:outline-none focus:border-primary/50 w-48" placeholder="Buscar..." type="text" oninput="filterTable(this.value)">
 </div>
 </div>
+<div id="categoryTabs" class="px-md py-2 flex flex-wrap gap-2 border-b border-outline-variant/5 bg-surface-container-low/30">
+<button class="cat-tab active px-3 py-1 rounded-full text-label-caps font-label-caps transition-all" data-cat="" onclick="filterByCategory(this)">Todas</button>
+<?php foreach ($categories as $cat): ?>
+<button class="cat-tab px-3 py-1 rounded-full text-label-caps font-label-caps transition-all" data-cat="<?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?>" onclick="filterByCategory(this)"><?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?></button>
+<?php endforeach; ?>
+</div>
 <div class="overflow-x-auto">
 <table class="w-full border-collapse">
 <thead>
@@ -111,7 +117,7 @@ $totalCount = count($products);
 </thead>
 <tbody class="divide-y divide-outline-variant/5">
 <?php foreach ($products as $i => $p): ?>
-<tr class="hover:bg-surface-variant/10 transition-colors group">
+<tr class="hover:bg-surface-variant/10 transition-colors group" data-category="<?= htmlspecialchars($catMap[(int)$p['category_id']] ?? 'Sin categoría', ENT_QUOTES, 'UTF-8') ?>">
 <td class="p-md text-body-sm font-medium opacity-50"><?= $i + 1 ?></td>
 <td class="p-md">
 <div class="flex items-center gap-3">
@@ -163,10 +169,23 @@ document.querySelectorAll('tbody tr').forEach(row => {
 row.addEventListener('mouseenter', () => { row.style.transform = 'translateY(-2px)'; row.style.transition = 'transform 0.2s ease'; });
 row.addEventListener('mouseleave', () => { row.style.transform = 'translateY(0)'; });
 });
+let activeCategory = '';
+function filterByCategory(el) {
+document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+el.classList.add('active');
+activeCategory = el.dataset.cat;
+applyFilters();
+}
 function filterTable(val) {
-const q = val.toLowerCase();
+window._searchVal = val.toLowerCase();
+applyFilters();
+}
+function applyFilters() {
+const q = (window._searchVal || '').toLowerCase();
 document.querySelectorAll('tbody tr').forEach(row => {
-row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+const catMatch = !activeCategory || row.dataset.category === activeCategory;
+const searchMatch = !q || row.textContent.toLowerCase().includes(q);
+row.style.display = catMatch && searchMatch ? '' : 'none';
 });
 }
 </script>

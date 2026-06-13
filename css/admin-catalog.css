@@ -553,3 +553,19 @@ footer {
   opacity: 0.15 !important;
   filter: drop-shadow(0 0 30px rgba(108, 140, 255, 0.1));
 }
+
+/* === Category filter tabs === */
+.cat-tab {
+  color: var(--md-sys-color-on-surface-variant);
+  border: 1px solid rgba(128, 128, 128, 0.15);
+  cursor: pointer;
+}
+.cat-tab:hover {
+  background: rgba(128, 128, 128, 0.1);
+  color: var(--md-sys-color-on-surface);
+}
+.cat-tab.active {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border-color: var(--md-sys-color-primary);
+}
