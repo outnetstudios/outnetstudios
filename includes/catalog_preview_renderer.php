@@ -14,7 +14,7 @@ function fitCount(array $candidate): int
     $pageH = 1056;
     $pad = 88;                // padding 44×2
     $firstCat = 52;           // header(40) + section gap(12)
-    $extraCat = 98;           // content gap(8) + divider-margin(8+14+8) + content gap(8) + header(40) + section gap(12)
+    $extraCat = 60;           // content gap(8) + header(40) + section gap(12)
     $rowH = 209;              // card ~189 + row-gap 20 (desc removed, card shorter)
     $rowGap = 20;             // CSS row-gap in px
 
@@ -245,10 +245,6 @@ function renderCategoryPage(array $page, array $content, array $categories): str
             $catName = htmlspecialchars($catMap[$cid]['name'], ENT_QUOTES, 'UTF-8');
             $catDesc = !empty($catMap[$cid]['description']) ? htmlspecialchars($catMap[$cid]['description'], ENT_QUOTES, 'UTF-8') : '';
             $catImage = !empty($catMap[$cid]['image']) ? $catMap[$cid]['image'] : null;
-        }
-
-        if ($sectionIndex > 0) {
-            $grid .= '<div class="preview-category-divider"><span class="preview-divider-line"></span><span class="preview-divider-text">' . $catName . '</span><span class="preview-divider-line"></span></div>';
         }
 
         $grid .= '<div class="preview-category-section">';
