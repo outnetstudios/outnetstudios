@@ -63,7 +63,7 @@ if ($currentPage) {
     .preview-cat-name { font-size: 0.95rem; color: #888; margin-top: -0.5rem; margin-bottom: 1rem; }
     .preview-category-content { display: flex; flex-direction: column; gap: 0.5rem; overflow: hidden; flex: 1; }
     .preview-category-section { display: flex; flex-direction: column; gap: 0.75rem; }
-    .preview-category-header { display: flex; align-items: center; gap: 0.5rem; padding-top: 0.25rem; }
+    .preview-category-header { display: flex; align-items: center; gap: 0.5rem; padding-top: 0.375rem; }
     .preview-cat-thumb { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; border: 1px solid rgba(0,0,0,0.08); }
     .preview-cat-title { font-size: 1.15rem; font-weight: 700; margin: 0; }
     .preview-cat-desc { font-size: 0.8rem; color: #888; margin: 0.15rem 0 0; }
