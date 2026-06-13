@@ -12,7 +12,7 @@ require_once __DIR__ . '/../includes/upload_helper.php';
 function fitCount(array $candidate): int
 {
     $availTotal = 828 - 88 - 46; // 694px (padding 44×2 + título)
-    $rowH = 162;                 // card 159 + gap 3
+    $rowH = 163;                 // card 159 + gap 4
     $headerH = 42;               // category header
     $dividerH = 17;              // divider between categories
 

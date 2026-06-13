@@ -70,7 +70,7 @@ if ($currentPage) {
     .preview-category-divider { display: flex; align-items: center; gap: 0.75rem; margin: 0.5rem 0; }
     .preview-divider-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,0,0,0.12), transparent); }
     .preview-divider-text { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #999; white-space: nowrap; }
-    .preview-products-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.1875rem; }
+    .preview-products-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.25rem; }
     .preview-product-card { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.375rem; border-radius: 8px; background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.08); }
     .preview-product-img { width: 100%; aspect-ratio: 1; border-radius: 6px; object-fit: contain; background: #f5f5f5; max-height: 88px; }
     .preview-product-img-placeholder { display: flex; align-items: center; justify-content: center; height: 88px; }
