@@ -90,16 +90,18 @@ $totalCount = count($products);
 <div class="glass-panel rounded-3xl overflow-hidden mb-xl">
 <div class="p-md border-b border-outline-variant/10 flex flex-wrap gap-md justify-between items-center bg-surface-container-highest/20">
 <h2 class="font-title-sm text-title-sm text-primary flex items-center gap-xs"><span class="material-symbols-outlined">list_alt</span>Inventario de Productos</h2>
+<div class="flex items-center gap-2 flex-wrap">
+<select id="categoryFilter" onchange="filterByCategory(this.value)" class="bg-surface-variant/20 border border-outline-variant/30 rounded-full px-md py-1 text-body-sm text-on-surface focus:outline-none focus:border-primary/50">
+<option value="">Todas las categorías</option>
+<?php foreach ($categories as $cat): ?>
+<option value="<?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?></option>
+<?php endforeach; ?>
+</select>
 <div class="flex gap-xs items-center">
 <span class="material-symbols-outlined text-on-surface-variant/50">search</span>
 <input id="tableSearch" class="bg-surface-variant/20 border border-outline-variant/30 rounded-full px-md py-1 text-body-sm text-on-surface placeholder-on-surface-variant/50 focus:outline-none focus:border-primary/50 w-48" placeholder="Buscar..." type="text" oninput="filterTable(this.value)">
 </div>
 </div>
-<div id="categoryTabs" class="px-md py-2 flex flex-wrap gap-2 border-b border-outline-variant/5 bg-surface-container-low/30">
-<button class="cat-tab active px-3 py-1 rounded-full text-label-caps font-label-caps transition-all" data-cat="" onclick="filterByCategory(this)">Todas</button>
-<?php foreach ($categories as $cat): ?>
-<button class="cat-tab px-3 py-1 rounded-full text-label-caps font-label-caps transition-all" data-cat="<?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?>" onclick="filterByCategory(this)"><?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?></button>
-<?php endforeach; ?>
 </div>
 <div class="overflow-x-auto">
 <table class="w-full border-collapse">
@@ -170,10 +172,8 @@ row.addEventListener('mouseenter', () => { row.style.transform = 'translateY(-2p
 row.addEventListener('mouseleave', () => { row.style.transform = 'translateY(0)'; });
 });
 let activeCategory = '';
-function filterByCategory(el) {
-document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
-el.classList.add('active');
-activeCategory = el.dataset.cat;
+function filterByCategory(val) {
+activeCategory = val;
 applyFilters();
 }
 function filterTable(val) {
