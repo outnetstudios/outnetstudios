@@ -80,7 +80,7 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
 .preview-cover-content { max-width: 600px; margin: 0 auto; }
 .preview-category-content { display: flex; flex-direction: column; gap: 0.5rem; overflow: hidden; flex: 1; }
 .preview-cat-name { font-size: 0.95rem; color: #888; margin-top: -0.5rem; margin-bottom: 1rem; }
-.preview-category-section { display: flex; flex-direction: column; gap: 0.75rem; }
+.preview-category-section { display: flex; flex-direction: column; gap: 1.25rem; }
 .preview-category-header { display: flex; align-items: center; gap: 0.5rem; }
 .preview-cat-thumb { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; border: 1px solid rgba(0,0,0,0.08); }
 .preview-cat-title { font-size: 1.15rem; font-weight: 700; margin: 0; }
