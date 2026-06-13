@@ -265,7 +265,6 @@ function renderCategoryPage(array $page, array $content, array $categories): str
             $pName = htmlspecialchars($prod['name'], ENT_QUOTES, 'UTF-8');
             $pPrice = $prod['price'] !== null ? number_format((float)$prod['price'], 2) : '';
             $pSku = htmlspecialchars($prod['sku'] ?? '', ENT_QUOTES, 'UTF-8');
-            $pDesc = htmlspecialchars(mb_substr($prod['description'] ?? '', 0, 80), ENT_QUOTES, 'UTF-8');
             $imgSrc = !empty($prod['main_image']) ? imageUrl($prod['main_image']) : '';
             $imgTag = $imgSrc ? '<img src="' . htmlspecialchars($imgSrc, ENT_QUOTES, 'UTF-8') . '" class="preview-product-img" alt="' . $pName . '">' : '<div class="preview-product-img preview-product-img-placeholder"><span class="material-symbols-outlined">image</span></div>';
 
@@ -274,7 +273,6 @@ function renderCategoryPage(array $page, array $content, array $categories): str
                 <div class="preview-product-info">
                     <h4>' . $pName . '</h4>
                     ' . ($pSku ? '<span class="preview-sku">' . $pSku . '</span>' : '') . '
-                    <p>' . $pDesc . '</p>
                     ' . ($pPrice ? '<div class="preview-price">' . $GLOBALS['currencySymbol'] . $pPrice . '</div>' : '') . '
                 </div>
             </div>';
