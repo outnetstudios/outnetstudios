@@ -5,15 +5,40 @@ require_once __DIR__ . '/../src/Repositories/ProductRepository.php';
 require_once __DIR__ . '/../includes/upload_helper.php';
 
 /**
+ * Calculate how many products from $candidate fully fit on one Letter page (828px).
+ * Uses iterative fit: tries 12, counts distinct categories in that range, calculates
+ * available rows, reduces if needed, and re-evaluates (categories may shrink).
+ */
+function fitCount(array $candidate): int
+{
+    $availTotal = 828 - 32 - 46; // 750px (padding 16×2 + título)
+    $rowH = 177;                 // card 171 + gap 6
+    $headerH = 42;               // category header
+    $dividerH = 17;              // divider between categories
+
+    $n = min(12, count($candidate));
+    do {
+        $chunk = array_slice($candidate, 0, $n);
+        $cats = [];
+        foreach ($chunk as $p) $cats[(int)$p['category_id']] = true;
+        $nc = count($cats);
+        $used = $nc * $headerH + max(0, $nc - 1) * $dividerH;
+        $avail = $availTotal - $used;
+        $rows = max(1, intdiv($avail, $rowH));
+        $maxFit = $rows * 4;
+        if ($maxFit >= $n) return $n; // n products all fully fit
+        $n = $maxFit;                 // reduce and retry (fewer cats)
+    } while (true);
+}
+
+/**
  * Build expanded page list: category pages consume products sequentially from a flat
- * pool (sorted by category → product). Each category page takes up to 12 products
- * (~3 rows of 4 on Letter). Non-category pages pass through unchanged.
- * `overflow: hidden` on .preview-sheet / .print-page clips any minimal excess.
+ * pool (sorted by category → product). `fitCount()` determines exactly how many products
+ * fit per page so nothing overflows or gets clipped. Non-category pages pass through.
  */
 function buildExpandedPages(array $pages, array $products, array $categories): array
 {
     $expanded = [];
-    $perPage = 12;
 
     $pool = array_values(array_filter($products, fn($p) => $p['status'] === 'active'));
 
@@ -42,7 +67,9 @@ function buildExpandedPages(array $pages, array $products, array $categories): a
             continue;
         }
 
-        $chunk = array_slice($pool, $idx, $perPage);
+        $remaining = array_slice($pool, $idx);
+        $take = fitCount($remaining);
+        $chunk = array_slice($pool, $idx, $take);
         $idx += count($chunk);
         $page['_assigned_products'] = $chunk;
         $expanded[] = $page;

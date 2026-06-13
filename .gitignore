@@ -4,3 +4,5 @@ config/env.local.php
 docs/catalogo-productos-plan.md
 .env
 db/
+docs/fit-strategy.md
+docs/page-layout.md

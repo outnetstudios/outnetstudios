@@ -51,28 +51,28 @@ if ($currentPage) {
     body { margin: 0; min-height: 100vh; background: #0f1320; color: #dee2f4; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; }
     .preview-sheet { width: 640px; height: 828px; background: #ffffff; color: #1a1a2e; border-radius: 4px; box-shadow: 0 4px 24px rgba(0,0,0,0.6); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease; transform-origin: top center; position: relative; flex-shrink: 0; }
     .preview-sheet .preview-page { flex: 1; display: flex; flex-direction: column; }
-    .page-content { padding: 2.5rem; }
-    .preview-cover-content { max-width: 600px; margin: 0 auto; }
+    .page-content { padding: 1rem; }
+    .preview-cover-content { max-width: 560px; margin: 0 auto; }
     .preview-title-lg { font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 800; margin: 0 0 0.5rem; letter-spacing: -0.03em; }
     .preview-subtitle { font-size: 1.1rem; }
-    .preview-title-md { font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 700; margin: 0 0 1rem; }
+    .preview-title-md { font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-weight: 700; margin: 0 0 0.5rem; }
     .preview-index-list { list-style: none; padding: 0; margin: 0; }
     .preview-index-list li { padding: 0.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.06); font-size: 1rem; }
     .index-num { font-weight: 700; margin-right: 0.5rem; }
     .preview-cat-name { font-size: 0.95rem; color: #888; margin-top: -0.5rem; margin-bottom: 1rem; }
-    .preview-category-content { display: flex; flex-direction: column; gap: 1.5rem; overflow: hidden; flex: 1; }
-    .preview-category-section { display: flex; flex-direction: column; gap: 0.75rem; }
-    .preview-category-header { display: flex; align-items: center; gap: 0.75rem; }
+    .preview-category-content { display: flex; flex-direction: column; gap: 0.75rem; overflow: hidden; flex: 1; }
+    .preview-category-section { display: flex; flex-direction: column; gap: 0.375rem; }
+    .preview-category-header { display: flex; align-items: center; gap: 0.5rem; }
     .preview-cat-thumb { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; border: 1px solid rgba(0,0,0,0.08); }
     .preview-cat-title { font-size: 1.15rem; font-weight: 700; margin: 0; }
     .preview-cat-desc { font-size: 0.8rem; color: #888; margin: 0.15rem 0 0; }
     .preview-category-divider { display: flex; align-items: center; gap: 0.75rem; margin: 0.5rem 0; }
     .preview-divider-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,0,0,0.12), transparent); }
     .preview-divider-text { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #999; white-space: nowrap; }
-    .preview-products-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
-    .preview-product-card { display: flex; flex-direction: column; gap: 0.5rem; padding: 0.75rem; border-radius: 8px; background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.08); }
-    .preview-product-img { width: 100%; aspect-ratio: 1; border-radius: 6px; object-fit: cover; background: #f5f5f5; }
-    .preview-product-img-placeholder { display: flex; align-items: center; justify-content: center; }
+    .preview-products-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.375rem; }
+    .preview-product-card { display: flex; flex-direction: column; gap: 0.25rem; padding: 0.25rem; border-radius: 8px; background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.08); }
+    .preview-product-img { width: 100%; aspect-ratio: 1; border-radius: 6px; object-fit: contain; background: #f5f5f5; max-height: 104px; }
+    .preview-product-img-placeholder { display: flex; align-items: center; justify-content: center; height: 104px; }
     .preview-product-img-placeholder span { font-size: 2rem; color: #ccc; }
     .preview-product-info h4 { margin: 0 0 0.15rem; font-size: 0.85rem; line-height: 1.3; }
     .preview-product-info p { margin: 0.15rem 0; font-size: 0.72rem; color: #666; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
