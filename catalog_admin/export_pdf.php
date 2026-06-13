@@ -178,20 +178,19 @@ function preloadImages(callback) {
             if (img.complete && img.naturalWidth > 0) { done(); return; }
             var retries = 0;
             var maxRetries = 3;
-            function tryLoad() {
+            function attempt() {
                 img.onload = function() { done(); };
                 img.onerror = function() {
                     retries++;
                     if (retries < maxRetries) {
-                        setTimeout(function() {
-                            img.src = img.src;
-                        }, 1000 * retries);
+                        setTimeout(attempt, 1000 * retries);
                     } else {
                         done();
                     }
                 };
+                img.src = img.src;
             }
-            tryLoad();
+            attempt();
         });
     });
 
