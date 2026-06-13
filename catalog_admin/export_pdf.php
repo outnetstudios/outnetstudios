@@ -45,10 +45,12 @@ unset($ep);
 @media print { html, body { width: 215.9mm; height: 279.4mm; }
     .page-with-bg { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     .print-page { height: 279.4mm; min-height: 279.4mm; overflow: hidden; }
+    body { overflow: visible; }
 }
 *, *::before, *::after { box-sizing: border-box; }
-body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: #fff; color: #1a1a2e; }
-.print-page { page-break-after: always; width: 215.9mm; min-height: 279.4mm; overflow: hidden; display: flex; flex-direction: column; background: #ffffff; }
+body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: #0f1320; color: #1a1a2e; overflow-x: hidden; }
+.print-wrapper { display: flex; flex-direction: column; align-items: center; padding: 0.5rem; }
+.print-page { page-break-after: always; width: 215.9mm; min-height: 279.4mm; overflow: hidden; display: flex; flex-direction: column; background: #ffffff; margin: 1rem 0; border-radius: 4px; box-shadow: 0 4px 24px rgba(0,0,0,0.4); flex-shrink: 0; }
 .print-page:last-child { page-break-after: auto; }
 .print-page-bleed { padding: 0; }
 .print-page-bleed .page-content { padding: 2cm; }
@@ -110,8 +112,9 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
 .preview-price-lg { font-size: 1.3rem; font-weight: 700; margin: 0.5rem 0; }
 .preview-stock { font-size: 0.85rem; color: #666; }
 .preview-empty { text-align: center; padding: 4rem 2rem; font-size: 1.2rem; }
-.print-content { padding-top: 160px; }
-@media print { body { background: #fff; color: #000; } .no-print { display: none !important; } .print-content { padding-top: 0 !important; } }
+.print-content { padding-top: 180px; }
+@media print { body { background: #fff; color: #000; overflow: visible; } .no-print { display: none !important; } .print-content { padding-top: 0 !important; } .print-wrapper { padding: 0; } .print-page { margin: 0; border-radius: 0; box-shadow: none; } }
+@media (max-width: 480px) { .no-print { padding: 1rem !important; } .no-print h2 { font-size: 1rem !important; } .no-print p { font-size: 0.75rem !important; } .no-print-btn-wrap { flex-direction: column; align-items: center; gap: 0.5rem; } .no-print-btn-wrap a { margin-left: 0 !important; } }
 </style>
 </head>
 <body>
@@ -121,17 +124,21 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
 <h2 style="margin:0 0 0.3rem;font-size:1.2rem;">Generando PDF: <?= $catalogName ?></h2>
 <p style="margin:0;font-size:0.85rem;color:rgba(255,255,255,0.6);">Se abrirá el cuadro de diálogo para guardar el PDF. Selecciona "Guardar como PDF" y haz clic en guardar.</p>
 <p style="margin:0.5rem 0 0;font-size:0.8rem;color:rgba(255,255,255,0.45);">⚠️ Importante: en el diálogo de impresión, activa la opción <strong>"Imprimir imágenes y colores de fondo"</strong> (Chrome) o equivalente para que las imágenes de portada/fondos se vean en el PDF.</p>
-<button onclick="window.print()" style="margin-top:1rem;padding:0.5rem 1.5rem;border-radius:999px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-size:0.9rem;">Abrir diálogo de PDF</button>
-<a href="preview.php?catalog_id=<?= $catalogId ?>" style="display:inline-block;margin-top:1rem;margin-left:0.5rem;padding:0.5rem 1.5rem;border-radius:999px;border:1px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.9rem;">Volver</a>
+<div class="no-print-btn-wrap" style="display:flex;justify-content:center;gap:0.5rem;margin-top:1rem;">
+<button onclick="window.print()" style="padding:0.5rem 1.5rem;border-radius:999px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-size:0.9rem;white-space:nowrap;">Abrir diálogo de PDF</button>
+<a href="preview.php?catalog_id=<?= $catalogId ?>" style="padding:0.5rem 1.5rem;border-radius:999px;border:1px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.9rem;white-space:nowrap;">Volver</a>
+</div>
 </div>
 </div>
 <div class="print-content">
 <?php if (empty($expandedPages)): ?>
-<div class="print-page preview-empty">Este catálogo no tiene páginas.</div>
+<div class="print-wrapper"><div class="print-page preview-empty">Este catálogo no tiene páginas.</div></div>
 <?php else: ?>
+<div class="print-wrapper">
 <?php foreach ($expandedPages as $p): ?>
 <div class="print-page<?= !empty($p['background_image']) ? ' print-page-bleed' : '' ?>"><?= renderPageContent($p, $categories, $expandedPages) ?></div>
 <?php endforeach; ?>
+</div>
 <?php endif; ?>
 </div>
 <script>
