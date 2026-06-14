@@ -45,6 +45,13 @@ $pageContent = '';
 if ($currentPage) {
     $pageContent = renderPageContent($currentPage, $categories, $expandedPages);
 }
+$pageNum = null;
+if ($currentPage && !in_array($currentPage['page_type'], ['cover', 'back_cover', 'index'], true)) {
+    $pageNum = 0;
+    for ($i = 0; $i < $pageIndex; $i++) {
+        if (!in_array($expandedPages[$i]['page_type'], ['cover', 'back_cover', 'index'], true)) $pageNum++;
+    }
+}
 ?>
 <?php $pageTitle = 'Vista previa - ' . $catalogName; require_once __DIR__ . '/../templates/partials/admin_head.php'; ?>
     <style>
@@ -90,6 +97,7 @@ if ($currentPage) {
     .preview-prod-info h2 { margin: 0 0 0.5rem; font-size: 1.4rem; }
     .preview-price-lg { font-size: 1.3rem; font-weight: 700; margin: 0.5rem 0; }
     .preview-stock { font-size: 0.85rem; color: #666; }
+    .page-footer { text-align: center; padding: 0.35rem 0 0.5rem; font-size: 0.7rem; color: #999; flex-shrink: 0; }
     .preview-empty { text-align: center; padding: 4rem 2rem; }
     .preview-empty p { font-size: 1.2rem; margin-bottom: 1rem; }
     .preview-cover { text-align: center; justify-content: center; }
@@ -164,6 +172,7 @@ if ($currentPage) {
 <?php else: ?>
 <div class="preview-sheet" id="previewSheet">
 <?= $pageContent ?>
+<?php if ($pageNum !== null): ?><div class="page-footer"><?= $pageNum ?></div><?php endif; ?>
 </div>
 <?php endif; ?>
 </div>
