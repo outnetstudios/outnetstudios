@@ -193,6 +193,48 @@ $secId = (int)$section['id'];
 </tbody>
 </table>
 </div>
+
+<!-- Mobile cards -->
+<div class="mobile-cards">
+<?php foreach ($sections as $section):
+$secName = htmlspecialchars($section['name'], ENT_QUOTES, 'UTF-8');
+$secId = (int)$section['id'];
+?>
+<div class="mobile-section-group" data-section-id="<?= $secId ?>">
+<p class="mobile-section-title"><span class="material-symbols-outlined"><?= $secId === 0 ? 'help' : 'folder' ?></span> <?= $secName ?> <span class="mobile-section-count">(<?= count($section['products']) ?>)</span></p>
+<?php foreach ($section['products'] as $i => $p): ?>
+<div class="mobile-card" data-product-id="<?= (int)$p['id'] ?>" data-section-id="<?= $secId ?>" data-category="<?= $secName ?>" draggable="true">
+<div class="mobile-card-header">
+<div class="mobile-card-drag"><span class="material-symbols-outlined">drag_indicator</span></div>
+<?php if (!empty($p['main_image'])): ?>
+<img src="<?= htmlspecialchars(imageUrl($p['main_image']), ENT_QUOTES, 'UTF-8') ?>">
+<?php else: ?>
+<div class="mobile-card-icon"><span class="material-symbols-outlined">package</span></div>
+<?php endif; ?>
+<div class="mobile-card-header-text">
+<span class="mobile-card-title"><?= htmlspecialchars($p['name'], ENT_QUOTES, 'UTF-8') ?></span>
+<span class="mobile-card-sku">SKU: <?= htmlspecialchars($p['sku'] ?? '-', ENT_QUOTES, 'UTF-8') ?></span>
+</div>
+</div>
+<div class="mobile-card-body">
+<div class="mobile-card-row">
+<span class="mobile-card-label">Estado</span>
+<span class="mobile-card-status <?= $p['status'] === 'active' ? 'active' : '' ?>">
+<span class="status-dot <?= $p['status'] === 'active' ? 'active' : '' ?>"></span>
+<?= $p['status'] === 'active' ? 'Publicado' : 'Borrador' ?>
+</span>
+</div>
+</div>
+<div class="mobile-card-actions">
+<a href="product_edit.php?id=<?= $p['id'] ?>" class="mobile-card-action-btn edit"><span class="material-symbols-outlined">edit</span> Editar</a>
+<a href="product_delete.php?id=<?= $p['id'] ?>" class="mobile-card-action-btn delete" onclick="return confirm('¿Eliminar este producto?')"><span class="material-symbols-outlined">delete</span> Eliminar</a>
+</div>
+</div>
+<?php endforeach; ?>
+</div>
+<?php endforeach; ?>
+</div>
+
 </div>
 <div class="flex flex-col md:flex-row justify-between items-center gap-sm glass-panel p-sm rounded-2xl">
 <p class="font-body-sm text-body-sm text-on-surface-variant/70">Mostrando <?= $totalCount ?> de <?= $totalCount ?> productos</p>
@@ -206,6 +248,42 @@ $secId = (int)$section['id'];
 </div>
 </section>
 </main>
+<style>
+@media (max-width: 768px) {
+.mobile-cards { display: flex; flex-direction: column; gap: 0.5rem; padding: 0.75rem; }
+.mobile-section-group { display: flex; flex-direction: column; gap: 0.5rem; }
+.mobile-section-title { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.5); padding: 0.5rem 0.25rem 0; margin: 0; text-transform: uppercase; letter-spacing: 0.05em; }
+.mobile-section-title span { font-size: 1rem; }
+.mobile-section-count { font-weight: 400; color: rgba(255,255,255,0.3); }
+.mobile-card { background: var(--surface-container-high, #1e1e2e); border-radius: 12px; padding: 0.75rem 1rem; border: 1px solid rgba(255,255,255,0.06); touch-action: none; user-select: none; }
+.mobile-card.sorting { opacity: 0.5; transform: scale(0.97); }
+.mobile-card.chosen { border-color: rgba(100,180,255,0.4); box-shadow: 0 4px 16px rgba(100,180,255,0.15); }
+.mobile-card-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+.mobile-card-drag { display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.2); cursor: grab; touch-action: none; }
+.mobile-card-drag span { font-size: 1.2rem; }
+.mobile-card-header img { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; border: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; }
+.mobile-card-icon { width: 44px; height: 44px; border-radius: 8px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.mobile-card-icon span { font-size: 20px; color: rgba(255,255,255,0.3); }
+.mobile-card-header-text { flex: 1; min-width: 0; }
+.mobile-card-title { font-size: 0.9rem; font-weight: 700; color: var(--text-on-surface, #e0e0f0); display: block; }
+.mobile-card-sku { font-size: 0.7rem; color: rgba(255,255,255,0.35); font-family: monospace; }
+.mobile-card-body { margin-bottom: 0.5rem; }
+.mobile-card-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; }
+.mobile-card-label { color: rgba(255,255,255,0.35); font-weight: 500; }
+.mobile-card-status { display: flex; align-items: center; gap: 0.35rem; font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.3); }
+.mobile-card-status.active { color: #b7c4ff; }
+.status-dot { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: rgba(255,255,255,0.2); display: inline-block; }
+.status-dot.active { background: #b7c4ff; }
+.mobile-card-actions { display: flex; gap: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.06); }
+.mobile-card-action-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.3rem; padding: 0.4rem; border-radius: 8px; font-size: 0.78rem; font-weight: 600; text-decoration: none; color: rgba(255,255,255,0.6); transition: all 0.15s; background: rgba(255,255,255,0.04); }
+.mobile-card-action-btn span { font-size: 1rem; }
+.mobile-card-action-btn.edit:hover { background: rgba(100,180,255,0.15); color: #64b4ff; }
+.mobile-card-action-btn.delete:hover { background: rgba(255,80,80,0.15); color: #ff5050; }
+}
+@media (min-width: 769px) {
+.mobile-cards { display: none; }
+}
+</style>
 <script>
 let activeCategory = '';
 function filterByCategory(val) {
@@ -228,6 +306,12 @@ document.querySelectorAll('.section-header').forEach(header => {
 const sid = header.dataset.sectionId;
 const visible = [...document.querySelectorAll(`.draggable-row[data-section-id="${sid}"]`)].some(r => r.style.display !== 'none');
 header.style.display = visible ? '' : 'none';
+});
+// Apply same filters to mobile cards
+document.querySelectorAll('.mobile-card').forEach(card => {
+const catMatch = !activeCategory || card.dataset.category === activeCategory;
+const searchMatch = !q || card.textContent.toLowerCase().includes(q);
+card.style.display = catMatch && searchMatch ? '' : 'none';
 });
 }
 
@@ -294,6 +378,40 @@ fetch('products.php?catalog_id=<?= $catalogId ?>', {
 method: 'POST',
 body: formData
 });
+});
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
+<script>
+// Mobile touch drag reorder via SortableJS
+function initMobileSortable() {
+if (window.innerWidth > 768) { document.querySelectorAll('.mobile-section-group').forEach(function(g) { if (g.sortable) g.sortable.destroy(); }); return; }
+document.querySelectorAll('.mobile-section-group').forEach(function(group) {
+if (group.sortable) group.sortable.destroy();
+group.sortable = new Sortable(group, {
+animation: 200,
+handle: '.mobile-card-drag',
+delay: 200,
+delayOnTouchOnly: true,
+touchStartThreshold: 5,
+direction: 'vertical',
+onEnd: function(evt) {
+var sectionGroup = evt.to;
+var cards = [...sectionGroup.querySelectorAll('.mobile-card')];
+var ids = cards.map(function(c) { return c.dataset.productId; }).join(',');
+var sectionId = sectionGroup.dataset.sectionId;
+var formData = new FormData();
+formData.append('action', 'reorder');
+formData.append('category_id', sectionId);
+formData.append('order', ids);
+fetch('products.php?catalog_id=<?= $catalogId ?>', { method: 'POST', body: formData });
+}
+});
+});
+}
+initMobileSortable();
+window.addEventListener('resize', function() {
+setTimeout(initMobileSortable, 300);
 });
 </script>
 </body>

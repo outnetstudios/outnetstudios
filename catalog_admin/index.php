@@ -128,46 +128,133 @@ $totalCount = count($catalogs);
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>
-                            </table>
-                        </div>
+                        </table>
                     </div>
 
-                    <!-- Pagination -->
-                    <div class="flex flex-col md:flex-row justify-between items-center gap-sm glass-panel p-sm rounded-2xl">
-                        <p class="font-body-sm text-body-sm text-on-surface-variant/70">Mostrando <?= $totalCount ?> de <?= $totalCount ?> catálogos</p>
-                        <div class="flex items-center gap-1">
-                            <button class="flex items-center gap-1 px-sm py-1 rounded-full font-label-caps text-label-caps text-on-surface-variant/60 hover:text-tertiary hover:bg-surface-variant/20 transition-all disabled opacity-30 pointer-events-none">
-                                <span class="material-symbols-outlined text-[16px]">chevron_left</span> Anterior
-                            </button>
-                            <div class="flex gap-1">
-                                <button class="w-8 h-8 rounded-full bg-primary/20 text-primary font-bold text-label-caps text-[11px]">1</button>
+                    <!-- Mobile cards -->
+                    <div class="mobile-cards">
+                    <?php foreach ($catalogs as $c):
+                        $statusLabel = match ($c['status']) {
+                            'published' => 'Published',
+                            'archived' => 'Archived',
+                            default => 'Draft'
+                        };
+                        $statusClass = match ($c['status']) {
+                            'published' => 'bg-primary/10 text-primary border-primary/20',
+                            'archived' => 'bg-error/10 text-error/80 border-error/20',
+                            default => 'bg-on-surface-variant/10 text-on-surface-variant border-on-surface-variant/20'
+                        };
+                    ?>
+                    <div class="mobile-card">
+                        <div class="mobile-card-header">
+                            <div class="mobile-card-cover">
+                                <?php if (!empty($c['cover_image'])): ?>
+                                <img src="<?= htmlspecialchars(imageUrl($c['cover_image']), ENT_QUOTES, 'UTF-8') ?>">
+                                <?php else: ?>
+                                <span class="material-symbols-outlined">image</span>
+                                <?php endif; ?>
                             </div>
-                            <button class="flex items-center gap-1 px-sm py-1 rounded-full font-label-caps text-label-caps text-on-surface-variant/60 hover:text-tertiary hover:bg-surface-variant/20 transition-all disabled opacity-30 pointer-events-none">
-                                Siguiente <span class="material-symbols-outlined text-[16px]">chevron_right</span>
-                            </button>
+                            <div class="mobile-card-header-text">
+                                <span class="mobile-card-title"><?= htmlspecialchars($c['name'], ENT_QUOTES, 'UTF-8') ?></span>
+                                <span class="mobile-card-slug"><?= htmlspecialchars($c['slug'], ENT_QUOTES, 'UTF-8') ?></span>
+                            </div>
+                        </div>
+                        <div class="mobile-card-body">
+                            <div class="mobile-card-row">
+                                <span class="mobile-card-label">Estado</span>
+                                <span class="px-md py-1 rounded-full text-label-caps font-label-caps <?= $statusClass ?> border"><?= $statusLabel ?></span>
+                            </div>
+                            <div class="mobile-card-row">
+                                <span class="mobile-card-label">Creado</span>
+                                <span class="mobile-card-value"><?= htmlspecialchars($c['created_at'] ?? '-', ENT_QUOTES, 'UTF-8') ?></span>
+                            </div>
+                        </div>
+                        <div class="mobile-card-actions">
+                            <div class="mobile-card-actions-left">
+                                <a href="categories.php?catalog_id=<?= $c['id'] ?>" class="mobile-card-btn" title="Categorías"><span class="material-symbols-outlined">folder</span></a>
+                                <a href="products.php?catalog_id=<?= $c['id'] ?>" class="mobile-card-btn" title="Productos"><span class="material-symbols-outlined">package</span></a>
+                                <a href="pages.php?catalog_id=<?= $c['id'] ?>" class="mobile-card-btn" title="Páginas"><span class="material-symbols-outlined">description</span></a>
+                            </div>
+                            <div class="mobile-card-actions-right">
+                                <a href="preview.php?catalog_id=<?= $c['id'] ?>" class="mobile-card-btn preview" title="Vista previa"><span class="material-symbols-outlined">visibility</span></a>
+                                <a href="edit.php?id=<?= $c['id'] ?>" class="mobile-card-btn edit" title="Editar"><span class="material-symbols-outlined">edit</span></a>
+                                <a href="delete.php?id=<?= $c['id'] ?>" class="mobile-card-btn delete" title="Borrar" onclick="return confirm('¿Borrar este catálogo y todos sus datos?')"><span class="material-symbols-outlined">delete</span></a>
+                            </div>
                         </div>
                     </div>
-                <?php endif; ?>
-            </div>
-        </section>
-    </main>
+                    <?php endforeach; ?>
+                    </div>
 
-    <script>
-        document.querySelectorAll('tbody tr').forEach(row => {
-            row.addEventListener('mouseenter', () => {
-                row.style.transform = 'translateY(-2px)';
-                row.style.transition = 'transform 0.2s ease';
-            });
-            row.addEventListener('mouseleave', () => {
-                row.style.transform = 'translateY(0)';
-            });
+                </div>
+
+                <!-- Pagination -->
+                <div class="flex flex-col md:flex-row justify-between items-center gap-sm glass-panel p-sm rounded-2xl">
+                    <p class="font-body-sm text-body-sm text-on-surface-variant/70">Mostrando <?= $totalCount ?> de <?= $totalCount ?> catálogos</p>
+                    <div class="flex items-center gap-1">
+                        <button class="flex items-center gap-1 px-sm py-1 rounded-full font-label-caps text-label-caps text-on-surface-variant/60 hover:text-tertiary hover:bg-surface-variant/20 transition-all disabled opacity-30 pointer-events-none">
+                            <span class="material-symbols-outlined text-[16px]">chevron_left</span> Anterior
+                        </button>
+                        <div class="flex gap-1">
+                            <button class="w-8 h-8 rounded-full bg-primary/20 text-primary font-bold text-label-caps text-[11px]">1</button>
+                        </div>
+                        <button class="flex items-center gap-1 px-sm py-1 rounded-full font-label-caps text-label-caps text-on-surface-variant/60 hover:text-tertiary hover:bg-surface-variant/20 transition-all disabled opacity-30 pointer-events-none">
+                            Siguiente <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+    </section>
+</main>
+
+<style>
+@media (max-width: 768px) {
+.mobile-cards { display: flex; flex-direction: column; gap: 0.75rem; padding: 0.75rem; }
+.mobile-card { background: var(--surface-container-high, #1e1e2e); border-radius: 12px; padding: 1rem; border: 1px solid rgba(255,255,255,0.06); }
+.mobile-card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+.mobile-card-cover { width: 56px; height: 64px; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; }
+.mobile-card-cover img { width: 100%; height: 100%; object-fit: cover; }
+.mobile-card-cover span { font-size: 20px; color: rgba(255,255,255,0.2); }
+.mobile-card-header-text { flex: 1; min-width: 0; }
+.mobile-card-title { font-size: 0.95rem; font-weight: 700; color: var(--text-on-surface, #e0e0f0); display: block; }
+.mobile-card-slug { font-size: 0.75rem; color: rgba(255,255,255,0.35); font-style: italic; }
+.mobile-card-body { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 0.75rem; }
+.mobile-card-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
+.mobile-card-label { color: rgba(255,255,255,0.4); font-weight: 500; }
+.mobile-card-value { color: rgba(255,255,255,0.7); font-weight: 600; text-align: right; }
+.mobile-card-actions { display: flex; justify-content: space-between; align-items: center; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.06); }
+.mobile-card-actions-left, .mobile-card-actions-right { display: flex; gap: 0.25rem; }
+.mobile-card-btn { display: inline-flex; align-items: center; justify-content: center; width: 2.2rem; height: 2.2rem; border-radius: 50%; color: rgba(255,255,255,0.5); text-decoration: none; transition: all 0.15s; }
+.mobile-card-btn span { font-size: 1.1rem; }
+.mobile-card-btn:hover { background: rgba(255,255,255,0.06); color: var(--text-on-surface, #e0e0f0); }
+.mobile-card-btn.preview:hover { background: rgba(100,200,180,0.15); color: #64c8b4; }
+.mobile-card-btn.edit:hover { background: rgba(100,180,255,0.15); color: #64b4ff; }
+.mobile-card-btn.delete:hover { background: rgba(255,80,80,0.15); color: #ff5050; }
+}
+@media (min-width: 769px) {
+.mobile-cards { display: none; }
+}
+</style>
+
+<script>
+    document.querySelectorAll('tbody tr').forEach(row => {
+        row.addEventListener('mouseenter', () => {
+            row.style.transform = 'translateY(-2px)';
+            row.style.transition = 'transform 0.2s ease';
         });
-        function filterTable(val) {
-            const q = val.toLowerCase();
-            document.querySelectorAll('tbody tr').forEach(row => {
-                row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
-            });
-        }
-    </script>
+        row.addEventListener('mouseleave', () => {
+            row.style.transform = 'translateY(0)';
+        });
+    });
+    function filterTable(val) {
+        const q = val.toLowerCase();
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+        });
+        document.querySelectorAll('.mobile-card').forEach(card => {
+            card.style.display = card.textContent.toLowerCase().includes(q) ? '' : 'none';
+        });
+    }
+</script>
 </body>
 </html>

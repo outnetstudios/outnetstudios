@@ -142,6 +142,49 @@ $totalCount = count($categories);
 </tbody>
 </table>
 </div>
+
+<!-- Mobile cards -->
+<div class="mobile-cards">
+<?php foreach ($categories as $i => $cat): ?>
+<div class="mobile-card">
+<div class="mobile-card-header">
+<?php if (!empty($cat['image'])): ?>
+<img src="<?= htmlspecialchars(imageUrl($cat['image']), ENT_QUOTES, 'UTF-8') ?>">
+<?php else: ?>
+<div class="mobile-card-icon"><span class="material-symbols-outlined">folder</span></div>
+<?php endif; ?>
+<div class="mobile-card-header-text">
+<span class="mobile-card-title"><?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?></span>
+</div>
+</div>
+<div class="mobile-card-body">
+<div class="mobile-card-row">
+<span class="mobile-card-label">Descripción</span>
+<span class="mobile-card-value"><?= htmlspecialchars($cat['description'] ?? '-', ENT_QUOTES, 'UTF-8') ?></span>
+</div>
+<div class="mobile-card-row">
+<span class="mobile-card-label">Estado</span>
+<span class="mobile-card-value"><?= $cat['status'] === 'active' ? 'Activo' : 'Inactivo' ?></span>
+</div>
+</div>
+<div class="mobile-card-actions">
+<div class="mobile-card-actions-left">
+<?php if ($i > 0): ?>
+<a href="?catalog_id=<?= $catalogId ?>&move=up&move_id=<?= $cat['id'] ?>" class="mobile-card-btn"><span class="material-symbols-outlined">arrow_upward</span></a>
+<?php endif; ?>
+<?php if ($i < $totalCount - 1): ?>
+<a href="?catalog_id=<?= $catalogId ?>&move=down&move_id=<?= $cat['id'] ?>" class="mobile-card-btn"><span class="material-symbols-outlined">arrow_downward</span></a>
+<?php endif; ?>
+</div>
+<div class="mobile-card-actions-right">
+<a href="category_edit.php?id=<?= $cat['id'] ?>" class="mobile-card-btn edit"><span class="material-symbols-outlined">edit</span></a>
+<a href="category_delete.php?id=<?= $cat['id'] ?>" class="mobile-card-btn delete" onclick="return confirm('¿Eliminar esta categoría? Los productos se quedarán sin categoría.')"><span class="material-symbols-outlined">delete</span></a>
+</div>
+</div>
+</div>
+<?php endforeach; ?>
+</div>
+
 </div>
 <div class="flex flex-col md:flex-row justify-between items-center gap-sm glass-panel px-sm py-xs rounded-2xl">
 <p class="font-body-sm text-body-sm text-on-surface-variant/70">Mostrando <?= $totalCount ?> de <?= $totalCount ?> categorías</p>
@@ -150,6 +193,34 @@ $totalCount = count($categories);
 </div>
 </section>
 </main>
+<style>
+@media (max-width: 768px) {
+.data-table-wrap { overflow-x: hidden; }
+.data-table-wrap table { display: none; }
+.mobile-cards { display: flex; flex-direction: column; gap: 0.75rem; padding: 0.75rem; }
+.mobile-card { background: var(--surface-container-high, #1e1e2e); border-radius: 12px; padding: 1rem; border: 1px solid rgba(255,255,255,0.06); }
+.mobile-card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+.mobile-card-header img { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; border: 1px solid rgba(255,255,255,0.08); }
+.mobile-card-icon { width: 48px; height: 48px; border-radius: 10px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; }
+.mobile-card-icon span { font-size: 24px; color: rgba(255,255,255,0.3); }
+.mobile-card-header-text { flex: 1; min-width: 0; }
+.mobile-card-title { font-size: 0.95rem; font-weight: 700; color: var(--text-on-surface, #e0e0f0); }
+.mobile-card-body { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 0.75rem; }
+.mobile-card-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
+.mobile-card-label { color: rgba(255,255,255,0.4); font-weight: 500; }
+.mobile-card-value { color: rgba(255,255,255,0.7); font-weight: 600; text-align: right; }
+.mobile-card-actions { display: flex; justify-content: space-between; align-items: center; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.06); }
+.mobile-card-actions-left, .mobile-card-actions-right { display: flex; gap: 0.25rem; }
+.mobile-card-btn { display: inline-flex; align-items: center; justify-content: center; width: 2.2rem; height: 2.2rem; border-radius: 50%; color: rgba(255,255,255,0.5); text-decoration: none; transition: all 0.15s; }
+.mobile-card-btn span { font-size: 1.1rem; }
+.mobile-card-btn:hover { background: rgba(255,255,255,0.06); color: var(--text-on-surface, #e0e0f0); }
+.mobile-card-btn.edit:hover { background: rgba(100,180,255,0.15); color: #64b4ff; }
+.mobile-card-btn.delete:hover { background: rgba(255,80,80,0.15); color: #ff5050; }
+}
+@media (min-width: 769px) {
+.mobile-cards { display: none; }
+}
+</style>
 <script>
 document.querySelectorAll('tbody tr').forEach(row => {
 row.addEventListener('mouseenter', () => { row.style.transform = 'translateY(-2px)'; row.style.transition = 'transform 0.2s ease'; });
@@ -159,6 +230,9 @@ function filterTable(val) {
 const q = val.toLowerCase();
 document.querySelectorAll('tbody tr').forEach(row => {
 row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+});
+document.querySelectorAll('.mobile-card').forEach(card => {
+card.style.display = card.textContent.toLowerCase().includes(q) ? '' : 'none';
 });
 }
 </script>
