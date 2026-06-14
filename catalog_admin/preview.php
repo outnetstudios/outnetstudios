@@ -97,7 +97,8 @@ if ($currentPage && !in_array($currentPage['page_type'], ['cover', 'back_cover',
     .preview-prod-info h2 { margin: 0 0 0.5rem; font-size: 1.4rem; }
     .preview-price-lg { font-size: 1.3rem; font-weight: 700; margin: 0.5rem 0; }
     .preview-stock { font-size: 0.85rem; color: #666; }
-    .page-footer { text-align: center; padding: 0.35rem 0 0.5rem; font-size: 0.7rem; color: #999; flex-shrink: 0; }
+    .page-footer { text-align: center; padding: 0.15rem 0 0.2rem; background: transparent; flex-shrink: 0; position: relative; z-index: 5; }
+    .page-number { display: inline-flex; align-items: center; justify-content: center; width: 1.4rem; height: 1.4rem; border-radius: 50%; background: rgba(255,255,255,0.85); color: #444; font-size: 0.6rem; font-weight: 600; line-height: 1; }
     .preview-empty { text-align: center; padding: 4rem 2rem; }
     .preview-empty p { font-size: 1.2rem; margin-bottom: 1rem; }
     .preview-cover { text-align: center; justify-content: center; }
@@ -172,7 +173,7 @@ if ($currentPage && !in_array($currentPage['page_type'], ['cover', 'back_cover',
 <?php else: ?>
 <div class="preview-sheet" id="previewSheet">
 <?= $pageContent ?>
-<?php if ($pageNum !== null): ?><div class="page-footer"><?= $pageNum ?></div><?php endif; ?>
+<?php if ($pageNum !== null): ?><div class="page-footer"><span class="page-number"><?= $pageNum ?></span></div><?php endif; ?>
 </div>
 <?php endif; ?>
 </div>

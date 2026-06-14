@@ -113,7 +113,8 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
 .preview-stock { font-size: 0.85rem; color: #666; }
 .preview-empty { text-align: center; padding: 4rem 2rem; font-size: 1.2rem; }
 .print-content { padding-top: 180px; display: flex; flex-direction: column; align-items: center; overflow: hidden; }
-.page-footer { text-align: center; padding: 0.35rem 0 0.5rem; font-size: 0.7rem; color: #999; flex-shrink: 0; }
+.page-footer { text-align: center; padding: 0.15rem 0 0.2rem; background: transparent; flex-shrink: 0; position: relative; z-index: 5; }
+.page-number { display: inline-flex; align-items: center; justify-content: center; width: 1.4rem; height: 1.4rem; border-radius: 50%; background: rgba(255,255,255,0.85); color: #444; font-size: 0.6rem; font-weight: 600; line-height: 1; }
 @media print { body { background: #fff; color: #000; overflow: visible; } .no-print { display: none !important; } .print-content { padding-top: 0 !important; } .print-wrapper { padding: 0; transform: none !important; } .print-page { margin: 0; border-radius: 0; box-shadow: none; } }
 @media (max-width: 480px) { .no-print { padding: 1rem !important; } .no-print h2 { font-size: 1rem !important; } .no-print p { font-size: 0.75rem !important; } .no-print-btn-wrap { flex-direction: column; align-items: center; gap: 0.5rem; } .no-print-btn-wrap a { margin-left: 0 !important; } }
 </style>
@@ -153,7 +154,7 @@ foreach ($expandedPages as $p):
 ?>
 <div class="print-page<?= !empty($p['background_image']) ? ' print-page-bleed' : '' ?>">
 <?= renderPageContent($p, $categories, $expandedPages) ?>
-<?php if ($showNum): ?><div class="page-footer"><?= $pageNum ?></div><?php endif; ?>
+<?php if ($showNum): ?><div class="page-footer"><span class="page-number"><?= $pageNum ?></span></div><?php endif; ?>
 </div>
 <?php endforeach; ?>
 </div>
