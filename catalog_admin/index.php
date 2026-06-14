@@ -224,8 +224,8 @@ $totalCount = count($catalogs);
 .mobile-card-label { color: rgba(255,255,255,0.4); font-weight: 500; }
 .mobile-card-value { color: rgba(255,255,255,0.7); font-weight: 600; text-align: right; }
 .mobile-card-actions { display: flex; justify-content: space-between; align-items: center; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.06); }
-.mobile-card-actions-left, .mobile-card-actions-right { display: flex; gap: 0.25rem; }
-.mobile-card-btn { display: inline-flex; align-items: center; justify-content: center; width: 2.2rem; height: 2.2rem; border-radius: 50%; color: rgba(255,255,255,0.5); text-decoration: none; transition: all 0.15s; }
+.mobile-card-actions-left, .mobile-card-actions-right { display: flex; gap: 0.5rem; }
+.mobile-card-btn { display: inline-flex; align-items: center; justify-content: center; min-width: 2.6rem; height: 2.6rem; border-radius: 50%; color: rgba(255,255,255,0.5); text-decoration: none; transition: all 0.15s; }
 .mobile-card-btn span { font-size: 1.1rem; }
 .mobile-card-btn:hover { background: rgba(255,255,255,0.06); color: var(--text-on-surface, #e0e0f0); }
 .mobile-card-btn.preview:hover { background: rgba(100,200,180,0.15); color: #64c8b4; }
