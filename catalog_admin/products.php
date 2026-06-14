@@ -250,6 +250,7 @@ $secId = (int)$section['id'];
 </main>
 <style>
 @media (max-width: 768px) {
+.overflow-x-auto { display: none; }
 .mobile-cards { display: flex; flex-direction: column; gap: 0.5rem; padding: 0.75rem; }
 .mobile-section-group { display: flex; flex-direction: column; gap: 0.5rem; }
 .mobile-section-title { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.5); padding: 0.5rem 0.25rem 0; margin: 0; text-transform: uppercase; letter-spacing: 0.05em; }

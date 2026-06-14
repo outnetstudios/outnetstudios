@@ -209,6 +209,7 @@ $totalCount = count($catalogs);
 
 <style>
 @media (max-width: 768px) {
+.overflow-x-auto { display: none; }
 .mobile-cards { display: flex; flex-direction: column; gap: 0.75rem; padding: 0.75rem; }
 .mobile-card { background: var(--surface-container-high, #1e1e2e); border-radius: 12px; padding: 1rem; border: 1px solid rgba(255,255,255,0.06); }
 .mobile-card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
