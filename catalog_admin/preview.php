@@ -97,8 +97,8 @@ if ($currentPage && !in_array($currentPage['page_type'], ['cover', 'back_cover',
     .preview-prod-info h2 { margin: 0 0 0.5rem; font-size: 1.4rem; }
     .preview-price-lg { font-size: 1.3rem; font-weight: 700; margin: 0.5rem 0; }
     .preview-stock { font-size: 0.85rem; color: #666; }
-    .page-footer { text-align: center; background: transparent; flex-shrink: 0; position: relative; height: 0.6rem; }
-    .page-number { position: absolute; left: 50%; bottom: 0.4rem; transform: translateX(-50%); display: inline-flex; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: rgba(255,255,255,0.9); color: #444; font-size: 0.65rem; font-weight: 600; line-height: 1; }
+    .page-footer { text-align: center; background: transparent; flex-shrink: 0; position: relative; height: 0; overflow: visible; }
+    .page-number { position: absolute; left: 50%; bottom: 1rem; transform: translateX(-50%); display: inline-flex; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: rgba(255,255,255,0.9); color: #444; font-size: 0.65rem; font-weight: 600; line-height: 1; }
     .preview-empty { text-align: center; padding: 4rem 2rem; }
     .preview-empty p { font-size: 1.2rem; margin-bottom: 1rem; }
     .preview-cover { text-align: center; justify-content: center; }
