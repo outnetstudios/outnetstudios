@@ -50,7 +50,7 @@ unset($ep);
 *, *::before, *::after { box-sizing: border-box; }
 body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: #0f1320; color: #1a1a2e; overflow-x: hidden; }
 .print-wrapper { display: flex; flex-direction: column; align-items: center; padding: 0.5rem; transform-origin: top center; }
-.print-page { page-break-after: always; width: 215.9mm; min-height: 279.4mm; overflow: hidden; display: flex; flex-direction: column; background: #ffffff; margin: 1rem 0; border-radius: 4px; box-shadow: 0 4px 24px rgba(0,0,0,0.4); flex-shrink: 0; }
+.print-page { page-break-after: always; width: 215.9mm; min-height: 279.4mm; overflow: hidden; display: flex; flex-direction: column; background: #ffffff; margin: 1rem 0; border-radius: 4px; box-shadow: 0 4px 24px rgba(0,0,0,0.4); flex-shrink: 0; position: relative; }
 .print-page:last-child { page-break-after: auto; }
 .print-page-bleed { padding: 0; }
 .print-page-bleed .page-content { padding: 2cm; }
@@ -113,8 +113,8 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
 .preview-stock { font-size: 0.85rem; color: #666; }
 .preview-empty { text-align: center; padding: 4rem 2rem; font-size: 1.2rem; }
 .print-content { padding-top: 180px; display: flex; flex-direction: column; align-items: center; overflow: hidden; }
-.page-footer { text-align: center; padding: 0.15rem 0 0.2rem; background: transparent; flex-shrink: 0; position: relative; z-index: 5; }
-.page-number { display: inline-flex; align-items: center; justify-content: center; width: 1.4rem; height: 1.4rem; border-radius: 50%; background: rgba(255,255,255,0.85); color: #444; font-size: 0.6rem; font-weight: 600; line-height: 1; }
+.page-footer { text-align: center; background: transparent; flex-shrink: 0; position: relative; height: 0.6rem; }
+.page-number { position: absolute; left: 50%; bottom: 0.4rem; transform: translateX(-50%); display: inline-flex; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: rgba(255,255,255,0.9); color: #444; font-size: 0.65rem; font-weight: 600; line-height: 1; }
 @media print { body { background: #fff; color: #000; overflow: visible; } .no-print { display: none !important; } .print-content { padding-top: 0 !important; } .print-wrapper { padding: 0; transform: none !important; } .print-page { margin: 0; border-radius: 0; box-shadow: none; } }
 @media (max-width: 480px) { .no-print { padding: 1rem !important; } .no-print h2 { font-size: 1rem !important; } .no-print p { font-size: 0.75rem !important; } .no-print-btn-wrap { flex-direction: column; align-items: center; gap: 0.5rem; } .no-print-btn-wrap a { margin-left: 0 !important; } }
 </style>
