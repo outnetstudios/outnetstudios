@@ -55,7 +55,7 @@ if ($result) {
         <div class="module-nav">
             <a class="module-nav__item is-active" href="vista_privada.php">Prospectos</a>
             <a class="module-nav__item" href="../catalog_users.php">Usuarios catálogo</a>
-            <span class="module-nav__item is-disabled">Catálogos</span>
+            <a class="module-nav__item" href="catalogos.php">Catálogos</a>
         </div>
 
         <div class="table-wrap">

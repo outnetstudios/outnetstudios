@@ -10,6 +10,18 @@ class CatalogRepository
         $this->connection = Database::getConnection();
     }
 
+    public function all(): array
+    {
+        $query = 'SELECT c.*, u.name AS creator_name, u.email AS creator_email,
+                    (SELECT COUNT(*) FROM catalog_pages WHERE catalog_id = c.id) AS page_count,
+                    (SELECT COUNT(*) FROM catalog_products WHERE catalog_id = c.id) AS product_count
+                  FROM catalogs c
+                  LEFT JOIN catalog_users u ON c.user_id = u.id
+                  ORDER BY c.created_at DESC';
+        $stmt = $this->connection->query($query);
+        return $stmt ? $stmt->fetchAll() : [];
+    }
+
     public function allByUser(int $userId): array
     {
         $query = 'SELECT * FROM catalogs WHERE user_id = :user_id ORDER BY created_at DESC';
