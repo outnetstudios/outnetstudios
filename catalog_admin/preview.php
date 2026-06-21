@@ -252,26 +252,27 @@ function applyZoom() {
     if (zoomLabel) zoomLabel.textContent = pct + '%';
 }
 
-function zoomIn() { zoom = Math.min(zoom + 0.10, 3); applyZoom(); saveZoom(); }
-function zoomOut() { zoom = Math.max(zoom - 0.10, 0.10); applyZoom(); saveZoom(); }
+function zoomIn() { zoom = Math.min(Math.round((zoom + 0.05) * 20) / 20, 3); applyZoom(); saveZoom(); }
+function zoomOut() { zoom = Math.max(Math.round((zoom - 0.05) * 20) / 20, 0.05); applyZoom(); saveZoom(); }
 
 function zoomFit() {
     const container = document.getElementById('previewContainer');
     if (!container || !sheet) { zoom = 1; applyZoom(); saveZoom(); return; }
     const cw = container.clientWidth - 48;
-    zoom = Math.min(cw / 816, 1);
-    zoom = Math.round(zoom * 100) / 100;
+    zoom = Math.min(Math.round((cw / 816) * 20) / 20, 1);
     applyZoom();
     saveZoom();
 }
 
 const saved = loadZoom();
 if (saved !== null && saved > 0) { zoom = saved; applyZoom(); }
+else if (window.innerWidth < 768) { zoom = 0.45; applyZoom(); saveZoom(); }
 else { zoomFit(); }
 
 window.addEventListener('resize', function() {
     const s = loadZoom();
     if (s !== null) { zoom = s; applyZoom(); }
+    else if (window.innerWidth < 768) { zoom = 0.45; applyZoom(); saveZoom(); }
     else { zoomFit(); }
 });
 

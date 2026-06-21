@@ -155,6 +155,10 @@ $publicUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' :
     <span class="public-header-title"><?= $catalogName ?></span>
     <div class="public-header-actions">
         <button onclick="copiarEnlace()" class="public-btn" title="Copiar enlace"><span class="material-symbols-outlined public-btn-icon">share</span><span class="public-btn-label">Compartir</span></button>
+        <button onclick="zoomOut()" class="public-btn" title="Alejar"><span class="material-symbols-outlined public-btn-icon">zoom_out</span><span class="public-btn-label">Alejar</span></button>
+        <span class="preview-zoom-label" id="zoomLevel" style="font-size:0.7rem;font-weight:600;color:rgba(255,255,255,0.4);min-width:2.2rem;text-align:center">100%</span>
+        <button onclick="zoomIn()" class="public-btn" title="Acercar"><span class="material-symbols-outlined public-btn-icon">zoom_in</span><span class="public-btn-label">Acercar</span></button>
+        <button onclick="zoomFit()" class="public-btn" title="Ajustar"><span class="material-symbols-outlined public-btn-icon">fit_width</span><span class="public-btn-label">Ajustar</span></button>
         <?php if ($allowPdf): ?>
         <a href="descargar_pdf.php?id=<?= $catalogId ?>" target="_blank" class="public-btn" title="Descargar PDF"><span class="material-symbols-outlined public-btn-icon">picture_as_pdf</span><span class="public-btn-label">PDF</span></a>
         <?php endif; ?>
@@ -202,8 +206,7 @@ $publicUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' :
 <script>
 function mostrarToast(msg) {
     var t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
+    t.textContent = msg; t.classList.add('show');
     setTimeout(function(){ t.classList.remove('show'); }, 2000);
 }
 function copiarEnlace() {
@@ -212,13 +215,42 @@ function copiarEnlace() {
         navigator.clipboard.writeText(url).then(function(){ mostrarToast('¡Enlace copiado!'); });
     } else {
         var ta = document.createElement('textarea');
-        ta.value = url;
-        ta.style.position = 'fixed'; ta.style.left = '-9999px';
+        ta.value = url; ta.style.position = 'fixed'; ta.style.left = '-9999px';
         document.body.appendChild(ta); ta.select();
         try { document.execCommand('copy'); mostrarToast('¡Enlace copiado!'); } catch(e) { prompt('Copia el enlace:', url); }
         document.body.removeChild(ta);
     }
 }
+let zoom = 1;
+const sheet = document.getElementById('previewSheet');
+const zoomLabel = document.getElementById('zoomLevel');
+function saveZoom() { try { localStorage.setItem('public_zoom_<?= $catalogId ?>', zoom); } catch(e) {} }
+function loadZoom() { try { const s = localStorage.getItem('public_zoom_<?= $catalogId ?>'); if (s !== null) return parseFloat(s); } catch(e) {} return null; }
+function applyZoom() {
+    if (!sheet) return;
+    const p = Math.round(zoom * 100);
+    sheet.style.transform = 'scale(' + zoom + ')';
+    if (zoomLabel) zoomLabel.textContent = p + '%';
+}
+function zoomIn() { zoom = Math.min(Math.round((zoom + 0.05) * 20) / 20, 3); applyZoom(); saveZoom(); }
+function zoomOut() { zoom = Math.max(Math.round((zoom - 0.05) * 20) / 20, 0.05); applyZoom(); saveZoom(); }
+function zoomFit() {
+    const c = document.getElementById('previewContainer');
+    if (!c || !sheet) { zoom = 1; applyZoom(); saveZoom(); return; }
+    const cw = c.clientWidth - 48;
+    zoom = Math.min(Math.round((cw / 816) * 20) / 20, 1);
+    applyZoom(); saveZoom();
+}
+const saved = loadZoom();
+if (saved !== null && saved > 0) { zoom = saved; applyZoom(); }
+else if (window.innerWidth < 768) { zoom = 0.45; applyZoom(); saveZoom(); }
+else { zoomFit(); }
+window.addEventListener('resize', function() {
+    const s = loadZoom();
+    if (s !== null) { zoom = s; applyZoom(); }
+    else if (window.innerWidth < 768) { zoom = 0.45; applyZoom(); saveZoom(); }
+    else { zoomFit(); }
+});
 // Touch swipe
 (function(){
     var c = document.getElementById('previewContainer'); if (!c) return;
