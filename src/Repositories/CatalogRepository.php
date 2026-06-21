@@ -57,18 +57,20 @@ class CatalogRepository
 
     public function update(int $id, array $data): bool
     {
-        $query = 'UPDATE catalogs SET name = :name, slug = :slug, description = :description, cover_image = :cover_image, back_cover_image = :back_cover_image, status = :status, currency = :currency, updated_at = NOW() WHERE id = :id';
+        $fields = ['name', 'slug', 'description', 'cover_image', 'back_cover_image', 'status', 'currency', 'public_pdf_download'];
+        $sets = [];
+        $params = [':id' => $id];
+        foreach ($fields as $f) {
+            if (array_key_exists($f, $data)) {
+                $sets[] = "$f = :$f";
+                $params[":$f"] = $data[$f];
+            }
+        }
+        if (empty($sets)) return false;
+        $sets[] = 'updated_at = NOW()';
+        $query = 'UPDATE catalogs SET ' . implode(', ', $sets) . ' WHERE id = :id';
         $stmt = $this->connection->prepare($query);
-        return $stmt->execute([
-            ':name' => $data['name'],
-            ':slug' => $data['slug'],
-            ':description' => $data['description'] ?? null,
-            ':cover_image' => $data['cover_image'] ?? null,
-            ':back_cover_image' => $data['back_cover_image'] ?? null,
-            ':status' => $data['status'] ?? 'draft',
-            ':currency' => $data['currency'] ?? 'NIO',
-            ':id' => $id,
-        ]);
+        return $stmt->execute($params);
     }
 
     public function delete(int $id): bool

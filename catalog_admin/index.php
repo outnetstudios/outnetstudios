@@ -120,6 +120,7 @@ $totalCount = count($catalogs);
                                         </td>
                                         <td class="p-md text-center">
                                             <div class="flex justify-center gap-1">
+                                                <button onclick="copiarEnlace(<?= $c['id'] ?>)" class="p-2 hover:bg-primary/20 rounded-lg text-primary transition-colors" title="Compartir"><span class="material-symbols-outlined text-[20px]">share</span></button>
                                                 <a href="preview.php?catalog_id=<?= $c['id'] ?>" class="p-2 hover:bg-tertiary/20 rounded-lg text-tertiary transition-colors" title="Vista previa"><span class="material-symbols-outlined text-[20px]">visibility</span></a>
                                                 <a href="edit.php?id=<?= $c['id'] ?>" class="p-2 hover:bg-on-surface-variant/20 rounded-lg text-on-surface-variant transition-colors" title="Editar"><span class="material-symbols-outlined text-[20px]">edit</span></a>
                                                 <a href="delete.php?id=<?= $c['id'] ?>" class="p-2 hover:bg-error/20 rounded-lg text-error transition-colors" title="Borrar" onclick="return confirm('¿Borrar este catálogo y todos sus datos?')"><span class="material-symbols-outlined text-[20px]">delete</span></a>
@@ -176,6 +177,7 @@ $totalCount = count($catalogs);
                                 <a href="pages.php?catalog_id=<?= $c['id'] ?>" class="mobile-card-btn" title="Páginas"><span class="material-symbols-outlined">description</span></a>
                             </div>
                             <div class="mobile-card-actions-right">
+                                <button onclick="copiarEnlace(<?= $c['id'] ?>)" class="mobile-card-btn" title="Compartir"><span class="material-symbols-outlined">share</span></button>
                                 <a href="preview.php?catalog_id=<?= $c['id'] ?>" class="mobile-card-btn preview" title="Vista previa"><span class="material-symbols-outlined">visibility</span></a>
                                 <a href="edit.php?id=<?= $c['id'] ?>" class="mobile-card-btn edit" title="Editar"><span class="material-symbols-outlined">edit</span></a>
                                 <a href="delete.php?id=<?= $c['id'] ?>" class="mobile-card-btn delete" title="Borrar" onclick="return confirm('¿Borrar este catálogo y todos sus datos?')"><span class="material-symbols-outlined">delete</span></a>
@@ -225,7 +227,7 @@ $totalCount = count($catalogs);
 .mobile-card-value { color: rgba(255,255,255,0.7); font-weight: 600; text-align: right; }
 .mobile-card-actions { display: flex; justify-content: space-between; align-items: center; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.06); }
 .mobile-card-actions-left, .mobile-card-actions-right { display: flex; gap: 0.5rem; }
-.mobile-card-btn { display: inline-flex; align-items: center; justify-content: center; min-width: 2.6rem; height: 2.6rem; border-radius: 50%; color: rgba(255,255,255,0.5); text-decoration: none; transition: all 0.15s; }
+.mobile-card-btn { display: inline-flex; align-items: center; justify-content: center; min-width: 2.6rem; height: 2.6rem; border-radius: 50%; color: rgba(255,255,255,0.5); text-decoration: none; transition: all 0.15s; border: none; background: transparent; cursor: pointer; font: inherit; padding: 0; }
 .mobile-card-btn span { font-size: 1.1rem; }
 .mobile-card-btn:hover { background: rgba(255,255,255,0.06); color: var(--text-on-surface, #e0e0f0); }
 .mobile-card-btn.preview:hover { background: rgba(100,200,180,0.15); color: #64c8b4; }
@@ -237,7 +239,28 @@ $totalCount = count($catalogs);
 }
 </style>
 
+<style>
+.toast-share{position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:100;padding:0.6rem 1.2rem;border-radius:999px;background:rgba(0,200,150,0.9);color:#fff;font-size:0.85rem;font-weight:600;opacity:0;transition:opacity 0.3s;pointer-events:none}.toast-share.show{opacity:1}
+</style>
+<div class="toast-share" id="toastShare"></div>
 <script>
+    function mostrarToast(msg) {
+        var t = document.getElementById('toastShare');
+        t.textContent = msg; t.classList.add('show');
+        setTimeout(function(){ t.classList.remove('show'); }, 2000);
+    }
+    function copiarEnlace(id) {
+        var url = (location.protocol === 'https:' ? 'https' : 'http') + '://' + location.host + '/ver_catalogo.php?id=' + id;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(function(){ mostrarToast('¡Enlace copiado!'); });
+        } else {
+            var ta = document.createElement('textarea');
+            ta.value = url; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); mostrarToast('¡Enlace copiado!'); } catch(e) { prompt('Copia el enlace:', url); }
+            document.body.removeChild(ta);
+        }
+    }
     document.querySelectorAll('tbody tr').forEach(row => {
         row.addEventListener('mouseenter', () => {
             row.style.transform = 'translateY(-2px)';

@@ -159,6 +159,7 @@ if ($currentPage && !in_array($currentPage['page_type'], ['cover', 'back_cover',
 <div class="preview-header">
     <span class="preview-header-title"><?= $catalogName ?></span>
     <div class="preview-header-actions">
+        <button onclick="copiarEnlace()" class="preview-btn preview-btn-always" title="Compartir"><span class="material-symbols-outlined preview-btn-icon">share</span><span class="preview-btn-label">Compartir</span></button>
         <button onclick="zoomOut()" class="preview-btn preview-btn-always" title="Alejar"><span class="material-symbols-outlined preview-btn-icon">zoom_out</span><span class="preview-btn-label">Alejar</span></button>
         <span class="preview-zoom-label" id="zoomLevel">100%</span>
         <button onclick="zoomIn()" class="preview-btn preview-btn-always" title="Acercar"><span class="material-symbols-outlined preview-btn-icon">zoom_in</span><span class="preview-btn-label">Acercar</span></button>
@@ -208,7 +209,28 @@ if ($currentPage && !in_array($currentPage['page_type'], ['cover', 'back_cover',
 </nav>
 <?php endif; ?>
 
+<style>
+.toast-share{position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:200;padding:0.6rem 1.2rem;border-radius:999px;background:rgba(0,200,150,0.9);color:#fff;font-size:0.85rem;font-weight:600;opacity:0;transition:opacity 0.3s;pointer-events:none}.toast-share.show{opacity:1}
+</style>
+<div class="toast-share" id="toastShare"></div>
 <script>
+function mostrarToast(msg) {
+    var t = document.getElementById('toastShare');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 2000);
+}
+function copiarEnlace() {
+    var url = (location.protocol === 'https:' ? 'https' : 'http') + '://' + location.host + '/ver_catalogo.php?id=<?= $catalogId ?>';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function(){ mostrarToast('¡Enlace copiado!'); });
+    } else {
+        var ta = document.createElement('textarea');
+        ta.value = url; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); mostrarToast('¡Enlace copiado!'); } catch(e) { prompt('Copia el enlace:', url); }
+        document.body.removeChild(ta);
+    }
+}
 let zoom = 1;
 const sheet = document.getElementById('previewSheet');
 const zoomLabel = document.getElementById('zoomLevel');
