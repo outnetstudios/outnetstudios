@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__ . '/_session.php';
 require_once __DIR__ . '/../src/Repositories/UserRepository.php';
 require_once __DIR__ . '/../src/Repositories/PasswordResetRepository.php';
 require_once __DIR__ . '/../src/Services/SmtpMailer.php';
