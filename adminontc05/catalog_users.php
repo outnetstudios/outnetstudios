@@ -80,7 +80,8 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuarios catálogo</title>
-    <link rel="stylesheet" href="css/auth-admin-theme.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/auth-admin-theme.css">
     <style>
         .module-note {
             padding: 1rem 1.1rem;
@@ -243,7 +244,7 @@ try {
         <div class="module-nav">
             <a class="module-nav__item" href="dashboard.php">Prospectos</a>
             <a class="module-nav__item is-active" href="catalog_users.php">Usuarios catálogo</a>
-            <span class="module-nav__item is-disabled">Catálogos</span>
+            <a class="module-nav__item" href="catalogos.php">Catálogos</a>
             <a class="module-nav__item" href="logout.php">Salir</a>
         </div>
 
