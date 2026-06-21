@@ -169,7 +169,7 @@ $contactData = getContactData($conn);
         </div>
         <div class="module-nav">
             <a class="module-nav__item is-active" href="dashboard.php">Prospectos</a>
-            <a class="module-nav__item" href="../catalog_users.php">Usuarios catálogo</a>
+            <a class="module-nav__item" href="../adminontc05/catalog_users.php">Usuarios catálogo</a>
             <span class="module-nav__item is-disabled">Catálogos</span>
         </div>
         <div class="table-scroll">

@@ -53,8 +53,8 @@ if ($result) {
         </div>
 
         <div class="module-nav">
-            <a class="module-nav__item is-active" href="vista_privada.php">Prospectos</a>
-            <a class="module-nav__item" href="../catalog_users.php">Usuarios catálogo</a>
+            <a class="module-nav__item is-active" href="dashboard.php">Prospectos</a>
+            <a class="module-nav__item" href="catalog_users.php">Usuarios catálogo</a>
             <a class="module-nav__item" href="catalogos.php">Catálogos</a>
         </div>
 

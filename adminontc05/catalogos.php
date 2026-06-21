@@ -82,12 +82,12 @@ session_write_close();
                 <h1>Catálogos</h1>
                 <p>Bienvenido, <?php echo htmlspecialchars($displayName, ENT_QUOTES, 'UTF-8'); ?>.</p>
             </div>
-            <a class="button" href="vista_privada.php">← Panel</a>
+            <a class="button" href="dashboard.php">← Panel</a>
         </div>
 
         <div class="module-nav">
-            <a class="module-nav__item" href="vista_privada.php">Prospectos</a>
-            <a class="module-nav__item" href="../catalog_users.php">Usuarios catálogo</a>
+            <a class="module-nav__item" href="dashboard.php">Prospectos</a>
+            <a class="module-nav__item" href="catalog_users.php">Usuarios catálogo</a>
             <a class="module-nav__item is-active" href="catalogos.php">Catálogos</a>
         </div>
 

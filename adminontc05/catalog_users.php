@@ -2,12 +2,12 @@
 session_start();
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header('Location: auth/login.php');
+    header('Location: login.php');
     exit;
 }
 
-require_once __DIR__ . '/src/Repositories/CatalogUserRepository.php';
-require_once __DIR__ . '/includes/plan_helpers.php';
+require_once __DIR__ . '/../src/Repositories/CatalogUserRepository.php';
+require_once __DIR__ . '/../includes/plan_helpers.php';
 
 $flashMessage = '';
 $flashPassword = '';
@@ -237,14 +237,14 @@ try {
                 <h1>Usuarios catálogo</h1>
                 <p>Crea usuarios con contraseña temporal para el nuevo proyecto.</p>
             </div>
-            <a href="auth/dashboard.php" class="button-primary">Volver a prospectos</a>
+            <a href="dashboard.php" class="button-primary">Volver a prospectos</a>
         </div>
 
         <div class="module-nav">
-            <a class="module-nav__item" href="auth/dashboard.php">Prospectos</a>
+            <a class="module-nav__item" href="dashboard.php">Prospectos</a>
             <a class="module-nav__item is-active" href="catalog_users.php">Usuarios catálogo</a>
             <span class="module-nav__item is-disabled">Catálogos</span>
-            <a class="module-nav__item" href="auth/logout.php">Salir</a>
+            <a class="module-nav__item" href="logout.php">Salir</a>
         </div>
 
         <div class="module-grid">
