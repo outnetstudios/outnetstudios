@@ -142,20 +142,7 @@ $pageTypeLabels = [
 endforeach; ?>
 </p>
 </div>
-<div class="glass-panel p-md rounded-2xl mb-xl">
-<form method="post" action="catalog_update.php" class="flex items-center justify-between flex-wrap gap-sm">
-    <input type="hidden" name="catalog_id" value="<?= $catalogId ?>">
-    <input type="hidden" name="redirect" value="pages.php?catalog_id=<?= $catalogId ?>">
-    <div class="flex items-center gap-2">
-        <span class="material-symbols-outlined text-primary text-[18px]">file_download</span>
-        <span class="font-body-sm text-body-sm text-on-surface-variant">Permitir descarga de PDF en vista pública</span>
-    </div>
-    <label class="relative inline-flex items-center cursor-pointer">
-        <input type="checkbox" name="public_pdf_download" value="1" <?= !empty($catalog['public_pdf_download']) ? 'checked' : '' ?> onchange="this.form.submit()" class="sr-only peer">
-        <div class="w-11 h-6 bg-surface-variant/30 rounded-full peer peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
-    </label>
-</form>
-</div>
+
 <?php endif; ?>
 </div>
 </section>

@@ -46,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'currency' => $currency,
             'cover_image' => $coverImage,
             'back_cover_image' => $backCoverImage,
+            'public_pdf_download' => !empty($_POST['public_pdf_download']) ? 1 : 0,
         ]);
         header('Location: index.php');
         exit;
@@ -110,7 +111,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <option value="archived" <?= $catalog['status'] === 'archived' ? 'selected' : '' ?>>Archivado</option>
 </select>
 </div>
-<div class="flex gap-sm pt-md">
+<div class="flex items-center justify-between flex-wrap gap-sm pt-md border-t border-outline-variant/20">
+<div class="flex items-center gap-2">
+    <span class="material-symbols-outlined text-primary text-[18px]">file_download</span>
+    <span class="font-body-sm text-body-sm text-on-surface-variant">Permitir descarga de PDF en vista pública</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+    <input type="checkbox" name="public_pdf_download" value="1" <?= !empty($catalog['public_pdf_download']) ? 'checked' : '' ?> class="sr-only peer">
+    <div class="w-11 h-6 bg-surface-variant/30 rounded-full peer peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+</label>
+</div>
+<div class="flex gap-sm">
 <button class="primary-gradient text-white px-lg py-sm rounded-full font-title-sm text-title-sm active:scale-95 transition-transform primary-glow" type="submit">Guardar cambios</button>
 <a href="index.php" class="px-lg py-sm rounded-full border border-outline-variant font-title-sm text-title-sm text-on-surface-variant hover:bg-surface-variant/50 hover:border-error/30 hover:text-error transition-all no-underline">Cancelar</a>
 </div>

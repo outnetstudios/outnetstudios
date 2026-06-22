@@ -159,6 +159,7 @@ $totalCount = count($catalogs);
                                 <span class="mobile-card-title"><?= htmlspecialchars($c['name'], ENT_QUOTES, 'UTF-8') ?></span>
                                 <span class="mobile-card-slug"><?= htmlspecialchars($c['slug'], ENT_QUOTES, 'UTF-8') ?></span>
                             </div>
+                            <button onclick="copiarEnlace(<?= $c['id'] ?>)" class="mobile-card-btn mobile-card-share" title="Compartir"><span class="material-symbols-outlined">share</span></button>
                         </div>
                         <div class="mobile-card-body">
                             <div class="mobile-card-row">
@@ -177,7 +178,6 @@ $totalCount = count($catalogs);
                                 <a href="pages.php?catalog_id=<?= $c['id'] ?>" class="mobile-card-btn" title="Páginas"><span class="material-symbols-outlined">description</span></a>
                             </div>
                             <div class="mobile-card-actions-right">
-                                <button onclick="copiarEnlace(<?= $c['id'] ?>)" class="mobile-card-btn" title="Compartir"><span class="material-symbols-outlined">share</span></button>
                                 <a href="preview.php?catalog_id=<?= $c['id'] ?>" class="mobile-card-btn preview" title="Vista previa"><span class="material-symbols-outlined">visibility</span></a>
                                 <a href="edit.php?id=<?= $c['id'] ?>" class="mobile-card-btn edit" title="Editar"><span class="material-symbols-outlined">edit</span></a>
                                 <a href="delete.php?id=<?= $c['id'] ?>" class="mobile-card-btn delete" title="Borrar" onclick="return confirm('¿Borrar este catálogo y todos sus datos?')"><span class="material-symbols-outlined">delete</span></a>
@@ -214,7 +214,9 @@ $totalCount = count($catalogs);
 .overflow-x-auto { display: none; }
 .mobile-cards { display: flex; flex-direction: column; gap: 0.75rem; padding: 0.75rem; }
 .mobile-card { background: var(--surface-container-high, #1e1e2e); border-radius: 12px; padding: 1rem; border: 1px solid rgba(255,255,255,0.06); }
-.mobile-card-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+.mobile-card-header { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.75rem; }
+.mobile-card-share { margin-left: auto; flex-shrink: 0; }
+.mobile-card-share:hover { background: rgba(165,180,252,0.15); color: #a5b4fc; }
 .mobile-card-cover { width: 56px; height: 64px; border-radius: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; }
 .mobile-card-cover img { width: 100%; height: 100%; object-fit: cover; }
 .mobile-card-cover span { font-size: 20px; color: rgba(255,255,255,0.2); }
