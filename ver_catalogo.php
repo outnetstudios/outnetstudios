@@ -140,7 +140,9 @@ $publicUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' :
     .toast { position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); z-index: 100; padding: 0.6rem 1.2rem; border-radius: 999px; background: rgba(0,200,150,0.9); color: #fff; font-size: 0.85rem; font-weight: 600; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
     .toast.show { opacity: 1; }
     @media (max-width: 767px) {
-        #previewContainer.with-pages { padding: 0.5rem 0.5rem 3.5rem; }
+        #previewContainer.with-pages { padding: 0.25rem 0.5rem 3.5rem; }
+        .public-header-inner { padding: 0.25rem 0.75rem; }
+        .public-header-title { font-size: 0.85rem; }
     }
     @media (max-width: 480px) {
         .public-footer { padding: 0.3rem 0.4rem; gap: 0.15rem; }
