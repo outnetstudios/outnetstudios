@@ -1,20 +1,33 @@
 <?php
-require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
+$isPublicView = $isPublicView ?? false;
 require_once __DIR__ . '/../src/Repositories/CatalogRepository.php';
 require_once __DIR__ . '/../src/Repositories/CatalogPageRepository.php';
 require_once __DIR__ . '/../src/Repositories/CategoryRepository.php';
 require_once __DIR__ . '/../src/Repositories/ProductRepository.php';
 require_once __DIR__ . '/../includes/catalog_preview_renderer.php';
 
-catalogRequireLogin();
-$userId = (int)catalogGetUserId();
-$catalogId = (int)($_GET['catalog_id'] ?? 0);
+if (!$isPublicView) {
+    require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
+    catalogRequireLogin();
+    $userId = (int)catalogGetUserId();
+    $catalogId = (int)($_GET['catalog_id'] ?? 0);
+} else {
+    $catalogId = (int)($_GET['id'] ?? 0);
+}
 
 $catRepo = new CatalogRepository();
 $catalog = $catRepo->findById($catalogId);
-if (!$catalog || (int)$catalog['user_id'] !== $userId) {
-    header('Location: index.php');
-    exit;
+if (!$isPublicView) {
+    if (!$catalog || (int)$catalog['user_id'] !== $userId) {
+        header('Location: index.php');
+        exit;
+    }
+} else {
+    if (!$catalog || empty($catalog['public_pdf_download'])) {
+        http_response_code(403);
+        echo 'Descarga de PDF no disponible para este catálogo.';
+        exit;
+    }
 }
 
 $pageRepo = new CatalogPageRepository();
@@ -137,7 +150,7 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
 </div>
 <div class="no-print-btn-wrap" style="display:flex;justify-content:center;gap:0.5rem;margin-top:1rem;">
 <button id="printBtn" onclick="handlePrintClick()" style="padding:0.5rem 1.5rem;border-radius:999px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-size:0.9rem;white-space:nowrap;" disabled>Abrir diálogo de PDF</button>
-<a href="preview.php?catalog_id=<?= $catalogId ?>" style="padding:0.5rem 1.5rem;border-radius:999px;border:1px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.9rem;white-space:nowrap;">Volver</a>
+<a href="<?= $isPublicView ? 'ver_catalogo.php?id=' . $catalogId : 'preview.php?catalog_id=' . $catalogId ?>" style="padding:0.5rem 1.5rem;border-radius:999px;border:1px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.9rem;white-space:nowrap;">Volver</a>
 </div>
 </div>
 </div>
