@@ -29,6 +29,16 @@ if (!$isPublicView) {
         echo 'Catálogo no encontrado.';
         exit;
     }
+    if ($catalog['status'] === 'draft') {
+        http_response_code(503);
+        echo '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Catálogo en mantenimiento</title><style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0f1320;color:#dee2f4;font-family:"Inter",sans-serif;text-align:center;padding:2rem}.msg{max-width:480px}.msg h1{font-size:1.5rem;margin:0 0 0.75rem;color:#a5b4fc}.msg p{font-size:0.95rem;color:#8892b0;line-height:1.5;margin:0}</style></head><body><div class="msg"><span class="material-symbols-outlined" style="font-size:3rem;color:#fbbf24;margin-bottom:1rem">construction</span><h1>Catálogo en mantenimiento</h1><p>Ponte en contacto con tu proveedor para más información.</p></div></body></html>';
+        exit;
+    }
+    if ($catalog['status'] === 'archived') {
+        http_response_code(410);
+        echo '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Catálogo inactivo</title><style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0f1320;color:#dee2f4;font-family:"Inter",sans-serif;text-align:center;padding:2rem}.msg{max-width:480px}.msg h1{font-size:1.5rem;margin:0 0 0.75rem;color:#f87171}.msg p{font-size:0.95rem;color:#8892b0;line-height:1.5;margin:0}</style></head><body><div class="msg"><span class="material-symbols-outlined" style="font-size:3rem;color:#f87171;margin-bottom:1rem">block</span><h1>Catálogo inactivo</h1><p>Ponte en contacto con tu proveedor para más información.</p></div></body></html>';
+        exit;
+    }
 }
 
 $pageRepo = new CatalogPageRepository();
