@@ -79,9 +79,6 @@ function compressImage(string $path, string $mime): void
     global $maxDim, $jpgQuality, $webpQuality;
     [$w, $h] = @getimagesize($path);
     if (!$w || !$h) return;
-    $ratio = min($maxDim / max($w, $h), 1);
-    $nw = (int)round($w * $ratio);
-    $nh = (int)round($h * $ratio);
     $src = match ($mime) {
         'image/jpeg' => @imagecreatefromjpeg($path),
         'image/png' => @imagecreatefrompng($path),
@@ -91,6 +88,25 @@ function compressImage(string $path, string $mime): void
     };
     if (!$src) return;
     if ($mime === 'image/gif') { imagedestroy($src); return; }
+
+    // Fix EXIF orientation for JPEG (smartphone photos)
+    if ($mime === 'image/jpeg' && function_exists('exif_read_data')) {
+        $exif = @exif_read_data($path);
+        $orientation = ($exif && !empty($exif['Orientation'])) ? (int)$exif['Orientation'] : 1;
+        if ($orientation > 1) {
+            $swap = false;
+            switch ($orientation) {
+                case 3: $src = imagerotate($src, 180, 0); break;
+                case 6: $src = imagerotate($src, -90, 0); $swap = true; break;
+                case 8: $src = imagerotate($src, 90, 0); $swap = true; break;
+            }
+            if ($src && $swap) [$w, $h] = [$h, $w];
+        }
+    }
+
+    $ratio = min($maxDim / max($w, $h), 1);
+    $nw = (int)round($w * $ratio);
+    $nh = (int)round($h * $ratio);
     if ($ratio < 1) {
         $dst = imagecreatetruecolor($nw, $nh);
         if ($mime === 'image/png') {
