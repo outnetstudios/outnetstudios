@@ -1,21 +1,34 @@
 <?php
-require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
+$isPublicView = $isPublicView ?? false;
 require_once __DIR__ . '/../src/Repositories/CatalogRepository.php';
 require_once __DIR__ . '/../src/Repositories/CatalogPageRepository.php';
 require_once __DIR__ . '/../src/Repositories/CategoryRepository.php';
 require_once __DIR__ . '/../src/Repositories/ProductRepository.php';
 require_once __DIR__ . '/../includes/catalog_preview_renderer.php';
 
-catalogRequireLogin();
-$userName = htmlspecialchars(catalogGetUserName(), ENT_QUOTES, 'UTF-8');
-$userId = (int)catalogGetUserId();
-$catalogId = (int)($_GET['catalog_id'] ?? 0);
+if (!$isPublicView) {
+    require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
+    catalogRequireLogin();
+    $userName = htmlspecialchars(catalogGetUserName(), ENT_QUOTES, 'UTF-8');
+    $userId = (int)catalogGetUserId();
+    $catalogId = (int)($_GET['catalog_id'] ?? 0);
+} else {
+    $catalogId = (int)($_GET['id'] ?? 0);
+}
 
 $catRepo = new CatalogRepository();
 $catalog = $catRepo->findById($catalogId);
-if (!$catalog || (int)$catalog['user_id'] !== $userId) {
-    header('Location: index.php');
-    exit;
+if (!$isPublicView) {
+    if (!$catalog || (int)$catalog['user_id'] !== $userId) {
+        header('Location: index.php');
+        exit;
+    }
+} else {
+    if (!$catalog) {
+        http_response_code(404);
+        echo 'Catálogo no encontrado.';
+        exit;
+    }
 }
 
 $pageRepo = new CatalogPageRepository();
@@ -52,8 +65,13 @@ if ($currentPage && !in_array($currentPage['page_type'], ['cover', 'back_cover',
         if (!in_array($expandedPages[$i]['page_type'], ['cover', 'back_cover', 'index'], true)) $pageNum++;
     }
 }
-?>
-<?php $pageTitle = 'Vista previa - ' . $catalogName; require_once __DIR__ . '/../templates/partials/admin_head.php'; ?>
+$allowPdf = !empty($catalog['public_pdf_download']);
+$pageTitle = 'Vista previa - ' . $catalogName;
+if (!$isPublicView):
+    require_once __DIR__ . '/../templates/partials/admin_head.php';
+else:
+    $publicUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/ver_catalogo.php?id=' . $catalogId;
+    ?><!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title><?= $catalogName ?> — Catálogo</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><?php endif; ?>
     <style>
     *, *::before, *::after { box-sizing: border-box; }
     body { margin: 0; min-height: 100vh; background: #0f1320; color: #dee2f4; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; }
@@ -168,9 +186,15 @@ if ($currentPage && !in_array($currentPage['page_type'], ['cover', 'back_cover',
         <span class="preview-zoom-label" id="zoomLevel">100%</span>
         <button onclick="zoomIn()" class="preview-btn preview-btn-always" title="Acercar"><span class="material-symbols-outlined preview-btn-icon">zoom_in</span><span class="preview-btn-label">Acercar</span></button>
         <button onclick="zoomFit()" class="preview-btn preview-btn-always" title="Ajustar al ancho"><span class="material-symbols-outlined preview-btn-icon">fit_width</span><span class="preview-btn-label">Ajustar</span></button>
+<?php if ($isPublicView): ?>
+        <?php if ($allowPdf): ?>
+        <a href="descargar_pdf.php?id=<?= $catalogId ?>" target="_blank" class="preview-btn preview-btn-always" title="Descargar PDF"><span class="material-symbols-outlined preview-btn-icon">picture_as_pdf</span><span class="preview-btn-label">PDF</span></a>
+        <?php endif; ?>
+<?php else: ?>
         <a href="export_pdf.php?catalog_id=<?= $catalogId ?>" target="_blank" class="preview-btn preview-btn-always" title="Exportar PDF"><span class="material-symbols-outlined preview-btn-icon">picture_as_pdf</span><span class="preview-btn-label">PDF</span></a>
         <a href="pages.php?catalog_id=<?= $catalogId ?>" class="preview-btn" title="Editar páginas"><span class="material-symbols-outlined preview-btn-icon">edit_note</span><span class="preview-btn-label">Editar</span></a>
         <a href="index.php" class="preview-btn" title="Volver a catálogos"><span class="material-symbols-outlined preview-btn-icon">arrow_back</span><span class="preview-btn-label">Catálogos</span></a>
+<?php endif; ?>
     </div>
 </div>
 </header>
@@ -178,8 +202,10 @@ if ($currentPage && !in_array($currentPage['page_type'], ['cover', 'back_cover',
 <div class="flex-1 overflow-auto flex items-start justify-center <?= empty($pages) ? '' : 'with-pages' ?>" id="previewContainer">
 <?php if (empty($pages)): ?>
 <div class="preview-empty">
-    <p class="font-title-sm text-title-sm text-on-surface">Este catálogo no tiene páginas aún.</p>
+    <p>Este catálogo está vacío.</p>
+<?php if (!$isPublicView): ?>
     <a href="page_create.php?catalog_id=<?= $catalogId ?>" class="text-primary hover:text-primary-fixed-dim transition-colors">Añadir primera página</a>
+<?php endif; ?>
 </div>
 <?php else: ?>
 <div class="preview-sheet" id="previewSheet">
@@ -193,19 +219,19 @@ if ($currentPage && !in_array($currentPage['page_type'], ['cover', 'back_cover',
 <nav class="preview-footer">
     <div>
         <?php if ($pageIndex > 1): ?>
-        <a class="preview-footer-btn" href="?catalog_id=<?= $catalogId ?>&page=<?= $pageIndex - 1 ?>" id="prevPage"><span class="material-symbols-outlined" style="font-size:1.1rem">chevron_left</span> Anterior</a>
+        <a class="preview-footer-btn" href="?<?= $isPublicView ? 'id' : 'catalog_id' ?>=<?= $catalogId ?>&page=<?= $pageIndex - 1 ?>" id="prevPage"><span class="material-symbols-outlined" style="font-size:1.1rem">chevron_left</span> Anterior</a>
         <?php else: ?>
         <span class="preview-footer-btn disabled"><span class="material-symbols-outlined" style="font-size:1.1rem">chevron_left</span> Anterior</span>
         <?php endif; ?>
     </div>
     <div class="preview-page-numbers">
         <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-        <a href="?catalog_id=<?= $catalogId ?>&page=<?= $i ?>" class="preview-page-num <?= $i === $pageIndex ? 'active' : '' ?>"><?= $i ?></a>
+        <a href="?<?= $isPublicView ? 'id' : 'catalog_id' ?>=<?= $catalogId ?>&page=<?= $i ?>" class="preview-page-num <?= $i === $pageIndex ? 'active' : '' ?>"><?= $i ?></a>
         <?php endfor; ?>
     </div>
     <div>
         <?php if ($pageIndex < $totalPages): ?>
-        <a class="preview-footer-btn" href="?catalog_id=<?= $catalogId ?>&page=<?= $pageIndex + 1 ?>" id="nextPage">Siguiente <span class="material-symbols-outlined" style="font-size:1.1rem">chevron_right</span></a>
+        <a class="preview-footer-btn" href="?<?= $isPublicView ? 'id' : 'catalog_id' ?>=<?= $catalogId ?>&page=<?= $pageIndex + 1 ?>" id="nextPage">Siguiente <span class="material-symbols-outlined" style="font-size:1.1rem">chevron_right</span></a>
         <?php else: ?>
         <span class="preview-footer-btn disabled">Siguiente <span class="material-symbols-outlined" style="font-size:1.1rem">chevron_right</span></span>
         <?php endif; ?>
@@ -224,7 +250,7 @@ function mostrarToast(msg) {
     setTimeout(function(){ t.classList.remove('show'); }, 2000);
 }
 function copiarEnlace() {
-    var url = (location.protocol === 'https:' ? 'https' : 'http') + '://' + location.host + '/ver_catalogo.php?id=<?= $catalogId ?>';
+    var url = <?= $isPublicView ? "'$publicUrl'" : "'https://' + location.host + '/ver_catalogo.php?id=$catalogId'" ?>;
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(url).then(function(){ mostrarToast('¡Enlace copiado!'); });
     } else {
@@ -238,7 +264,7 @@ function copiarEnlace() {
 let zoom = 1;
 const sheet = document.getElementById('previewSheet');
 const zoomLabel = document.getElementById('zoomLevel');
-const storageKey = 'catalog_zoom_<?= $catalogId ?>';
+const storageKey = '<?= $isPublicView ? 'public' : 'catalog' ?>_zoom_<?= $catalogId ?>';
 
 function saveZoom() {
     try { localStorage.setItem(storageKey, zoom); } catch(e) {}
@@ -283,7 +309,7 @@ window.addEventListener('resize', function() {
 // Preserve scroll position across page navigation
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 (function() {
-    const key = 'preview_scroll_' + <?= $catalogId ?>;
+    const key = '<?= $isPublicView ? 'public' : 'preview' ?>_scroll_' + <?= $catalogId ?>;
     function saveScroll() {
         const c = document.getElementById('previewContainer');
         if (!c) return;
