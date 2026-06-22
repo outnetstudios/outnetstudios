@@ -70,6 +70,7 @@ $publicUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' :
         .public-header-title { max-width: none; font-size: 1.15rem; }
         .public-btn-label { display: inline; }
         .public-btn { padding: 0.4rem 0.9rem; font-size: 0.72rem; gap: 0.35rem; }
+        #previewContainer.with-pages { padding: 2rem 1.5rem 5rem; }
     }
     .preview-sheet { width: 816px; height: 1056px; background: #ffffff; color: #1a1a2e; border-radius: 4px; box-shadow: 0 4px 24px rgba(0,0,0,0.6); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease; transform-origin: center center; position: relative; flex-shrink: 0; }
     .preview-sheet .preview-page { flex: 1; display: flex; flex-direction: column; }
