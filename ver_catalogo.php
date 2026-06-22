@@ -123,7 +123,7 @@ $publicUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' :
     .preview-back-cover .page-content,
     .preview-banner .page-content { display: flex; flex-direction: column; justify-content: center; align-items: center; }
     .preview-page[style*="background:"] .page-content { display: none; }
-    #previewContainer { flex: 1; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    #previewContainer { flex: 1; display: flex; justify-content: center; }
     #previewContainer.with-pages { padding: 1.5rem 1rem 5rem; padding-top: 1.5rem; padding-bottom: 5rem; }
     .public-footer { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px)); background: rgba(15,19,32,0.85); backdrop-filter: blur(16px); border-top: 1px solid rgba(255,255,255,0.06); gap: 0.25rem; }
     .public-footer-btn { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.4rem 0.75rem; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); color: #b0b8d4; font-size: 0.75rem; font-weight: 500; text-decoration: none; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; cursor: pointer; }
@@ -140,7 +140,7 @@ $publicUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' :
     .toast { position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); z-index: 100; padding: 0.6rem 1.2rem; border-radius: 999px; background: rgba(0,200,150,0.9); color: #fff; font-size: 0.85rem; font-weight: 600; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
     .toast.show { opacity: 1; }
     @media (max-width: 767px) {
-        #previewContainer.with-pages { padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 0.25rem; padding-bottom: 3.5rem; }
+        #previewContainer.with-pages { align-items: flex-start; overflow: auto; padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 0; padding-bottom: 3.5rem; }
         .public-header-inner { padding: 0.35rem 0.75rem; }
     }
     @media (max-width: 480px) {
@@ -253,12 +253,14 @@ function zoomFit() {
 }
 const saved = loadZoom();
 if (saved !== null && saved > 0) { zoom = saved; applyZoom(); }
-else if (window.innerWidth < 768) { zoom = 0.45; applyZoom(); saveZoom(); }
+else if (window.innerWidth < 768) { zoom = Math.min(0.45, Math.round(((window.innerWidth - 32) / 816) * 20) / 20); applyZoom(); saveZoom(); }
 else { zoomFit(); }
 window.addEventListener('resize', function() {
+    const c = document.getElementById('previewContainer');
+    const cw = (c?.clientWidth ?? window.innerWidth) - 32;
     const s = loadZoom();
-    if (s !== null) { zoom = s; applyZoom(); }
-    else if (window.innerWidth < 768) { zoom = 0.45; applyZoom(); saveZoom(); }
+    if (s !== null) { zoom = s; if (cw < 816 * zoom && window.innerWidth < 768) { zoom = Math.min(0.45, Math.round((cw / 816) * 20) / 20); } applyZoom(); saveZoom(); }
+    else if (window.innerWidth < 768) { zoom = Math.min(0.45, Math.round((cw / 816) * 20) / 20); applyZoom(); saveZoom(); }
     else { zoomFit(); }
 });
 // Touch swipe

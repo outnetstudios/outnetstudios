@@ -132,7 +132,7 @@ if ($currentPage && !in_array($currentPage['page_type'], ['cover', 'back_cover',
     .preview-page-num { min-width: 1.75rem; height: 1.75rem; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; text-decoration: none; color: rgba(255,255,255,0.35); transition: all 0.15s; flex-shrink: 0; }
     .preview-page-num:hover { background: rgba(255,255,255,0.06); color: #dee2f4; }
     .preview-page-num.active { background: rgba(165,180,252,0.15); color: #a5b4fc; font-weight: 700; }
-    #previewContainer { flex: 1; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    #previewContainer { flex: 1; display: flex; justify-content: center; }
     #previewContainer.with-pages { padding: 1.5rem 1rem 5rem; padding-top: 1.5rem; padding-bottom: 5rem; }
 
     @media (min-width: 640px) {
@@ -144,7 +144,7 @@ if ($currentPage && !in_array($currentPage['page_type'], ['cover', 'back_cover',
         .preview-footer { padding: 0.5rem 1.5rem; }
     }
     @media (max-width: 767px) {
-        #previewContainer.with-pages { padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 0.25rem; padding-bottom: 3.5rem; }
+        #previewContainer.with-pages { align-items: flex-start; overflow: auto; padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 0; padding-bottom: 3.5rem; }
         .preview-header { padding: 0.35rem 0.75rem; }
     }
     @media (max-width: 480px) {
@@ -270,13 +270,15 @@ function zoomFit() {
 
 const saved = loadZoom();
 if (saved !== null && saved > 0) { zoom = saved; applyZoom(); }
-else if (window.innerWidth < 768) { zoom = 0.45; applyZoom(); saveZoom(); }
+else if (window.innerWidth < 768) { zoom = Math.min(0.45, Math.round(((window.innerWidth - 32) / 816) * 20) / 20); applyZoom(); saveZoom(); }
 else { zoomFit(); }
 
 window.addEventListener('resize', function() {
+    const c = document.getElementById('previewContainer');
+    const cw = (c?.clientWidth ?? window.innerWidth) - 32;
     const s = loadZoom();
-    if (s !== null) { zoom = s; applyZoom(); }
-    else if (window.innerWidth < 768) { zoom = 0.45; applyZoom(); saveZoom(); }
+    if (s !== null) { zoom = s; if (cw < 816 * zoom && window.innerWidth < 768) { zoom = Math.min(0.45, Math.round((cw / 816) * 20) / 20); } applyZoom(); saveZoom(); }
+    else if (window.innerWidth < 768) { zoom = Math.min(0.45, Math.round((cw / 816) * 20) / 20); applyZoom(); saveZoom(); }
     else { zoomFit(); }
 });
 
