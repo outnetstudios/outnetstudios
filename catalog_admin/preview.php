@@ -336,20 +336,28 @@ window.addEventListener('resize', function() {
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 (function() {
     const key = '<?= $isPublicView ? 'public' : 'preview' ?>_scroll_' + <?= $catalogId ?>;
-    function saveScroll() {
-        const c = document.getElementById('previewContainer');
-        if (!c) return;
-        if (c.scrollTop < 100) { try { sessionStorage.removeItem(key); } catch(e) {} return; }
-        const ratio = c.scrollHeight > c.clientHeight ? c.scrollTop / (c.scrollHeight - c.clientHeight) : 0;
-        try { sessionStorage.setItem(key, ratio); } catch(e) {}
+    function getScroller() {
+        var c = document.getElementById('previewContainer');
+        if (!c) return null;
+        return window.innerWidth < 768 ? document.documentElement : c;
     }
+    window.saveScroll = function() {
+        var el = getScroller();
+        if (!el) return;
+        var st = el === document.documentElement ? window.scrollY || window.pageYOffset || document.documentElement.scrollTop : el.scrollTop;
+        if (st < 100) { try { sessionStorage.removeItem(key); } catch(e) {} return; }
+        var sh = el === document.documentElement ? document.documentElement.scrollHeight : el.scrollHeight;
+        var ch = el === document.documentElement ? window.innerHeight : el.clientHeight;
+        var ratio = sh > ch ? st / (sh - ch) : 0;
+        try { sessionStorage.setItem(key, ratio); } catch(e) {}
+    };
     document.querySelectorAll('.preview-page-num, #prevPage, #nextPage').forEach(function(el) {
-        el.addEventListener('click', saveScroll);
+        el.addEventListener('click', window.saveScroll);
     });
     window.addEventListener('load', function() {
-        const c = document.getElementById('previewContainer');
-        if (!c) return;
-        try { const r = parseFloat(sessionStorage.getItem(key)); if (!isNaN(r) && r > 0) { setTimeout(function() { c.scrollTop = r * (c.scrollHeight - c.clientHeight); }, 50); } } catch(e) {}
+        var el = getScroller();
+        if (!el) return;
+        try { var r = parseFloat(sessionStorage.getItem(key)); if (!isNaN(r) && r > 0) { setTimeout(function() { var sh = el === document.documentElement ? document.documentElement.scrollHeight : el.scrollHeight; var ch = el === document.documentElement ? window.innerHeight : el.clientHeight; if (el === document.documentElement) { window.scrollTo(0, r * (sh - ch)); } else { el.scrollTop = r * (sh - ch); } }, 50); } } catch(e) {}
     });
 })();
 // Touch swipe navigation
@@ -366,6 +374,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
         const diff = xStart - xEnd;
         xStart = null;
         if (Math.abs(diff) < 50) return;
+        if (typeof window.saveScroll === 'function') window.saveScroll();
         if (diff > 0) {
             var next = document.getElementById('nextPage');
             if (next && next.tagName === 'A') location.href = next.href;
