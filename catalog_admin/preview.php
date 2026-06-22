@@ -133,18 +133,18 @@ if ($currentPage && !in_array($currentPage['page_type'], ['cover', 'back_cover',
     .preview-page-num:hover { background: rgba(255,255,255,0.06); color: #dee2f4; }
     .preview-page-num.active { background: rgba(165,180,252,0.15); color: #a5b4fc; font-weight: 700; }
     #previewContainer { flex: 1; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-    #previewContainer.with-pages { padding: 1.5rem 1rem 5rem; }
+    #previewContainer.with-pages { padding: 1.5rem 1rem 5rem; padding-top: 1.5rem; padding-bottom: 5rem; }
 
     @media (min-width: 640px) {
         .preview-header { padding: 0.5rem 1.5rem; }
         .preview-header-title { max-width: none; font-size: 1.15rem; }
         .preview-btn-label { display: inline; }
         .preview-btn { padding: 0.4rem 0.9rem; font-size: 0.72rem; gap: 0.35rem; }
-        #previewContainer.with-pages { padding: 2rem 1.5rem 5rem; }
+        #previewContainer.with-pages { padding: 2rem 1.5rem 5rem; padding-bottom: 5rem; }
         .preview-footer { padding: 0.5rem 1.5rem; }
     }
     @media (max-width: 767px) {
-        #previewContainer.with-pages { padding: 1rem 0.5rem 3.5rem; }
+        #previewContainer.with-pages { padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 0.25rem; padding-bottom: 3.5rem; }
         .preview-header { padding: 0.35rem 0.75rem; }
     }
     @media (max-width: 480px) {
