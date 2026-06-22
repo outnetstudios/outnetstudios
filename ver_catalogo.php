@@ -57,21 +57,6 @@ $publicUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' :
     <style>
     *, *::before, *::after { box-sizing: border-box; }
     body { margin: 0; min-height: 100vh; background: #0f1320; color: #dee2f4; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; }
-    .public-header { position: sticky; top: 0; z-index: 50; background: rgba(15,19,32,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); }
-    .public-header-inner { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0.5rem 1rem; gap: 0.5rem; }
-    .public-header-title { font-size: 1rem; font-weight: 700; color: #a5b4fc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
-    .public-header-actions { display: flex; align-items: center; gap: 0.35rem; flex-shrink: 0; }
-    .public-btn { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.35rem 0.6rem; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: #b0b8d4; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: all 0.15s; text-decoration: none; white-space: nowrap; }
-    .public-btn:hover { background: rgba(255,255,255,0.06); color: #dee2f4; }
-    .public-btn-icon { font-size: 1rem !important; }
-    .public-btn-label { display: none; }
-    @media (min-width: 640px) {
-        .public-header-inner { padding: 0.5rem 1.5rem; }
-        .public-header-title { max-width: none; font-size: 1.15rem; }
-        .public-btn-label { display: inline; }
-        .public-btn { padding: 0.4rem 0.9rem; font-size: 0.72rem; gap: 0.35rem; }
-        #previewContainer.with-pages { padding: 2rem 1.5rem 5rem; }
-    }
     .preview-sheet { width: 816px; height: 1056px; background: #ffffff; color: #1a1a2e; border-radius: 4px; box-shadow: 0 4px 24px rgba(0,0,0,0.6); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease; transform-origin: center center; position: relative; flex-shrink: 0; }
     .preview-sheet .preview-page { flex: 1; display: flex; flex-direction: column; }
     .page-content { padding: 2.75rem; }
@@ -121,56 +106,69 @@ $publicUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' :
     .preview-back-cover { text-align: center; justify-content: center; }
     .preview-cover .page-content,
     .preview-back-cover .page-content,
-    .preview-banner .page-content { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .preview-banner .page-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
     .preview-page[style*="background:"] .page-content { display: none; }
+    .preview-header-wrapper { position: sticky; top: 0; z-index: 50; background: rgba(15,19,32,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .preview-header { display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0.5rem 1rem; gap: 0.5rem; }
+    .preview-header-title { font-size: 1rem; font-weight: 700; color: #a5b4fc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
+    .preview-header-actions { display: flex; align-items: center; gap: 0.35rem; flex-shrink: 0; }
+    .preview-btn { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.35rem 0.6rem; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: #b0b8d4; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: all 0.15s; text-decoration: none; white-space: nowrap; }
+    .preview-btn:hover { background: rgba(255,255,255,0.06); color: #dee2f4; }
+    .preview-btn-icon { font-size: 1rem !important; }
+    .preview-btn-label { display: none; }
+    .preview-zoom-label { font-size: 0.7rem; font-weight: 600; color: rgba(255,255,255,0.4); min-width: 2.2rem; text-align: center; }
+    .preview-footer { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px)); background: rgba(15,19,32,0.85); backdrop-filter: blur(16px); border-top: 1px solid rgba(255,255,255,0.06); gap: 0.25rem; }
+    .preview-footer-btn { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.4rem 0.75rem; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); color: #b0b8d4; font-size: 0.75rem; font-weight: 500; text-decoration: none; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; }
+    .preview-footer-btn:hover { background: rgba(255,255,255,0.06); color: #dee2f4; }
+    .preview-footer-btn:active { transform: scale(0.96); }
+    .preview-footer-btn.disabled { opacity: 0.25; pointer-events: none; }
+    .preview-page-numbers { display: flex; align-items: center; gap: 0.2rem; overflow-x: auto; flex: 1 1 auto; min-width: 0; justify-content: center; scrollbar-width: none; -ms-overflow-style: none; }
+    .preview-page-numbers::-webkit-scrollbar { display: none; }
+    .preview-page-num { min-width: 1.75rem; height: 1.75rem; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; text-decoration: none; color: rgba(255,255,255,0.35); transition: all 0.15s; flex-shrink: 0; }
+    .preview-page-num:hover { background: rgba(255,255,255,0.06); color: #dee2f4; }
+    .preview-page-num.active { background: rgba(165,180,252,0.15); color: #a5b4fc; font-weight: 700; }
     #previewContainer { flex: 1; overflow: hidden; display: flex; align-items: center; justify-content: center; }
     #previewContainer.with-pages { padding: 1.5rem 1rem 5rem; padding-top: 1.5rem; padding-bottom: 5rem; }
-    .public-footer { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px)); background: rgba(15,19,32,0.85); backdrop-filter: blur(16px); border-top: 1px solid rgba(255,255,255,0.06); gap: 0.25rem; }
-    .public-footer-btn { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.4rem 0.75rem; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); color: #b0b8d4; font-size: 0.75rem; font-weight: 500; text-decoration: none; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; cursor: pointer; }
-    .public-footer-btn:hover { background: rgba(255,255,255,0.06); color: #dee2f4; }
-    .public-footer-btn:active { transform: scale(0.96); }
-    .public-footer-btn.disabled { opacity: 0.25; pointer-events: none; }
-    .public-footer-btn.pdf-btn { color: #64c8b4; border-color: rgba(100,200,180,0.3); }
-    .public-footer-btn.pdf-btn:hover { background: rgba(100,200,180,0.12); color: #7fffd4; }
-    .public-page-numbers { display: flex; align-items: center; gap: 0.2rem; overflow-x: auto; flex: 1 1 auto; min-width: 0; justify-content: center; scrollbar-width: none; -ms-overflow-style: none; }
-    .public-page-numbers::-webkit-scrollbar { display: none; }
-    .public-page-num { min-width: 1.75rem; height: 1.75rem; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; text-decoration: none; color: rgba(255,255,255,0.35); transition: all 0.15s; flex-shrink: 0; }
-    .public-page-num:hover { background: rgba(255,255,255,0.06); color: #dee2f4; }
-    .public-page-num.active { background: rgba(165,180,252,0.15); color: #a5b4fc; font-weight: 700; }
-    .toast { position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); z-index: 100; padding: 0.6rem 1.2rem; border-radius: 999px; background: rgba(0,200,150,0.9); color: #fff; font-size: 0.85rem; font-weight: 600; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-    .toast.show { opacity: 1; }
+
+    @media (min-width: 640px) {
+        .preview-header { padding: 0.5rem 1.5rem; }
+        .preview-header-title { max-width: none; font-size: 1.15rem; }
+        .preview-btn-label { display: inline; }
+        .preview-btn { padding: 0.4rem 0.9rem; font-size: 0.72rem; gap: 0.35rem; }
+        #previewContainer.with-pages { padding: 2rem 1.5rem 5rem; padding-bottom: 5rem; }
+        .preview-footer { padding: 0.5rem 1.5rem; }
+    }
     @media (max-width: 767px) {
         #previewContainer.with-pages { padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 0.25rem; padding-bottom: 3.5rem; }
-        .public-header-inner { padding: 0.35rem 0.75rem; }
+        .preview-header { padding: 0.35rem 0.75rem; }
     }
     @media (max-width: 480px) {
-        .public-footer { padding: 0.3rem 0.4rem; gap: 0.15rem; }
-        .public-footer-btn { padding: 0.25rem 0.4rem; font-size: 0.65rem; }
-        .public-page-num { min-width: 1.4rem; height: 1.4rem; font-size: 0.6rem; }
+        .preview-footer { padding: 0.3rem 0.4rem; gap: 0.15rem; }
+        .preview-footer-btn { padding: 0.25rem 0.4rem; font-size: 0.65rem; }
+        .preview-page-num { min-width: 1.4rem; height: 1.4rem; font-size: 0.6rem; }
     }
-    .flex-1 { flex: 1; }
-    .overflow-auto { overflow: auto; }
-    .flex { display: flex; }
-    .items-start { align-items: flex-start; }
-    .justify-center { justify-content: center; }
+
     @media print { .page-with-bg { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; } }
     </style>
 </head>
 <body>
 
-<div class="toast" id="toast"></div>
-
-<header class="public-header">
-<div class="public-header-inner">
-    <span class="public-header-title"><?= $catalogName ?></span>
-    <div class="public-header-actions">
-        <button onclick="copiarEnlace()" class="public-btn" title="Copiar enlace"><span class="material-symbols-outlined public-btn-icon">share</span><span class="public-btn-label">Compartir</span></button>
-        <button onclick="zoomOut()" class="public-btn" title="Alejar"><span class="material-symbols-outlined public-btn-icon">zoom_out</span><span class="public-btn-label">Alejar</span></button>
-        <span class="preview-zoom-label" id="zoomLevel" style="font-size:0.7rem;font-weight:600;color:rgba(255,255,255,0.4);min-width:2.2rem;text-align:center">100%</span>
-        <button onclick="zoomIn()" class="public-btn" title="Acercar"><span class="material-symbols-outlined public-btn-icon">zoom_in</span><span class="public-btn-label">Acercar</span></button>
-        <button onclick="zoomFit()" class="public-btn" title="Ajustar"><span class="material-symbols-outlined public-btn-icon">fit_width</span><span class="public-btn-label">Ajustar</span></button>
+<header class="preview-header-wrapper">
+<div class="preview-header">
+    <span class="preview-header-title"><?= $catalogName ?></span>
+    <div class="preview-header-actions">
+        <button onclick="copiarEnlace()" class="preview-btn preview-btn-always" title="Compartir"><span class="material-symbols-outlined preview-btn-icon">share</span><span class="preview-btn-label">Compartir</span></button>
+        <button onclick="zoomOut()" class="preview-btn preview-btn-always" title="Alejar"><span class="material-symbols-outlined preview-btn-icon">zoom_out</span><span class="preview-btn-label">Alejar</span></button>
+        <span class="preview-zoom-label" id="zoomLevel">100%</span>
+        <button onclick="zoomIn()" class="preview-btn preview-btn-always" title="Acercar"><span class="material-symbols-outlined preview-btn-icon">zoom_in</span><span class="preview-btn-label">Acercar</span></button>
+        <button onclick="zoomFit()" class="preview-btn preview-btn-always" title="Ajustar al ancho"><span class="material-symbols-outlined preview-btn-icon">fit_width</span><span class="preview-btn-label">Ajustar</span></button>
         <?php if ($allowPdf): ?>
-        <a href="descargar_pdf.php?id=<?= $catalogId ?>" target="_blank" class="public-btn" title="Descargar PDF"><span class="material-symbols-outlined public-btn-icon">picture_as_pdf</span><span class="public-btn-label">PDF</span></a>
+        <a href="descargar_pdf.php?id=<?= $catalogId ?>" target="_blank" class="preview-btn preview-btn-always" title="Descargar PDF"><span class="material-symbols-outlined preview-btn-icon">picture_as_pdf</span><span class="preview-btn-label">PDF</span></a>
         <?php endif; ?>
     </div>
 </div>
@@ -190,32 +188,36 @@ $publicUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' :
 </div>
 
 <?php if (!empty($pages)): ?>
-<nav class="public-footer">
+<nav class="preview-footer">
     <div>
         <?php if ($pageIndex > 1): ?>
-        <a class="public-footer-btn" href="?id=<?= $catalogId ?>&page=<?= $pageIndex - 1 ?>" id="prevPage"><span class="material-symbols-outlined" style="font-size:1.1rem">chevron_left</span> Anterior</a>
+        <a class="preview-footer-btn" href="?id=<?= $catalogId ?>&page=<?= $pageIndex - 1 ?>" id="prevPage"><span class="material-symbols-outlined" style="font-size:1.1rem">chevron_left</span> Anterior</a>
         <?php else: ?>
-        <span class="public-footer-btn disabled"><span class="material-symbols-outlined" style="font-size:1.1rem">chevron_left</span> Anterior</span>
+        <span class="preview-footer-btn disabled"><span class="material-symbols-outlined" style="font-size:1.1rem">chevron_left</span> Anterior</span>
         <?php endif; ?>
     </div>
-    <div class="public-page-numbers">
+    <div class="preview-page-numbers">
         <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-        <a href="?id=<?= $catalogId ?>&page=<?= $i ?>" class="public-page-num <?= $i === $pageIndex ? 'active' : '' ?>"><?= $i ?></a>
+        <a href="?id=<?= $catalogId ?>&page=<?= $i ?>" class="preview-page-num <?= $i === $pageIndex ? 'active' : '' ?>"><?= $i ?></a>
         <?php endfor; ?>
     </div>
     <div>
         <?php if ($pageIndex < $totalPages): ?>
-        <a class="public-footer-btn" href="?id=<?= $catalogId ?>&page=<?= $pageIndex + 1 ?>" id="nextPage">Siguiente <span class="material-symbols-outlined" style="font-size:1.1rem">chevron_right</span></a>
+        <a class="preview-footer-btn" href="?id=<?= $catalogId ?>&page=<?= $pageIndex + 1 ?>" id="nextPage">Siguiente <span class="material-symbols-outlined" style="font-size:1.1rem">chevron_right</span></a>
         <?php else: ?>
-        <span class="public-footer-btn disabled">Siguiente <span class="material-symbols-outlined" style="font-size:1.1rem">chevron_right</span></span>
+        <span class="preview-footer-btn disabled">Siguiente <span class="material-symbols-outlined" style="font-size:1.1rem">chevron_right</span></span>
         <?php endif; ?>
     </div>
 </nav>
 <?php endif; ?>
 
+<style>
+.toast-share{position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:200;padding:0.6rem 1.2rem;border-radius:999px;background:rgba(0,200,150,0.9);color:#fff;font-size:0.85rem;font-weight:600;opacity:0;transition:opacity 0.3s;pointer-events:none}.toast-share.show{opacity:1}
+</style>
+<div class="toast-share" id="toastShare"></div>
 <script>
 function mostrarToast(msg) {
-    var t = document.getElementById('toast');
+    var t = document.getElementById('toastShare');
     t.textContent = msg; t.classList.add('show');
     setTimeout(function(){ t.classList.remove('show'); }, 2000);
 }
@@ -234,62 +236,88 @@ function copiarEnlace() {
 let zoom = 1;
 const sheet = document.getElementById('previewSheet');
 const zoomLabel = document.getElementById('zoomLevel');
-function saveZoom() { try { localStorage.setItem('public_zoom_<?= $catalogId ?>', zoom); } catch(e) {} }
-function loadZoom() { try { const s = localStorage.getItem('public_zoom_<?= $catalogId ?>'); if (s !== null) return parseFloat(s); } catch(e) {} return null; }
+
+function saveZoom() {
+    try { localStorage.setItem('public_zoom_<?= $catalogId ?>', zoom); } catch(e) {}
+}
+
+function loadZoom() {
+    try { const s = localStorage.getItem('public_zoom_<?= $catalogId ?>'); if (s !== null) return parseFloat(s); } catch(e) {}
+    return null;
+}
+
 function applyZoom() {
     if (!sheet) return;
-    const p = Math.round(zoom * 100);
+    const pct = Math.round(zoom * 100);
     sheet.style.transform = 'scale(' + zoom + ')';
-    if (zoomLabel) zoomLabel.textContent = p + '%';
+    if (zoomLabel) zoomLabel.textContent = pct + '%';
 }
+
 function zoomIn() { zoom = Math.min(Math.round((zoom + 0.05) * 20) / 20, 3); applyZoom(); saveZoom(); }
 function zoomOut() { zoom = Math.max(Math.round((zoom - 0.05) * 20) / 20, 0.05); applyZoom(); saveZoom(); }
+
 function zoomFit() {
-    const c = document.getElementById('previewContainer');
-    if (!c || !sheet) { zoom = 1; applyZoom(); saveZoom(); return; }
-    const cw = c.clientWidth - 48;
+    const container = document.getElementById('previewContainer');
+    if (!container || !sheet) { zoom = 1; applyZoom(); saveZoom(); return; }
+    const cw = container.clientWidth - 48;
     zoom = Math.min(Math.round((cw / 816) * 20) / 20, 1);
-    applyZoom(); saveZoom();
+    applyZoom();
+    saveZoom();
 }
+
 const saved = loadZoom();
 if (saved !== null && saved > 0) { zoom = saved; applyZoom(); }
 else if (window.innerWidth < 768) { zoom = 0.45; applyZoom(); saveZoom(); }
 else { zoomFit(); }
+
 window.addEventListener('resize', function() {
     const s = loadZoom();
     if (s !== null) { zoom = s; applyZoom(); }
     else if (window.innerWidth < 768) { zoom = 0.45; applyZoom(); saveZoom(); }
     else { zoomFit(); }
 });
+
 // Preserve scroll position across page navigation
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-(function(){
-    var key = 'public_scroll_' + <?= $catalogId ?>;
+(function() {
+    const key = 'public_scroll_' + <?= $catalogId ?>;
     function saveScroll() {
-        var c = document.getElementById('previewContainer'); if (!c) return;
-        var ratio = c.scrollHeight > c.clientHeight ? c.scrollTop / (c.scrollHeight - c.clientHeight) : 0;
+        const c = document.getElementById('previewContainer');
+        if (!c) return;
+        const ratio = c.scrollHeight > c.clientHeight ? c.scrollTop / (c.scrollHeight - c.clientHeight) : 0;
         try { sessionStorage.setItem(key, ratio); } catch(e) {}
     }
-    document.querySelectorAll('.public-page-num, .public-footer-btn').forEach(function(el) {
+    document.querySelectorAll('.preview-page-num, #prevPage, #nextPage').forEach(function(el) {
         el.addEventListener('click', saveScroll);
     });
     window.addEventListener('load', function() {
-        var c = document.getElementById('previewContainer'); if (!c) return;
-        try { var r = parseFloat(sessionStorage.getItem(key)); if (!isNaN(r) && r > 0) { setTimeout(function() { c.scrollTop = r * (c.scrollHeight - c.clientHeight); }, 50); } } catch(e) {}
+        const c = document.getElementById('previewContainer');
+        if (!c) return;
+        try { const r = parseFloat(sessionStorage.getItem(key)); if (!isNaN(r) && r > 0) { setTimeout(function() { c.scrollTop = r * (c.scrollHeight - c.clientHeight); }, 50); } } catch(e) {}
     });
 })();
-// Touch swipe
-(function(){
-    var c = document.getElementById('previewContainer'); if (!c) return;
-    var xS = null;
-    c.addEventListener('touchstart', function(e){ if (e.touches.length === 1) xS = e.touches[0].clientX; }, {passive:true});
-    c.addEventListener('touchend', function(e){
-        if (xS === null) return;
-        var d = xS - e.changedTouches[0].clientX; xS = null;
-        if (Math.abs(d) < 50) return;
-        var el = d > 0 ? document.getElementById('nextPage') : document.getElementById('prevPage');
-        if (el && el.tagName === 'A') location.href = el.href;
-    }, {passive:true});
+// Touch swipe navigation
+(function() {
+    const container = document.getElementById('previewContainer');
+    if (!container) return;
+    let xStart = null;
+    container.addEventListener('touchstart', function(e) {
+        if (e.touches.length === 1) xStart = e.touches[0].clientX;
+    }, { passive: true });
+    container.addEventListener('touchend', function(e) {
+        if (xStart === null) return;
+        const xEnd = e.changedTouches[0].clientX;
+        const diff = xStart - xEnd;
+        xStart = null;
+        if (Math.abs(diff) < 50) return;
+        if (diff > 0) {
+            var next = document.getElementById('nextPage');
+            if (next && next.tagName === 'A') location.href = next.href;
+        } else {
+            var prev = document.getElementById('prevPage');
+            if (prev && prev.tagName === 'A') location.href = prev.href;
+        }
+    }, { passive: true });
 })();
 </script>
 </body>
