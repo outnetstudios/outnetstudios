@@ -120,7 +120,7 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
 .preview-product-info h4 { margin: 0 0 0.125rem; font-size: 0.85rem; line-height: 1.3; }
 .preview-product-info p { margin: 0.125rem 0; font-size: 0.72rem; color: #666; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .preview-sku { font-size: 0.65rem; color: #999; }
-.preview-price { font-weight: 700; font-size: 0.9rem; margin-top: auto; }
+.preview-price { font-weight: 700; font-size: 0.9rem; margin-top: auto; font-family: system-ui, -apple-system, sans-serif; }
 .preview-banner { text-align: center; justify-content: center; background: linear-gradient(135deg, #f8f9ff, #eef1ff); }
 .preview-banner-content { max-width: 600px; margin: 0 auto; }
 .preview-banner-text { font-size: 2rem; font-weight: 700; margin: 0 0 0.5rem; }
@@ -130,7 +130,7 @@ body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; bac
 .preview-prod-img-placeholder { display: flex; align-items: center; justify-content: center; background: #f0f0f0; }
 .preview-prod-img-placeholder span { font-size: 3rem; color: #ccc; }
 .preview-prod-info h2 { margin: 0 0 0.5rem; font-size: 1.4rem; }
-.preview-price-lg { font-size: 1.3rem; font-weight: 700; margin: 0.5rem 0; }
+.preview-price-lg { font-size: 1.3rem; font-weight: 700; margin: 0.5rem 0; font-family: system-ui, -apple-system, sans-serif; }
 .preview-stock { font-size: 0.85rem; color: #666; }
 .preview-empty { text-align: center; padding: 4rem 2rem; font-size: 1.2rem; }
 .print-content { padding-top: 180px; display: flex; flex-direction: column; align-items: center; overflow: hidden; }

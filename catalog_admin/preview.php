@@ -122,7 +122,7 @@ else:
     .preview-product-info h4 { margin: 0 0 0.125rem; font-size: 0.85rem; line-height: 1.3; }
     .preview-product-info p { margin: 0.125rem 0; font-size: 0.72rem; color: #666; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .preview-sku { font-size: 0.65rem; color: #999; }
-    .preview-price { font-weight: 700; font-size: 0.9rem; margin-top: auto; }
+    .preview-price { font-weight: 700; font-size: 0.9rem; margin-top: auto; font-family: system-ui, -apple-system, sans-serif; }
     .preview-banner-content { max-width: 600px; margin: 0 auto; }
     .preview-banner-text { font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 700; margin: 0 0 0.5rem; }
     .preview-banner-sub { font-size: 1.1rem; margin: 0; }
@@ -131,7 +131,7 @@ else:
     .preview-prod-img-placeholder { display: flex; align-items: center; justify-content: center; }
     .preview-prod-img-placeholder span { font-size: 3rem; color: #ccc; }
     .preview-prod-info h2 { margin: 0 0 0.5rem; font-size: 1.4rem; }
-    .preview-price-lg { font-size: 1.3rem; font-weight: 700; margin: 0.5rem 0; }
+    .preview-price-lg { font-size: 1.3rem; font-weight: 700; margin: 0.5rem 0; font-family: system-ui, -apple-system, sans-serif; }
     .preview-stock { font-size: 0.85rem; color: #666; }
     .page-footer { text-align: center; background: transparent; flex-shrink: 0; position: relative; height: 0; overflow: visible; }
     .page-number { position: absolute; left: 50%; bottom: 1rem; transform: translateX(-50%); display: inline-flex; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: rgba(255,255,255,0.9); color: #444; font-size: 0.65rem; font-weight: 600; line-height: 1; }
