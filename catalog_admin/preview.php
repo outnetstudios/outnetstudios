@@ -89,7 +89,7 @@ if (!$isPublicView):
     require_once __DIR__ . '/../templates/partials/admin_head.php';
 else:
     $publicUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/ver_catalogo.php?id=' . $catalogId;
-    ?><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title><?= $catalogName ?> — Catálogo</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><?php endif; ?>
+    ?><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"><title><?= $catalogName ?> — Catálogo</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><?php endif; ?>
     <style>
     *, *::before, *::after { box-sizing: border-box; }
     body { margin: 0; min-height: 100vh; background: #0f1320; color: #dee2f4; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; overflow-x: hidden; }
@@ -158,7 +158,7 @@ else:
     .preview-btn-icon { font-size: 1rem !important; }
     .preview-btn-label { display: none; }
     .preview-zoom-label { font-size: 0.7rem; font-weight: 600; color: rgba(255,255,255,0.4); min-width: 2.2rem; text-align: center; }
-    .preview-footer { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px)); background: rgba(15,19,32,0.85); backdrop-filter: blur(16px); border-top: 1px solid rgba(255,255,255,0.06); gap: 0.25rem; }
+    .preview-footer { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px)); background: rgba(15,19,32,0.85); backdrop-filter: blur(16px); border-top: 1px solid rgba(255,255,255,0.06); gap: 0.25rem; will-change: transform; }
     .preview-footer-btn { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.4rem 0.75rem; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); color: #b0b8d4; font-size: 0.75rem; font-weight: 500; text-decoration: none; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; }
     .preview-footer-btn:hover { background: rgba(255,255,255,0.06); color: #dee2f4; }
     .preview-footer-btn:active { transform: scale(0.96); }
@@ -182,6 +182,7 @@ else:
     @media (max-width: 767px) {
         #previewContainer.with-pages { overflow: auto; align-items: flex-start; padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 0.25rem; padding-bottom: 3.5rem; -webkit-overflow-scrolling: touch; }
         .preview-header { padding: 0.35rem 0.75rem; }
+        .preview-footer { padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px) + 20px); }
     }
     @media (max-width: 480px) {
         .preview-footer { padding: 0.3rem 0.4rem; gap: 0.15rem; }
@@ -336,6 +337,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     function saveScroll() {
         const c = document.getElementById('previewContainer');
         if (!c) return;
+        if (c.scrollTop < 100) { try { sessionStorage.removeItem(key); } catch(e) {} return; }
         const ratio = c.scrollHeight > c.clientHeight ? c.scrollTop / (c.scrollHeight - c.clientHeight) : 0;
         try { sessionStorage.setItem(key, ratio); } catch(e) {}
     }
