@@ -261,6 +261,23 @@ window.addEventListener('resize', function() {
     else if (window.innerWidth < 768) { zoom = 0.45; applyZoom(); saveZoom(); }
     else { zoomFit(); }
 });
+// Preserve scroll position across page navigation
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+(function(){
+    var key = 'public_scroll_' + <?= $catalogId ?>;
+    function saveScroll() {
+        var c = document.getElementById('previewContainer'); if (!c) return;
+        var ratio = c.scrollHeight > c.clientHeight ? c.scrollTop / (c.scrollHeight - c.clientHeight) : 0;
+        try { sessionStorage.setItem(key, ratio); } catch(e) {}
+    }
+    document.querySelectorAll('.public-page-num, .public-footer-btn').forEach(function(el) {
+        el.addEventListener('click', saveScroll);
+    });
+    window.addEventListener('load', function() {
+        var c = document.getElementById('previewContainer'); if (!c) return;
+        try { var r = parseFloat(sessionStorage.getItem(key)); if (!isNaN(r) && r > 0) { setTimeout(function() { c.scrollTop = r * (c.scrollHeight - c.clientHeight); }, 50); } } catch(e) {}
+    });
+})();
 // Touch swipe
 (function(){
     var c = document.getElementById('previewContainer'); if (!c) return;
