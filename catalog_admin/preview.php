@@ -48,6 +48,14 @@ $productRepo = new ProductRepository();
 $pages = $pageRepo->allByCatalog($catalogId);
 $categories = $categoryRepo->allByCatalog($catalogId);
 $products = $productRepo->allByCatalog($catalogId);
+
+if ($isPublicView) {
+    $activeCatIds = [];
+    foreach ($categories as $c) { if ($c['status'] === 'active') $activeCatIds[] = (int)$c['id']; }
+    $categories = array_values(array_filter($categories, fn($c) => $c['status'] === 'active'));
+    $products = array_values(array_filter($products, fn($p) => (int)$p['category_id'] === 0 || in_array((int)$p['category_id'], $activeCatIds)));
+}
+
 $catalogName = htmlspecialchars($catalog['name'], ENT_QUOTES, 'UTF-8');
 $GLOBALS['currencySymbol'] = currencySymbol($catalog['currency'] ?? null);
 
