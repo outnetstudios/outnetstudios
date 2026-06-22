@@ -71,10 +71,10 @@ if (!$isPublicView):
     require_once __DIR__ . '/../templates/partials/admin_head.php';
 else:
     $publicUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/ver_catalogo.php?id=' . $catalogId;
-    ?><!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title><?= $catalogName ?> — Catálogo</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><?php endif; ?>
+    ?><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title><?= $catalogName ?> — Catálogo</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><?php endif; ?>
     <style>
     *, *::before, *::after { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; background: #0f1320; color: #dee2f4; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; }
+    body { margin: 0; min-height: 100vh; background: #0f1320; color: #dee2f4; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; overflow-x: hidden; }
     .preview-sheet { width: 816px; height: 1056px; background: #ffffff; color: #1a1a2e; border-radius: 4px; box-shadow: 0 4px 24px rgba(0,0,0,0.6); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease; transform-origin: center center; position: relative; flex-shrink: 0; }
     .preview-sheet .preview-page { flex: 1; display: flex; flex-direction: column; }
     .page-content { padding: 2.75rem; }
@@ -172,6 +172,11 @@ else:
     }
 
 
+    .flex-1 { flex: 1; }
+    .overflow-auto { overflow: auto; }
+    .flex { display: flex; }
+    .items-start { align-items: flex-start; }
+    .justify-center { justify-content: center; }
     @media print { .page-with-bg { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; } }
     </style>
 </head>
