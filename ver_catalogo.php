@@ -143,6 +143,11 @@ $publicUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' :
         .public-footer-btn { padding: 0.25rem 0.4rem; font-size: 0.65rem; }
         .public-page-num { min-width: 1.4rem; height: 1.4rem; font-size: 0.6rem; }
     }
+    .flex-1 { flex: 1; }
+    .overflow-auto { overflow: auto; }
+    .flex { display: flex; }
+    .items-start { align-items: flex-start; }
+    .justify-center { justify-content: center; }
     @media print { .page-with-bg { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; } }
     </style>
 </head>
