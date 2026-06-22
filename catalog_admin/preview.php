@@ -180,12 +180,14 @@ else:
         .preview-footer { padding: 0.5rem 1.5rem; }
     }
     @media (max-width: 767px) {
-        #previewContainer.with-pages { overflow: auto; align-items: flex-start; padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 0.25rem; padding-bottom: 3.5rem; -webkit-overflow-scrolling: touch; }
+        body { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        #previewContainer { overflow: visible; align-items: center; min-height: 0; }
+        #previewContainer.with-pages { padding-left: 0.5rem; padding-right: 0.5rem; padding-top: 0.25rem; padding-bottom: 4rem; }
         .preview-header { padding: 0.35rem 0.75rem; }
-        .preview-footer { padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px) + 20px); }
+        .preview-footer { position: sticky; bottom: 0; padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px) + 20px); }
     }
     @media (max-width: 480px) {
-        .preview-footer { padding: 0.3rem 0.4rem; gap: 0.15rem; }
+        .preview-footer { padding: 0.3rem 0.4rem; padding-bottom: calc(0.3rem + env(safe-area-inset-bottom, 0px) + 20px); gap: 0.15rem; }
         .preview-footer-btn { padding: 0.25rem 0.4rem; font-size: 0.65rem; }
         .preview-page-num { min-width: 1.4rem; height: 1.4rem; font-size: 0.6rem; }
     }
