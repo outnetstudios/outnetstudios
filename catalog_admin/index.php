@@ -232,11 +232,11 @@ $totalCount = count($catalogs);
 .mobile-card-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
 .mobile-card-label { color: rgba(255,255,255,0.4); font-weight: 500; }
 .mobile-card-value { color: rgba(255,255,255,0.7); font-weight: 600; text-align: right; }
-.mobile-card-actions { display: flex; flex-direction: row; gap: 0.5rem; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.06); }
-.mobile-card-action-btn { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; padding: 0.5rem 0.25rem; border-radius: 10px; background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.65rem; font-weight: 600; transition: all 0.15s; border: 1px solid rgba(255,255,255,0.06); flex: 1; justify-content: center; text-align: center; line-height: 1.2; }
+.mobile-card-actions { display: flex; flex-direction: column; gap: 0.35rem; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.06); }
+.mobile-card-action-btn { display: flex; flex-direction: row; align-items: center; gap: 0.6rem; padding: 0.65rem 0.75rem; border-radius: 10px; background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.15s; border: 1px solid rgba(255,255,255,0.06); justify-content: flex-start; line-height: 1.2; }
 .mobile-card-action-btn span { font-size: 1.15rem; }
 .mobile-card-action-btn:hover { background: rgba(165,180,252,0.12); color: #a5b4fc; border-color: rgba(165,180,252,0.25); }
-.mobile-card-actions-secondary { display: flex; justify-content: space-evenly; gap: 0.25rem; padding-top: 0.35rem; }
+.mobile-card-actions-secondary { display: flex; justify-content: space-evenly; gap: 0.25rem; padding-top: 0.85rem; margin-top: 0.35rem; border-top: 1px solid rgba(255,255,255,0.04); }
 .mobile-card-btn { display: inline-flex; align-items: center; justify-content: center; min-width: 2.4rem; height: 2.4rem; border-radius: 50%; color: rgba(255,255,255,0.4); text-decoration: none; transition: all 0.15s; border: none; background: transparent; cursor: pointer; font: inherit; padding: 0; flex: 1; max-width: 3rem; }
 .mobile-card-btn span { font-size: 1rem; }
 .mobile-card-btn:hover { background: rgba(255,255,255,0.06); color: var(--text-on-surface, #e0e0f0); }
