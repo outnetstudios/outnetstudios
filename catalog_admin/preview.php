@@ -144,9 +144,8 @@ if ($currentPage && !in_array($currentPage['page_type'], ['cover', 'back_cover',
         .preview-footer { padding: 0.5rem 1.5rem; }
     }
     @media (max-width: 767px) {
-        #previewContainer.with-pages { padding: 0.25rem 0.5rem 3.5rem; }
-        .preview-header { padding: 0.25rem 0.75rem; }
-        .preview-header-title { font-size: 0.85rem; }
+        #previewContainer.with-pages { padding: 1rem 0.5rem 3.5rem; }
+        .preview-header { padding: 0.35rem 0.75rem; }
     }
     @media (max-width: 480px) {
         .preview-footer { padding: 0.3rem 0.4rem; gap: 0.15rem; }
