@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <label class="form-label" for="currency">Moneda</label>
 <select id="currency" name="currency" class="form-input">
 <option value="NIO" <?= ($catalog['currency'] ?? 'NIO') === 'NIO' ? 'selected' : '' ?>>Córdobas (C$)</option>
-<option value="USD" <?= ($catalog['currency'] ?? 'NIO') === 'USD' ? 'selected' : '' ?>>Dólares ($)</option>
+<option value="USD" <?= ($catalog['currency'] ?? 'NIO') === 'USD' ? 'selected' : '' ?>>Dólares estadounidenses ($)</option>
 </select>
 </div>
 <div>

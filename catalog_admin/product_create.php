@@ -109,9 +109,9 @@ $catalogName = htmlspecialchars($catalog['name'], ENT_QUOTES, 'UTF-8');
 <input type="radio" id="status_inactive" name="status" value="inactive" class="hidden" <?= $status === 'inactive' ? 'checked' : '' ?>>
 </div>
 <div class="space-y-xs">
-<label class="font-label-caps text-label-caps text-primary uppercase ml-xs">Precio (USD)</label>
+<label class="font-label-caps text-label-caps text-primary uppercase ml-xs">Precio</label>
 <div class="relative">
-<span class="absolute left-md top-1/2 -translate-y-1/2 text-tertiary">$</span>
+<span class="absolute left-md top-1/2 -translate-y-1/2 text-tertiary"><?= ($catalog['currency'] ?? 'NIO') === 'USD' ? '$' : 'C$' ?></span>
 <input class="w-full h-14 bg-white/5 border border-outline-variant/30 rounded-[20px] pl-xl pr-md text-on-surface placeholder:text-on-surface-variant/50 focus:ring-1 focus:ring-primary focus:border-primary transition-all outline-none" type="number" id="price" name="price" step="0.01" min="0" placeholder="0.00" value="<?= $price !== null ? htmlspecialchars((string)$price, ENT_QUOTES, 'UTF-8') : '' ?>">
 </div>
 </div>
