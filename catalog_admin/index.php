@@ -159,6 +159,7 @@ $totalCount = count($catalogs);
                                 <span class="mobile-card-title"><?= htmlspecialchars($c['name'], ENT_QUOTES, 'UTF-8') ?></span>
                                 <span class="mobile-card-slug"><?= htmlspecialchars($c['slug'], ENT_QUOTES, 'UTF-8') ?></span>
                             </div>
+                            <button onclick="copiarEnlace(<?= $c['id'] ?>)" class="mobile-card-btn mobile-card-share" title="Compartir"><span class="material-symbols-outlined">share</span></button>
                         </div>
                         <div class="mobile-card-body">
                             <div class="mobile-card-row">
@@ -187,7 +188,6 @@ $totalCount = count($catalogs);
                         <div class="mobile-card-actions-secondary">
                             <a href="preview.php?catalog_id=<?= $c['id'] ?>" class="mobile-card-btn preview" title="Vista previa"><span class="material-symbols-outlined">visibility</span></a>
                             <a href="edit.php?id=<?= $c['id'] ?>" class="mobile-card-btn edit" title="Editar"><span class="material-symbols-outlined">edit</span></a>
-                            <button onclick="copiarEnlace(<?= $c['id'] ?>)" class="mobile-card-btn" title="Compartir"><span class="material-symbols-outlined">share</span></button>
                             <a href="delete.php?id=<?= $c['id'] ?>" class="mobile-card-btn delete" title="Borrar" onclick="return confirm('¿Borrar este catálogo y todos sus datos?')"><span class="material-symbols-outlined">delete</span></a>
                         </div>
                     </div>
@@ -228,6 +228,8 @@ $totalCount = count($catalogs);
 .mobile-card-header-text { flex: 1; min-width: 0; }
 .mobile-card-title { font-size: 0.95rem; font-weight: 700; color: var(--text-on-surface, #e0e0f0); display: block; }
 .mobile-card-slug { font-size: 0.75rem; color: rgba(255,255,255,0.35); font-style: italic; }
+.mobile-card-share { margin-left: auto; flex-shrink: 0; }
+.mobile-card-share:hover { background: rgba(165,180,252,0.15); color: #a5b4fc; }
 .mobile-card-body { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 0.75rem; }
 .mobile-card-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
 .mobile-card-label { color: rgba(255,255,255,0.4); font-weight: 500; }
