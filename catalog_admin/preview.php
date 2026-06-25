@@ -177,7 +177,7 @@ else:
         .preview-btn-label { display: inline; }
         .preview-btn { padding: 0.4rem 0.9rem; font-size: 0.72rem; gap: 0.35rem; }
         #previewContainer.with-pages { padding: 2rem 1.5rem 5rem; padding-bottom: 5rem; }
-        #previewContainer.zoom-pad-top { padding-top: 3rem; align-items: flex-start; }
+        #previewContainer.zoom-pad-top { padding-top: 2rem; align-items: flex-start; }
         .preview-footer { padding: 0.5rem 1.5rem; }
     }
     @media (max-width: 767px) {
