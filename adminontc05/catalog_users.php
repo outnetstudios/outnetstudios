@@ -159,8 +159,8 @@ try {
 
             <div class="module-panel">
                 <h2 style="margin-top:0;">Usuarios creados</h2>
-                <div class="scroll-wrap">
-                    <table class="user-table">
+                <div class="table-wrap">
+                    <table>
                         <thead>
                             <tr>
                                 <th>Nombre</th>
@@ -191,6 +191,7 @@ try {
                         </tbody>
                     </table>
                 </div>
+            </div>
             </div>
         </div>
     </div>

@@ -325,10 +325,6 @@ body.dashboard-shell table {
     border-collapse: collapse;
 }
 
-body.dashboard-shell .dashboard-table {
-    min-width: 860px;
-}
-
 body.dashboard-shell th,
 body.dashboard-shell td {
     padding: 0.75rem 1rem;
@@ -483,17 +479,6 @@ body.dashboard-shell .module-form .form-actions {
 body.dashboard-shell .module-form .form-actions button {
     max-width: 100%;
     min-width: 0;
-}
-
-body.dashboard-shell .user-table {
-    width: 100%;
-    min-width: 0;
-    border-collapse: collapse;
-    table-layout: auto;
-}
-
-body.dashboard-shell .scroll-wrap {
-    overflow-x: auto;
 }
 
 body.dashboard-shell .module-note {

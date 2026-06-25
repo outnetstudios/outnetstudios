@@ -36,7 +36,7 @@ if ($result) {
     <div class="card">
         <?php require __DIR__ . '/navbar.php'; ?>
 
-        <div class="table-wrap" style="padding:1.5rem 2rem 2rem;">
+        <div class="table-wrap" style="padding:0 2rem 2rem;">
             <?php if (count($contacts) === 0): ?>
                 <div class="empty">No hay prospectos registrados aún.</div>
             <?php else: ?>
