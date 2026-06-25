@@ -404,6 +404,11 @@ body.dashboard-shell .module-nav__item.is-disabled {
     cursor: not-allowed;
 }
 
+body.dashboard-shell .module-nav__icon {
+    font-size: 1.15rem;
+    font-variation-settings: 'FILL' 0;
+}
+
 body.dashboard-shell .module-grid {
     display: grid;
     gap: 1.5rem;
@@ -451,6 +456,21 @@ body.dashboard-shell .module-form textarea {
     max-width: 100%;
     min-width: 0;
     box-sizing: border-box;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+    padding: 0.9rem 1rem;
+    outline: none;
+}
+
+body.dashboard-shell .module-form input::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+body.dashboard-shell .module-form select option {
+    background: #1a1c2e;
+    color: #fff;
 }
 
 body.dashboard-shell .module-form .form-actions {

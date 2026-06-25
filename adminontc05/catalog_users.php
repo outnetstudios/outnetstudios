@@ -9,6 +9,9 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 require_once __DIR__ . '/../src/Repositories/CatalogUserRepository.php';
 require_once __DIR__ . '/../includes/plan_helpers.php';
 
+$pageTitle = 'Usuarios catálogo';
+$pageSubtitle = 'Crea usuarios con contraseña temporal para el nuevo proyecto.';
+
 $flashMessage = '';
 $flashPassword = '';
 $errorMessage = '';
@@ -19,11 +22,9 @@ function generateTemporaryPassword(int $length = 12): string
     $alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%';
     $maxIndex = strlen($alphabet) - 1;
     $password = '';
-
     for ($i = 0; $i < $length; $i++) {
         $password .= $alphabet[random_int(0, $maxIndex)];
     }
-
     return $password;
 }
 
@@ -80,173 +81,21 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuarios catálogo</title>
-    <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/auth-admin-theme.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
     <style>
-        .module-note {
-            padding: 1rem 1.1rem;
-            border-radius: 22px;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(246, 248, 255, 0.84);
-        }
-
-        .module-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1rem;
-            padding: 2rem;
-        }
-
-        .module-panel {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            padding: 1.25rem;
-        }
-
-        .module-form {
-            display: grid;
-            gap: 1rem;
-        }
-
-        .module-form .grid-two {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 1rem;
-            min-width: 0;
-            align-items: start;
-            grid-auto-rows: minmax(min-content, auto);
-        }
-
-        .module-form .grid-two > div {
-            min-width: 0;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        @media (max-width: 1024px) {
-            .module-form .grid-two {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .module-form label {
-            display: block;
-            margin-bottom: 0.45rem;
-            color: #d8e0ff;
-            font-size: 0.95rem;
-        }
-
-        .module-form input,
-        .module-form select {
-            width: 100%;
-            max-width: 100%;
-            min-width: 0;
-            box-sizing: border-box;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            background: rgba(255, 255, 255, 0.07);
-            color: #fff;
-            padding: 0.9rem 1rem;
-            outline: none;
-        }
-
-        .module-form .form-actions {
-            min-width: 0;
-        }
-
-        .module-form .form-actions button {
-            width: 100%;
-            max-width: 100%;
-        }
-
-        .module-form input::placeholder {
-            color: rgba(255, 255, 255, 0.45);
-        }
-
-        .pw-row {
-            display: flex;
-            gap: 0.5rem;
-            align-items: stretch;
-        }
-
-        .pw-row input {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .pw-row .btn-gen {
-            flex-shrink: 0;
-            padding: 0.9rem 1rem;
-            border-radius: 20px;
-            border: 1px solid rgba(245, 162, 0, 0.3);
-            background: rgba(245, 162, 0, 0.12);
-            color: #ffd966;
-            cursor: pointer;
-            font-weight: 600;
-            white-space: nowrap;
-            transition: background 0.2s;
-        }
-
-        .pw-row .btn-gen:hover {
-            background: rgba(245, 162, 0, 0.22);
-        }
-
-        .user-table {
-            width: 100%;
-            min-width: 0;
-            border-collapse: collapse;
-            table-layout: auto;
-        }
-
-        .user-table th,
-        .user-table td {
-            padding: 0.95rem 0.9rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            text-align: left;
-            color: #e9ecff;
-        }
-
-        .user-table th {
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-size: 0.85rem;
-            color: #d8e0ff;
-        }
-
-        .scroll-wrap {
-            overflow-x: auto;
-        }
-
-        .flash-password {
-            margin-top: 0.75rem;
-            padding: 0.9rem 1rem;
-            border-radius: 18px;
-            background: rgba(245, 162, 0, 0.12);
-            border: 1px solid rgba(245, 162, 0, 0.22);
-            color: #fff3cf;
-        }
+        .pw-row { display: flex; gap: 0.5rem; align-items: stretch; }
+        .pw-row input { flex: 1; min-width: 0; }
+        .pw-row .btn-gen { flex-shrink: 0; padding: 0.9rem 1rem; border-radius: 20px; border: 1px solid rgba(245,162,0,0.3); background: rgba(245,162,0,0.12); color: #ffd966; cursor: pointer; font-weight: 600; white-space: nowrap; transition: background 0.2s; }
+        .pw-row .btn-gen:hover { background: rgba(245,162,0,0.22); }
     </style>
 </head>
 <body class="dashboard-shell">
     <div class="dashboard-container">
-        <div class="dashboard-header">
-            <div>
-                <h1>Usuarios catálogo</h1>
-                <p>Crea usuarios con contraseña temporal para el nuevo proyecto.</p>
-            </div>
-            <a href="dashboard.php" class="button-primary">Volver a prospectos</a>
-        </div>
-
-        <div class="module-nav">
-            <a class="module-nav__item" href="dashboard.php">Prospectos</a>
-            <a class="module-nav__item is-active" href="catalog_users.php">Usuarios catálogo</a>
-            <a class="module-nav__item" href="catalogos.php">Catálogos</a>
-            <a class="module-nav__item" href="logout.php">Salir</a>
-        </div>
+        <?php require __DIR__ . '/navbar.php'; ?>
 
         <div class="module-grid">
             <?php if ($errorMessage !== ''): ?>
@@ -348,22 +197,15 @@ try {
 
 <script>
 function pad(n) { return n.toString().padStart(2, '0'); }
-
 function toDatetimeLocal(date) {
-    return date.getFullYear() + '-' +
-        pad(date.getMonth() + 1) + '-' +
-        pad(date.getDate()) + 'T' +
-        pad(date.getHours()) + ':' +
-        pad(date.getMinutes());
+    return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate()) + 'T' + pad(date.getHours()) + ':' + pad(date.getMinutes());
 }
-
 (function() {
     var expiresField = document.getElementById('temp_password_expires_at');
     if (expiresField && !expiresField.value) {
         var future = new Date(Date.now() + 72 * 60 * 60 * 1000);
         expiresField.value = toDatetimeLocal(future);
     }
-
     document.getElementById('btnGeneratePw').addEventListener('click', function() {
         var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%';
         var pw = '';
