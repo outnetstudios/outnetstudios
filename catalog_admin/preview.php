@@ -177,6 +177,7 @@ else:
         .preview-btn-label { display: inline; }
         .preview-btn { padding: 0.4rem 0.9rem; font-size: 0.72rem; gap: 0.35rem; }
         #previewContainer.with-pages { padding: 2rem 1.5rem 5rem; padding-bottom: 5rem; }
+        #previewContainer.zoom-pad-top { padding-top: 5rem; }
         .preview-footer { padding: 0.5rem 1.5rem; }
     }
     @media (max-width: 767px) {
@@ -304,6 +305,8 @@ function applyZoom() {
     const pct = Math.round(zoom * 100);
     sheet.style.zoom = zoom;
     if (zoomLabel) zoomLabel.textContent = pct + '%';
+    const container = document.getElementById('previewContainer');
+    if (container) container.classList.toggle('zoom-pad-top', zoom > 0.5);
 }
 
 function zoomIn() { zoom = Math.min(Math.round((zoom + 0.05) * 20) / 20, 3); applyZoom(); saveZoom(); }
