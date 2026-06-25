@@ -309,14 +309,12 @@ function zoomFit() {
 
 const saved = loadZoom();
 if (saved !== null && saved > 0) { zoom = saved; applyZoom(); }
-else if (window.innerWidth < 768) { zoom = 0.45; applyZoom(); saveZoom(); }
-else { zoomFit(); }
+else { zoom = 0.45; applyZoom(); saveZoom(); }
 
 window.addEventListener('resize', function() {
     const s = loadZoom();
     if (s !== null) { zoom = s; applyZoom(); }
-    else if (window.innerWidth < 768) { zoom = 0.45; applyZoom(); saveZoom(); }
-    else { zoomFit(); }
+    else { zoom = 0.45; applyZoom(); saveZoom(); }
 });
 
 // Preserve scroll position across page navigation
