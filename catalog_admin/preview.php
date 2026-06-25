@@ -288,6 +288,17 @@ function copiarEnlace() {
     }
 }
 let zoom = 1;
+const zoomLabel = document.getElementById('zoomLevel');
+const storageKey = '<?= $isPublicView ? 'public' : 'catalog' ?>_zoom_<?= $catalogId ?>';
+
+function loadZoom() {
+    try { const v = parseFloat(localStorage.getItem(storageKey)); return isNaN(v) ? null : v; } catch(e) { return null; }
+}
+function saveZoom() {
+    try { localStorage.setItem(storageKey, zoom); } catch(e) {}
+}
+
+function applyZoom() {
     const sheet = document.getElementById('previewSheet');
     if (!sheet) return;
     const pct = Math.round(zoom * 100);
@@ -300,6 +311,7 @@ function zoomOut() { zoom = Math.max(Math.round((zoom - 0.05) * 20) / 20, 0.05);
 
 function zoomFit() {
     const container = document.getElementById('previewContainer');
+    const sheet = document.getElementById('previewSheet');
     if (!container || !sheet) { zoom = 1; applyZoom(); saveZoom(); return; }
     const cw = container.clientWidth - 48;
     zoom = Math.min(Math.round((cw / 816) * 20) / 20, 1);
