@@ -93,7 +93,7 @@ else:
     <style>
     *, *::before, *::after { box-sizing: border-box; }
     body { margin: 0; min-height: 100vh; background: #0f1320; color: #dee2f4; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; overflow-x: hidden; }
-    .preview-sheet { width: 816px; height: 1056px; background: #ffffff; color: #1a1a2e; border-radius: 4px; box-shadow: 0 4px 24px rgba(0,0,0,0.6); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s ease; transform-origin: center center; position: relative; flex-shrink: 0; }
+    .preview-sheet { width: 816px; height: 1056px; background: #ffffff; color: #1a1a2e; border-radius: 4px; box-shadow: 0 4px 24px rgba(0,0,0,0.6); overflow: hidden; display: flex; flex-direction: column; transform-origin: top left; position: relative; flex-shrink: 0; }
     .preview-sheet .preview-page { flex: 1; display: flex; flex-direction: column; }
     .page-content { padding: 2.75rem; }
     .preview-cover-content { max-width: 700px; margin: 0 auto; }
@@ -168,7 +168,7 @@ else:
     .preview-page-num { min-width: 1.75rem; height: 1.75rem; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; text-decoration: none; color: rgba(255,255,255,0.35); transition: all 0.15s; flex-shrink: 0; }
     .preview-page-num:hover { background: rgba(255,255,255,0.06); color: #dee2f4; }
     .preview-page-num.active { background: rgba(165,180,252,0.15); color: #a5b4fc; font-weight: 700; }
-    #previewContainer { flex: 1; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    #previewContainer { flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; }
     #previewContainer.with-pages { padding: 1.5rem 1rem 5rem; padding-top: 1.5rem; padding-bottom: 5rem; }
 
     @media (min-width: 640px) {
@@ -234,7 +234,7 @@ else:
 <?php endif; ?>
 </div>
 <?php else: ?>
-<div class="preview-sheet" id="previewSheet">
+<div class="preview-sheet" id="previewSheet" style="flex-shrink:0;">
 <?= $pageContent ?>
 <?php if ($pageNum !== null): ?><div class="page-footer"><span class="page-number"><?= $pageNum ?></span></div><?php endif; ?>
 </div>
@@ -288,23 +288,10 @@ function copiarEnlace() {
     }
 }
 let zoom = 1;
-const sheet = document.getElementById('previewSheet');
-const zoomLabel = document.getElementById('zoomLevel');
-const storageKey = '<?= $isPublicView ? 'public' : 'catalog' ?>_zoom_<?= $catalogId ?>';
-
-function saveZoom() {
-    try { localStorage.setItem(storageKey, zoom); } catch(e) {}
-}
-
-function loadZoom() {
-    try { const s = localStorage.getItem(storageKey); if (s !== null) return parseFloat(s); } catch(e) {}
-    return null;
-}
-
-function applyZoom() {
+    const sheet = document.getElementById('previewSheet');
     if (!sheet) return;
     const pct = Math.round(zoom * 100);
-    sheet.style.transform = 'scale(' + zoom + ')';
+    sheet.style.zoom = zoom;
     if (zoomLabel) zoomLabel.textContent = pct + '%';
 }
 
