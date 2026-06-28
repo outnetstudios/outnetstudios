@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
 require_once __DIR__ . '/../includes/upload_helper.php';
 require_once __DIR__ . '/../src/Repositories/CatalogRepository.php';
+require_once __DIR__ . '/../includes/catalog_preview_renderer.php';
 
 catalogRequireLogin();
 $userId = (int)catalogGetUserId();
@@ -38,6 +39,8 @@ $id = $repo->create([
 ]);
 
 if ($id) {
+    $repo->createCatalogCode($id, generatePublicCode(), true);
+    $repo->createCatalogCode($id, generatePublicCode(), false);
     header('Location: index.php');
     exit;
 }

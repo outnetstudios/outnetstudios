@@ -9,6 +9,16 @@ $userId = (int)catalogGetUserId();
 $userName = htmlspecialchars(catalogGetUserName(), ENT_QUOTES, 'UTF-8');
 $userEmail = htmlspecialchars(catalogGetUserEmail(), ENT_QUOTES, 'UTF-8');
 $catalogs = $repo->allByUser($userId);
+// Load public codes for share modal
+$catalogCodes = [];
+foreach ($catalogs as $c) {
+    $codes = $repo->findCodesByCatalog((int)$c['id']);
+    foreach ($codes as $cc) {
+        $cid = (int)$cc['catalog_id'];
+        if (!isset($catalogCodes[$cid])) $catalogCodes[$cid] = [];
+        $catalogCodes[$cid][] = $cc;
+    }
+}
 $activeCount = count(array_filter($catalogs, fn($c) => $c['status'] === 'published'));
 $totalCount = count($catalogs);
 ?>
@@ -120,7 +130,17 @@ $totalCount = count($catalogs);
                                         </td>
                                         <td class="p-md text-center">
                                             <div class="flex justify-center gap-1">
-                                                <button onclick="abrirModalCompartir(<?= $c['id'] ?>)" class="p-2 hover:bg-primary/20 rounded-lg text-primary transition-colors" title="Compartir"><span class="material-symbols-outlined text-[20px]">share</span></button>
+                                                <?php
+                                                $pCode = '';
+                                                $npCode = '';
+                                                if (isset($catalogCodes[(int)$c['id']])) {
+                                                    foreach ($catalogCodes[(int)$c['id']] as $cc) {
+                                                        if ((int)$cc['show_prices'] === 1) $pCode = $cc['code'];
+                                                        else $npCode = $cc['code'];
+                                                    }
+                                                }
+                                                ?>
+                                                <button onclick="abrirModalCompartir(this)" data-code-prices="<?= $pCode ?>" data-code-no-prices="<?= $npCode ?>" class="p-2 hover:bg-primary/20 rounded-lg text-primary transition-colors" title="Compartir"><span class="material-symbols-outlined text-[20px]">share</span></button>
                                                 <a href="preview.php?catalog_id=<?= $c['id'] ?>" class="p-2 hover:bg-tertiary/20 rounded-lg text-tertiary transition-colors" title="Vista previa"><span class="material-symbols-outlined text-[20px]">visibility</span></a>
                                                 <a href="edit.php?id=<?= $c['id'] ?>" class="p-2 hover:bg-on-surface-variant/20 rounded-lg text-on-surface-variant transition-colors" title="Editar"><span class="material-symbols-outlined text-[20px]">edit</span></a>
                                                 <a href="delete.php?id=<?= $c['id'] ?>" class="p-2 hover:bg-error/20 rounded-lg text-error transition-colors" title="Borrar" onclick="return confirm('¿Borrar este catálogo y todos sus datos?')"><span class="material-symbols-outlined text-[20px]">delete</span></a>
@@ -159,7 +179,17 @@ $totalCount = count($catalogs);
                                 <span class="mobile-card-title"><?= htmlspecialchars($c['name'], ENT_QUOTES, 'UTF-8') ?></span>
                                 <span class="mobile-card-slug"><?= htmlspecialchars($c['slug'], ENT_QUOTES, 'UTF-8') ?></span>
                             </div>
-                            <button onclick="abrirModalCompartir(<?= $c['id'] ?>)" class="mobile-card-btn mobile-card-share" title="Compartir"><span class="material-symbols-outlined">share</span></button>
+                            <button onclick="abrirModalCompartir(this)" data-code-prices="<?php
+                                $mpCode = '';
+                                $mnpCode = '';
+                                if (isset($catalogCodes[(int)$c['id']])) {
+                                    foreach ($catalogCodes[(int)$c['id']] as $cc) {
+                                        if ((int)$cc['show_prices'] === 1) $mpCode = $cc['code'];
+                                        else $mnpCode = $cc['code'];
+                                    }
+                                }
+                                echo htmlspecialchars($mpCode, ENT_QUOTES, 'UTF-8');
+                            ?>" data-code-no-prices="<?= htmlspecialchars($mnpCode, ENT_QUOTES, 'UTF-8') ?>" class="mobile-card-btn mobile-card-share" title="Compartir"><span class="material-symbols-outlined">share</span></button>
                         </div>
                         <div class="mobile-card-body">
                             <div class="mobile-card-row">
@@ -265,14 +295,14 @@ $totalCount = count($catalogs);
     </div>
 </div>
 <script>
-    var shareCatalogId = null;
+    var shareBtn = null;
     function mostrarToast(msg) {
         var t = document.getElementById('toastShare');
         t.textContent = msg; t.classList.add('show');
         setTimeout(function(){ t.classList.remove('show'); }, 2000);
     }
-    function abrirModalCompartir(id) {
-        shareCatalogId = id;
+    function abrirModalCompartir(btn) {
+        shareBtn = btn;
         document.getElementById('modalCompartir').classList.add('open');
     }
     function cerrarModalCompartir() {
@@ -292,11 +322,11 @@ $totalCount = count($catalogs);
     }
     function copiarEnlaceConPrecios() {
         var proto = location.protocol === 'https:' ? 'https' : 'http';
-        copiarUrl(proto + '://' + location.host + '/ver_catalogo.php?id=' + shareCatalogId);
+        copiarUrl(proto + '://' + location.host + '/ver_catalogo.php?c=' + shareBtn.getAttribute('data-code-prices'));
     }
     function copiarEnlaceSinPrecios() {
         var proto = location.protocol === 'https:' ? 'https' : 'http';
-        copiarUrl(proto + '://' + location.host + '/ver_catalogo.php?id=' + shareCatalogId + '&no_prices=1');
+        copiarUrl(proto + '://' + location.host + '/ver_catalogo.php?c=' + shareBtn.getAttribute('data-code-no-prices'));
     }
     document.querySelectorAll('tbody tr').forEach(row => {
         row.addEventListener('mouseenter', () => {

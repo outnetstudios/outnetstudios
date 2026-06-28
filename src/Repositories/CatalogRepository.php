@@ -10,6 +10,11 @@ class CatalogRepository
         $this->connection = Database::getConnection();
     }
 
+    public function getConnection(): PDO
+    {
+        return $this->connection;
+    }
+
     public function all(): array
     {
         $query = 'SELECT c.*, u.name AS creator_name, u.email AS creator_email,
@@ -78,5 +83,43 @@ class CatalogRepository
         $query = 'DELETE FROM catalogs WHERE id = :id';
         $stmt = $this->connection->prepare($query);
         return $stmt->execute([':id' => $id]);
+    }
+
+    public function findCatalogByCode(string $code)
+    {
+        $query = 'SELECT c.*, cc.show_prices, cc.code
+                  FROM catalog_codes cc
+                  JOIN catalogs c ON cc.catalog_id = c.id
+                  WHERE cc.code = :code LIMIT 1';
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute([':code' => $code]);
+        return $stmt->fetch();
+    }
+
+    public function findCodesByCatalog(int $catalogId): array
+    {
+        $query = 'SELECT code, show_prices FROM catalog_codes WHERE catalog_id = :catalog_id';
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute([':catalog_id' => $catalogId]);
+        return $stmt->fetchAll();
+    }
+
+    public function createCatalogCode(int $catalogId, string $code, bool $showPrices): bool
+    {
+        $query = 'INSERT IGNORE INTO catalog_codes (catalog_id, code, show_prices) VALUES (:catalog_id, :code, :show_prices)';
+        $stmt = $this->connection->prepare($query);
+        return $stmt->execute([
+            ':catalog_id' => $catalogId,
+            ':code' => $code,
+            ':show_prices' => $showPrices ? 1 : 0,
+        ]);
+    }
+
+    public function regenerateCatalogCodes(int $catalogId): void
+    {
+        require_once __DIR__ . '/../../includes/catalog_preview_renderer.php';
+        $this->connection->prepare('DELETE FROM catalog_codes WHERE catalog_id = ?')->execute([$catalogId]);
+        $this->createCatalogCode($catalogId, generatePublicCode(), true);
+        $this->createCatalogCode($catalogId, generatePublicCode(), false);
     }
 }

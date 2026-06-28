@@ -6,24 +6,52 @@ require_once __DIR__ . '/../src/Repositories/CategoryRepository.php';
 require_once __DIR__ . '/../src/Repositories/ProductRepository.php';
 require_once __DIR__ . '/../includes/catalog_preview_renderer.php';
 
+$catRepo = new CatalogRepository();
+$showPrices = true;
+$catalogId = 0;
+$catalog = null;
+$publicCodePrices = null;
+$publicCodeNoPrices = null;
+
 if (!$isPublicView) {
     require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
     catalogRequireLogin();
     $userName = htmlspecialchars(catalogGetUserName(), ENT_QUOTES, 'UTF-8');
     $userId = (int)catalogGetUserId();
     $catalogId = (int)($_GET['catalog_id'] ?? 0);
-} else {
-    $catalogId = (int)($_GET['id'] ?? 0);
-}
-
-$catRepo = new CatalogRepository();
-$catalog = $catRepo->findById($catalogId);
-if (!$isPublicView) {
+    $catalog = $catRepo->findById($catalogId);
     if (!$catalog || (int)$catalog['user_id'] !== $userId) {
         header('Location: index.php');
         exit;
     }
+    $codes = $catRepo->findCodesByCatalog($catalogId);
+    foreach ($codes as $cc) {
+        if ((int)$cc['show_prices'] === 1) $publicCodePrices = $cc['code'];
+        else $publicCodeNoPrices = $cc['code'];
+    }
 } else {
+    if (!empty($_GET['c'])) {
+        $codeData = $catRepo->findCatalogByCode($_GET['c']);
+        if ($codeData) {
+            $catalogId = (int)$codeData['id'];
+            $showPrices = (bool)$codeData['show_prices'];
+            $catalog = $codeData;
+            // load both codes for the share modal
+            $codes = $catRepo->findCodesByCatalog($catalogId);
+            foreach ($codes as $cc) {
+                if ((int)$cc['show_prices'] === 1) $publicCodePrices = $cc['code'];
+                else $publicCodeNoPrices = $cc['code'];
+            }
+        }
+    } elseif (!empty($_GET['id'])) {
+        $catalogId = (int)$_GET['id'];
+        $catalog = $catRepo->findById($catalogId);
+        $codes = $catRepo->findCodesByCatalog($catalogId);
+        foreach ($codes as $cc) {
+            if ((int)$cc['show_prices'] === 1) $publicCodePrices = $cc['code'];
+            else $publicCodeNoPrices = $cc['code'];
+        }
+    }
     if (!$catalog) {
         http_response_code(404);
         echo 'Catálogo no encontrado.';
@@ -40,6 +68,10 @@ if (!$isPublicView) {
         exit;
     }
 }
+
+$GLOBALS['showPrices'] = $showPrices;
+$publicUrlWithPrices = $publicCodePrices ? (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/ver_catalogo.php?c=' . $publicCodePrices : '';
+$publicUrlNoPrices = $publicCodeNoPrices ? (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/ver_catalogo.php?c=' . $publicCodeNoPrices : '';
 
 $pageRepo = new CatalogPageRepository();
 $categoryRepo = new CategoryRepository();
@@ -58,10 +90,8 @@ if ($isPublicView) {
 
 $catalogName = htmlspecialchars($catalog['name'], ENT_QUOTES, 'UTF-8');
 $GLOBALS['currencySymbol'] = currencySymbol($catalog['currency'] ?? null);
-$showPrices = empty($_GET['no_prices']) && ($GLOBALS['showPrices'] ?? true);
-$GLOBALS['showPrices'] = $showPrices;
-$publicUrlWithPrices = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/ver_catalogo.php?id=' . $catalogId;
-$publicUrlNoPrices = $publicUrlWithPrices . '&no_prices=1';
+$currentPublicCode = $showPrices ? $publicCodePrices : $publicCodeNoPrices;
+$navParam = $isPublicView ? 'c=' . $currentPublicCode : 'catalog_id=' . $catalogId;
 
 // Expand pages: category pages auto-flow products
 $expandedPages = buildExpandedPages($pages, $products, $categories);
@@ -218,7 +248,7 @@ else:
         <button onclick="zoomFit()" class="preview-btn preview-btn-always" title="Ajustar al ancho"><span class="material-symbols-outlined preview-btn-icon">fit_width</span><span class="preview-btn-label">Ajustar</span></button>
 <?php if ($isPublicView): ?>
         <?php if ($allowPdf): ?>
-        <a href="descargar_pdf.php?id=<?= $catalogId ?><?= $showPrices ? '' : '&no_prices=1' ?>" target="_blank" class="preview-btn preview-btn-always" title="Descargar PDF"><span class="material-symbols-outlined preview-btn-icon">picture_as_pdf</span><span class="preview-btn-label">PDF</span></a>
+        <a href="descargar_pdf.php?c=<?= $currentPublicCode ?>" target="_blank" class="preview-btn preview-btn-always" title="Descargar PDF"><span class="material-symbols-outlined preview-btn-icon">picture_as_pdf</span><span class="preview-btn-label">PDF</span></a>
         <?php endif; ?>
 <?php else: ?>
         <a href="export_pdf.php?catalog_id=<?= $catalogId ?>" target="_blank" class="preview-btn preview-btn-always" title="Exportar PDF"><span class="material-symbols-outlined preview-btn-icon">picture_as_pdf</span><span class="preview-btn-label">PDF</span></a>
@@ -249,19 +279,19 @@ else:
 <nav class="preview-footer">
     <div>
         <?php if ($pageIndex > 1): ?>
-        <a class="preview-footer-btn" href="?<?= $isPublicView ? 'id' : 'catalog_id' ?>=<?= $catalogId ?>&page=<?= $pageIndex - 1 ?><?= $showPrices ? '' : '&no_prices=1' ?>" id="prevPage"><span class="material-symbols-outlined" style="font-size:1.1rem">chevron_left</span> Anterior</a>
+        <a class="preview-footer-btn" href="?<?= $navParam ?>&page=<?= $pageIndex - 1 ?>" id="prevPage"><span class="material-symbols-outlined" style="font-size:1.1rem">chevron_left</span> Anterior</a>
         <?php else: ?>
         <span class="preview-footer-btn disabled"><span class="material-symbols-outlined" style="font-size:1.1rem">chevron_left</span> Anterior</span>
         <?php endif; ?>
     </div>
     <div class="preview-page-numbers">
         <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-        <a href="?<?= $isPublicView ? 'id' : 'catalog_id' ?>=<?= $catalogId ?>&page=<?= $i ?><?= $showPrices ? '' : '&no_prices=1' ?>" class="preview-page-num <?= $i === $pageIndex ? 'active' : '' ?>"><?= $i ?></a>
+        <a href="?<?= $navParam ?>&page=<?= $i ?>" class="preview-page-num <?= $i === $pageIndex ? 'active' : '' ?>"><?= $i ?></a>
         <?php endfor; ?>
     </div>
     <div>
         <?php if ($pageIndex < $totalPages): ?>
-        <a class="preview-footer-btn" href="?<?= $isPublicView ? 'id' : 'catalog_id' ?>=<?= $catalogId ?>&page=<?= $pageIndex + 1 ?><?= $showPrices ? '' : '&no_prices=1' ?>" id="nextPage">Siguiente <span class="material-symbols-outlined" style="font-size:1.1rem">chevron_right</span></a>
+        <a class="preview-footer-btn" href="?<?= $navParam ?>&page=<?= $pageIndex + 1 ?>" id="nextPage">Siguiente <span class="material-symbols-outlined" style="font-size:1.1rem">chevron_right</span></a>
         <?php else: ?>
         <span class="preview-footer-btn disabled">Siguiente <span class="material-symbols-outlined" style="font-size:1.1rem">chevron_right</span></span>
         <?php endif; ?>

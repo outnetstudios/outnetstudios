@@ -103,6 +103,15 @@ function currencySymbol(?string $currency): string {
     return $currency === 'USD' ? '$' : 'C$';
 }
 
+function generatePublicCode(): string {
+    $chars = 'BCDFGHJKLMNPQRSTVWXYZ23456789';
+    $code = '';
+    for ($i = 0; $i < 8; $i++) {
+        $code .= $chars[random_int(0, strlen($chars) - 1)];
+    }
+    return $code;
+}
+
 $pageTypeLabels = [
     'cover' => 'Portada',
     'index' => 'Índice',

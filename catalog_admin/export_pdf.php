@@ -6,23 +6,33 @@ require_once __DIR__ . '/../src/Repositories/CategoryRepository.php';
 require_once __DIR__ . '/../src/Repositories/ProductRepository.php';
 require_once __DIR__ . '/../includes/catalog_preview_renderer.php';
 
+$catRepo = new CatalogRepository();
+$showPrices = true;
+$catalogId = 0;
+$catalog = null;
+
 if (!$isPublicView) {
     require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
     catalogRequireLogin();
     $userId = (int)catalogGetUserId();
     $catalogId = (int)($_GET['catalog_id'] ?? 0);
-} else {
-    $catalogId = (int)($_GET['id'] ?? 0);
-}
-
-$catRepo = new CatalogRepository();
-$catalog = $catRepo->findById($catalogId);
-if (!$isPublicView) {
+    $catalog = $catRepo->findById($catalogId);
     if (!$catalog || (int)$catalog['user_id'] !== $userId) {
         header('Location: index.php');
         exit;
     }
 } else {
+    if (!empty($_GET['c'])) {
+        $codeData = $catRepo->findCatalogByCode($_GET['c']);
+        if ($codeData) {
+            $catalogId = (int)$codeData['id'];
+            $showPrices = (bool)$codeData['show_prices'];
+            $catalog = $codeData;
+        }
+    } elseif (!empty($_GET['id'])) {
+        $catalogId = (int)$_GET['id'];
+        $catalog = $catRepo->findById($catalogId);
+    }
     if (!$catalog || empty($catalog['public_pdf_download'])) {
         http_response_code(403);
         echo 'Descarga de PDF no disponible para este catálogo.';
@@ -47,7 +57,6 @@ if ($isPublicView) {
 
 $catalogName = htmlspecialchars($catalog['name'], ENT_QUOTES, 'UTF-8');
 $GLOBALS['currencySymbol'] = currencySymbol($catalog['currency'] ?? null);
-$showPrices = empty($_GET['no_prices']) && ($GLOBALS['showPrices'] ?? true);
 $GLOBALS['showPrices'] = $showPrices;
 
 // Expand pages: category pages auto-flow products

@@ -18,39 +18,54 @@ if (!$catalog || (int)$catalog['user_id'] !== $userId) {
 }
 
 $error = '';
+$success = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = trim($_POST['name'] ?? '');
-    $slug = trim($_POST['slug'] ?? '');
-    $description = trim($_POST['description'] ?? '');
-    $status = in_array($_POST['status'] ?? 'draft', ['draft','published','archived']) ? $_POST['status'] : 'draft';
-    $currency = $_POST['currency'] === 'USD' ? 'USD' : 'NIO';
-
-    if ($name === '') {
-        $error = 'El nombre es obligatorio.';
+    if (!empty($_POST['regenerate_codes'])) {
+        $repo->regenerateCatalogCodes($id);
+        $success = 'Códigos públicos regenerados. Las URLs anteriores han dejado de funcionar.';
     } else {
-        if ($slug === '') {
-            $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $name));
-            $slug = trim($slug, '-');
+        $name = trim($_POST['name'] ?? '');
+        $slug = trim($_POST['slug'] ?? '');
+        $description = trim($_POST['description'] ?? '');
+        $status = in_array($_POST['status'] ?? 'draft', ['draft','published','archived']) ? $_POST['status'] : 'draft';
+        $currency = $_POST['currency'] === 'USD' ? 'USD' : 'NIO';
+
+        if ($name === '') {
+            $error = 'El nombre es obligatorio.';
+        } else {
+            if ($slug === '') {
+                $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $name));
+                $slug = trim($slug, '-');
+            }
+            $coverImage = $catalog['cover_image'] ?? null;
+            $newCover = uploadImage($_FILES['cover_image'] ?? []);
+            if ($newCover) { deleteImage($catalog['cover_image'] ?? null); $coverImage = $newCover; }
+            $backCoverImage = $catalog['back_cover_image'] ?? null;
+            $newBack = uploadImage($_FILES['back_cover_image'] ?? []);
+            if ($newBack) { deleteImage($catalog['back_cover_image'] ?? null); $backCoverImage = $newBack; }
+            $repo->update($id, [
+                'name' => $name,
+                'slug' => $slug,
+                'description' => $description,
+                'status' => $status,
+                'currency' => $currency,
+                'cover_image' => $coverImage,
+                'back_cover_image' => $backCoverImage,
+                'public_pdf_download' => !empty($_POST['public_pdf_download']) ? 1 : 0,
+            ]);
+            header('Location: index.php');
+            exit;
         }
-        $coverImage = $catalog['cover_image'] ?? null;
-        $newCover = uploadImage($_FILES['cover_image'] ?? []);
-        if ($newCover) { deleteImage($catalog['cover_image'] ?? null); $coverImage = $newCover; }
-        $backCoverImage = $catalog['back_cover_image'] ?? null;
-        $newBack = uploadImage($_FILES['back_cover_image'] ?? []);
-        if ($newBack) { deleteImage($catalog['back_cover_image'] ?? null); $backCoverImage = $newBack; }
-        $repo->update($id, [
-            'name' => $name,
-            'slug' => $slug,
-            'description' => $description,
-            'status' => $status,
-            'currency' => $currency,
-            'cover_image' => $coverImage,
-            'back_cover_image' => $backCoverImage,
-            'public_pdf_download' => !empty($_POST['public_pdf_download']) ? 1 : 0,
-        ]);
-        header('Location: index.php');
-        exit;
     }
+}
+
+// Load codes for display
+$codes = $repo->findCodesByCatalog($id);
+$publicCodePrices = '';
+$publicCodeNoPrices = '';
+foreach ($codes as $cc) {
+    if ((int)$cc['show_prices'] === 1) $publicCodePrices = $cc['code'];
+    else $publicCodeNoPrices = $cc['code'];
 }
 ?>
 <?php $pageTitle = 'Editar catálogo'; require_once __DIR__ . '/../templates/partials/admin_head.php'; ?>
@@ -61,6 +76,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php if ($error !== ''): ?>
 <div class="bg-error-container/20 border border-error/30 rounded-xl px-md py-sm mb-md">
 <p class="font-body-sm text-body-sm text-error"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></p>
+</div>
+<?php endif; ?>
+<?php if ($success !== ''): ?>
+<div class="bg-tertiary/20 border border-tertiary/30 rounded-xl px-md py-sm mb-md">
+<p class="font-body-sm text-body-sm text-tertiary"><?= htmlspecialchars($success, ENT_QUOTES, 'UTF-8') ?></p>
 </div>
 <?php endif; ?>
 <form method="post" class="space-y-lg" enctype="multipart/form-data">
@@ -120,6 +140,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <input type="checkbox" name="public_pdf_download" value="1" <?= !empty($catalog['public_pdf_download']) ? 'checked' : '' ?> class="sr-only peer">
     <div class="w-11 h-6 bg-surface-variant/30 rounded-full peer peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
 </label>
+</div>
+<div class="flex flex-col gap-sm pt-md border-t border-outline-variant/20">
+<div class="flex items-center justify-between flex-wrap gap-sm">
+<div class="flex items-center gap-2">
+    <span class="material-symbols-outlined text-primary text-[18px]">public</span>
+    <span class="font-body-sm text-body-sm text-on-surface-variant">Códigos públicos</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+    <span class="font-body-xs text-body-xs text-on-surface-variant/60">URL con precios: <code class="text-primary text-[0.7rem]">ver_catalogo.php?c=<?= htmlspecialchars($publicCodePrices, ENT_QUOTES, 'UTF-8') ?></code></span>
+    <span class="font-body-xs text-body-xs text-on-surface-variant/60">URL sin precios: <code class="text-primary text-[0.7rem]">ver_catalogo.php?c=<?= htmlspecialchars($publicCodeNoPrices, ENT_QUOTES, 'UTF-8') ?></code></span>
+</div>
+<button type="submit" name="regenerate_codes" value="1" class="self-start px-md py-1 rounded-full border border-outline-variant font-label-caps text-label-caps text-on-surface-variant hover:bg-warning/10 hover:text-warning hover:border-warning/30 transition-all">Regenerar códigos</button>
 </div>
 <div class="flex gap-sm form-btn-row">
 <button class="primary-gradient text-white px-lg py-sm rounded-full font-title-sm text-title-sm active:scale-95 transition-transform primary-glow" type="submit">Guardar cambios</button>
