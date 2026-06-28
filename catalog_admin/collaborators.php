@@ -279,7 +279,7 @@ $catalogoCount = count($access);
 </tr>
 <tr id="access-<?= $uid ?>" class="hidden">
 <td colspan="3" class="p-0">
-<div class="bg-surface-container-low/50 p-md space-y-3">
+<div class="bg-surface-container-low/50 p-md space-y-md">
 <?php if ($catalogoCount > 0): ?>
 <div class="flex flex-col gap-2">
 <?php foreach ($access as $a): ?>
@@ -401,7 +401,7 @@ $catalogoCount = count($access);
 </div>
 </div>
 <div id="access-mobile-<?= $uid ?>" class="hidden">
-<div class="bg-surface-container-low/50 p-md space-y-3">
+<div class="bg-surface-container-low/50 p-md space-y-md">
 <?php if ($catalogoCount > 0): ?>
 <div class="flex flex-col gap-2">
 <?php foreach ($access as $a): ?>
@@ -524,26 +524,24 @@ $catalogoCount = count($access);
 </style>
 <script>
 function toggleAccess(id) {
-var desktopRow = document.getElementById('access-' + id);
-var mobileRow = document.getElementById('access-mobile-' + id);
+var isMobile = window.innerWidth < 769;
+var row = document.getElementById(isMobile ? 'access-mobile-' + id : 'access-' + id);
+if (!row) return;
 var arrows = document.querySelectorAll('.toggle-arrow-' + id);
-var isHidden = desktopRow ? desktopRow.classList.contains('hidden') : true;
-[desktopRow, mobileRow].forEach(function(el) {
-if (!el) return;
-el.classList.toggle('hidden');
+var isHidden = row.classList.contains('hidden');
 if (isHidden) {
-el.style.maxHeight = '0px';
-el.classList.remove('hidden');
+row.classList.remove('hidden');
+row.style.maxHeight = '0px';
 requestAnimationFrame(function() {
-el.style.maxHeight = el.scrollHeight + 'px';
-el.style.opacity = '1';
+row.style.maxHeight = row.scrollHeight + 'px';
+row.style.opacity = '1';
 });
 } else {
-el.style.maxHeight = '0px';
-el.style.opacity = '0';
-setTimeout(function() { el.classList.add('hidden'); }, 300);
+row.style.maxHeight = '0px';
+row.style.opacity = '0';
+var r = row;
+setTimeout(function() { r.classList.add('hidden'); }, 300);
 }
-});
 arrows.forEach(function(a) {
 a.style.transform = isHidden ? '' : 'rotate(180deg)';
 });
