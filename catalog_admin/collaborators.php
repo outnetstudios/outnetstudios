@@ -88,6 +88,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
         $collabRepo->updatePermissions($collabId, $perms);
         $success = 'Permisos actualizados.';
+    } elseif (!empty($_POST['reset_password'])) {
+        $targetUserId = (int)($_POST['target_user_id'] ?? 0);
+        $newPassword = generatePassword();
+        $userRepo->updatePassword($targetUserId, password_hash($newPassword, PASSWORD_DEFAULT));
+        $success = 'Contraseña generada para <strong>' . htmlspecialchars($userRepo->findById($targetUserId)['email'] ?? '', ENT_QUOTES, 'UTF-8') . '</strong>: <code>' . htmlspecialchars($newPassword, ENT_QUOTES, 'UTF-8') . '</code>';
     }
 }
 
@@ -237,6 +242,13 @@ foreach ($collaborators as $u) {
                 <button type="submit" name="add_access" value="1" class="px-sm py-0.5 rounded-full border border-outline-variant font-label-caps text-[0.65rem] text-on-surface-variant hover:text-primary hover:border-primary/30 transition-all">Agregar acceso</button>
             </div>
         </form>
+        <div class="mt-sm pt-sm border-t border-outline-variant/10 flex items-center gap-sm">
+            <span class="font-body-xs text-body-xs text-on-surface-variant/60">Contraseña:</span>
+            <form method="POST">
+                <input type="hidden" name="target_user_id" value="<?= $uid ?>">
+                <button type="submit" name="reset_password" value="1" class="px-sm py-0.5 rounded-full border border-outline-variant font-label-caps text-[0.65rem] text-on-surface-variant hover:text-warning hover:border-warning/30 transition-all">Generar nueva</button>
+            </form>
+        </div>
     </div>
 </div>
 <?php endforeach; ?>
