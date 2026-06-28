@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
+require_once __DIR__ . '/../includes/catalog_permissions.php';
 require_once __DIR__ . '/../includes/upload_helper.php';
 require_once __DIR__ . '/../src/Repositories/CatalogRepository.php';
 require_once __DIR__ . '/../src/Repositories/ProductRepository.php';
@@ -12,7 +13,7 @@ $userId = (int)catalogGetUserId();
 $id = (int)($_GET['id'] ?? 0);
 $catalog = $repo->findById($id);
 
-if (!$catalog || (int)$catalog['user_id'] !== $userId) {
+if (!$catalog || !catalogIsOwner($id, $userId)) {
     header('Location: index.php');
     exit;
 }

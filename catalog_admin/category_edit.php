@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
+require_once __DIR__ . '/../includes/catalog_permissions.php';
 require_once __DIR__ . '/../includes/upload_helper.php';
+require_once __DIR__ . '/../src/Repositories/CatalogRepository.php';
 require_once __DIR__ . '/../src/Repositories/CategoryRepository.php';
 
 catalogRequireLogin();
@@ -11,7 +13,7 @@ $id = (int)($_GET['id'] ?? 0);
 $categoryRepo = new CategoryRepository();
 $category = $categoryRepo->findById($id);
 
-if (!$category || (int)$category['user_id'] !== $userId) {
+if (!$category || !catalogCanEdit((int)$category['catalog_id'], $userId, PERM_EDIT_CATEGORIES)) {
     header('Location: index.php');
     exit;
 }

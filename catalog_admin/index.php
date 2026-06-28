@@ -2,13 +2,14 @@
 require_once __DIR__ . '/../src/Repositories/CatalogRepository.php';
 require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
 require_once __DIR__ . '/../includes/upload_helper.php';
+require_once __DIR__ . '/../includes/catalog_permissions.php';
 
 catalogRequireLogin();
 $repo = new CatalogRepository();
 $userId = (int)catalogGetUserId();
 $userName = htmlspecialchars(catalogGetUserName(), ENT_QUOTES, 'UTF-8');
 $userEmail = htmlspecialchars(catalogGetUserEmail(), ENT_QUOTES, 'UTF-8');
-$catalogs = $repo->allByUser($userId);
+$catalogs = $repo->allAccessibleByUser($userId);
 // Load public codes for share modal
 $catalogCodes = [];
 foreach ($catalogs as $c) {
@@ -109,6 +110,9 @@ $totalCount = count($catalogs);
                                                     <?php endif; ?>
                                                 </div>
                                                 <span class="font-title-sm text-title-sm text-on-surface font-semibold"><?= htmlspecialchars($c['name'], ENT_QUOTES, 'UTF-8') ?></span>
+                                                <?php if (($c['_access_level'] ?? 'owner') === 'collaborator'): ?>
+                                                <span class="text-label-caps text-[0.6rem] px-1.5 py-0.5 rounded-full bg-tertiary/15 text-tertiary border border-tertiary/20 ml-1">Colaborador</span>
+                                                <?php endif; ?>
                                             </div>
                                         </td>
                                         <td class="p-md font-body-sm text-body-sm text-on-surface-variant italic"><?= htmlspecialchars($c['slug'], ENT_QUOTES, 'UTF-8') ?></td>
@@ -139,8 +143,12 @@ $totalCount = count($catalogs);
                                                 ?>
                                                 <button onclick="abrirModalCompartir(this)" data-code-prices="<?= htmlspecialchars($pCode, ENT_QUOTES, 'UTF-8') ?>" data-code-no-prices="<?= htmlspecialchars($npCode, ENT_QUOTES, 'UTF-8') ?>" class="p-2 hover:bg-primary/20 rounded-lg text-primary transition-colors" title="Compartir"><span class="material-symbols-outlined text-[20px]">share</span></button>
                                                 <a href="preview.php?catalog_id=<?= $c['id'] ?>" class="p-2 hover:bg-tertiary/20 rounded-lg text-tertiary transition-colors" title="Vista previa"><span class="material-symbols-outlined text-[20px]">visibility</span></a>
+                                                <?php if (catalogCanEdit((int)$c['id'], $userId, PERM_EDIT_CATALOG)): ?>
                                                 <a href="edit.php?id=<?= $c['id'] ?>" class="p-2 hover:bg-on-surface-variant/20 rounded-lg text-on-surface-variant transition-colors" title="Editar"><span class="material-symbols-outlined text-[20px]">edit</span></a>
+                                                <?php endif; ?>
+                                                <?php if (catalogIsOwner((int)$c['id'], $userId)): ?>
                                                 <a href="delete.php?id=<?= $c['id'] ?>" class="p-2 hover:bg-error/20 rounded-lg text-error transition-colors" title="Borrar" onclick="return confirm('¿Borrar este catálogo y todos sus datos?')"><span class="material-symbols-outlined text-[20px]">delete</span></a>
+                                                <?php endif; ?>
                                             </div>
                                         </td>
                                     </tr>
@@ -214,8 +222,12 @@ $totalCount = count($catalogs);
                         </div>
                         <div class="mobile-card-actions-secondary">
                             <a href="preview.php?catalog_id=<?= $c['id'] ?>" class="mobile-card-btn preview" title="Vista previa"><span class="material-symbols-outlined">visibility</span></a>
+                            <?php if (catalogCanEdit((int)$c['id'], $userId, PERM_EDIT_CATALOG)): ?>
                             <a href="edit.php?id=<?= $c['id'] ?>" class="mobile-card-btn edit" title="Editar"><span class="material-symbols-outlined">edit</span></a>
+                            <?php endif; ?>
+                            <?php if (catalogIsOwner((int)$c['id'], $userId)): ?>
                             <a href="delete.php?id=<?= $c['id'] ?>" class="mobile-card-btn delete" title="Borrar" onclick="return confirm('¿Borrar este catálogo y todos sus datos?')"><span class="material-symbols-outlined">delete</span></a>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <?php endforeach; ?>

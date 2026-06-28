@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
+require_once __DIR__ . '/../includes/catalog_permissions.php';
 require_once __DIR__ . '/../includes/upload_helper.php';
+require_once __DIR__ . '/../src/Repositories/CatalogRepository.php';
 require_once __DIR__ . '/../src/Repositories/ProductRepository.php';
 
 catalogRequireLogin();
@@ -10,7 +12,7 @@ $id = (int)($_GET['id'] ?? 0);
 $productRepo = new ProductRepository();
 $product = $productRepo->findById($id);
 
-if (!$product || (int)$product['user_id'] !== $userId) {
+if (!$product || !catalogCanEdit((int)$product['catalog_id'], $userId, PERM_EDIT_PRODUCTS)) {
     header('Location: index.php');
     exit;
 }

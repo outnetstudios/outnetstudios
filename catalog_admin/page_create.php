@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
+require_once __DIR__ . '/../includes/catalog_permissions.php';
 require_once __DIR__ . '/../includes/upload_helper.php';
 require_once __DIR__ . '/../src/Repositories/CatalogRepository.php';
 require_once __DIR__ . '/../src/Repositories/CatalogPageRepository.php';
@@ -14,7 +15,7 @@ $catalogId = (int)($_GET['catalog_id'] ?? 0);
 
 $catRepo = new CatalogRepository();
 $catalog = $catRepo->findById($catalogId);
-if (!$catalog || (int)$catalog['user_id'] !== $userId) {
+if (!$catalog || !catalogCanEdit($catalogId, $userId, PERM_EDIT_PAGES)) {
     header('Location: index.php');
     exit;
 }

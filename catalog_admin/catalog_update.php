@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
+require_once __DIR__ . '/../includes/catalog_permissions.php';
 require_once __DIR__ . '/../src/Repositories/CatalogRepository.php';
 
 catalogRequireLogin();
@@ -10,7 +11,7 @@ $redirect = $_POST['redirect'] ?? 'index.php';
 
 $repo = new CatalogRepository();
 $catalog = $repo->findById($catalogId);
-if (!$catalog || (int)$catalog['user_id'] !== $userId) {
+if (!$catalog || !catalogCanEdit($catalogId, $userId, PERM_EDIT_CATALOG)) {
     header('Location: index.php');
     exit;
 }

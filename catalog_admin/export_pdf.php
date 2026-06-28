@@ -13,11 +13,12 @@ $catalog = null;
 
 if (!$isPublicView) {
     require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
+    require_once __DIR__ . '/../includes/catalog_permissions.php';
     catalogRequireLogin();
     $userId = (int)catalogGetUserId();
     $catalogId = (int)($_GET['catalog_id'] ?? 0);
     $catalog = $catRepo->findById($catalogId);
-    if (!$catalog || (int)$catalog['user_id'] !== $userId) {
+    if (!$catalog || !catalogHasAnyAccess($catalogId, $userId)) {
         header('Location: index.php');
         exit;
     }

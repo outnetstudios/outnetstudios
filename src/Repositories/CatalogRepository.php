@@ -35,6 +35,20 @@ class CatalogRepository
         return $stmt->fetchAll();
     }
 
+    public function allAccessibleByUser(int $userId): array
+    {
+        $query = "SELECT c.*, 'owner' AS _access_level FROM catalogs c WHERE c.user_id = :user_id
+                  UNION
+                  SELECT c.*, 'collaborator' AS _access_level
+                  FROM catalog_collaborators cc
+                  JOIN catalogs c ON cc.catalog_id = c.id
+                  WHERE cc.user_id = :user_id2
+                  ORDER BY created_at DESC";
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute([':user_id' => $userId, ':user_id2' => $userId]);
+        return $stmt->fetchAll();
+    }
+
     public function findById(int $id)
     {
         $query = 'SELECT * FROM catalogs WHERE id = :id LIMIT 1';
