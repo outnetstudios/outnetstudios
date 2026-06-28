@@ -12,12 +12,9 @@ $catalogs = $repo->allByUser($userId);
 // Load public codes for share modal
 $catalogCodes = [];
 foreach ($catalogs as $c) {
-    $codes = $repo->findCodesByCatalog((int)$c['id']);
-    foreach ($codes as $cc) {
-        $cid = (int)$cc['catalog_id'];
-        if (!isset($catalogCodes[$cid])) $catalogCodes[$cid] = [];
-        $catalogCodes[$cid][] = $cc;
-    }
+    $cid = (int)$c['id'];
+    $codes = $repo->findCodesByCatalog($cid);
+    $catalogCodes[$cid] = $codes;
 }
 $activeCount = count(array_filter($catalogs, fn($c) => $c['status'] === 'published'));
 $totalCount = count($catalogs);
@@ -140,7 +137,7 @@ $totalCount = count($catalogs);
                                                     }
                                                 }
                                                 ?>
-                                                <button onclick="abrirModalCompartir(this)" data-code-prices="<?= $pCode ?>" data-code-no-prices="<?= $npCode ?>" class="p-2 hover:bg-primary/20 rounded-lg text-primary transition-colors" title="Compartir"><span class="material-symbols-outlined text-[20px]">share</span></button>
+                                                <button onclick="abrirModalCompartir(this)" data-code-prices="<?= htmlspecialchars($pCode, ENT_QUOTES, 'UTF-8') ?>" data-code-no-prices="<?= htmlspecialchars($npCode, ENT_QUOTES, 'UTF-8') ?>" class="p-2 hover:bg-primary/20 rounded-lg text-primary transition-colors" title="Compartir"><span class="material-symbols-outlined text-[20px]">share</span></button>
                                                 <a href="preview.php?catalog_id=<?= $c['id'] ?>" class="p-2 hover:bg-tertiary/20 rounded-lg text-tertiary transition-colors" title="Vista previa"><span class="material-symbols-outlined text-[20px]">visibility</span></a>
                                                 <a href="edit.php?id=<?= $c['id'] ?>" class="p-2 hover:bg-on-surface-variant/20 rounded-lg text-on-surface-variant transition-colors" title="Editar"><span class="material-symbols-outlined text-[20px]">edit</span></a>
                                                 <a href="delete.php?id=<?= $c['id'] ?>" class="p-2 hover:bg-error/20 rounded-lg text-error transition-colors" title="Borrar" onclick="return confirm('¿Borrar este catálogo y todos sus datos?')"><span class="material-symbols-outlined text-[20px]">delete</span></a>
