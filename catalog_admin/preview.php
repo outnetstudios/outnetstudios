@@ -67,6 +67,11 @@ if (!$isPublicView) {
         echo '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Catálogo inactivo</title><style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0f1320;color:#dee2f4;font-family:"Inter",sans-serif;text-align:center;padding:2rem}.msg{max-width:480px}.msg h1{font-size:1.5rem;margin:0 0 0.75rem;color:#f87171}.msg p{font-size:0.95rem;color:#8892b0;line-height:1.5;margin:0}</style></head><body><div class="msg"><span class="material-symbols-outlined" style="font-size:3rem;color:#f87171;margin-bottom:1rem">block</span><h1>Catálogo inactivo</h1><p>Ponte en contacto con tu proveedor para más información.</p></div></body></html>';
         exit;
     }
+    if ($showPrices && empty($catalog['prices_url_active'])) {
+        http_response_code(404);
+        echo 'Catálogo no disponible.';
+        exit;
+    }
 }
 
 $GLOBALS['showPrices'] = $showPrices;
@@ -241,7 +246,7 @@ else:
 <div class="preview-header">
     <span class="preview-header-title"><?= $catalogName ?></span>
     <div class="preview-header-actions">
-        <button onclick="abrirModalCompartir()" class="preview-btn preview-btn-always" title="Compartir"><span class="material-symbols-outlined preview-btn-icon">share</span><span class="preview-btn-label">Compartir</span></button>
+        <button onclick="<?= $isPublicView ? "copiarEnlaceActual()" : "abrirModalCompartir()" ?>" class="preview-btn preview-btn-always" title="Compartir"><span class="material-symbols-outlined preview-btn-icon">share</span><span class="preview-btn-label">Compartir</span></button>
         <button onclick="zoomOut()" class="preview-btn preview-btn-always" title="Alejar"><span class="material-symbols-outlined preview-btn-icon">zoom_out</span><span class="preview-btn-label">Alejar</span></button>
         <span class="preview-zoom-label" id="zoomLevel">100%</span>
         <button onclick="zoomIn()" class="preview-btn preview-btn-always" title="Acercar"><span class="material-symbols-outlined preview-btn-icon">zoom_in</span><span class="preview-btn-label">Acercar</span></button>
@@ -307,7 +312,7 @@ else:
 <div class="modal-overlay" id="modalCompartir" onclick="if(event.target===this)cerrarModalCompartir()">
     <div class="modal-box">
         <h3>Compartir catálogo</h3>
-        <button class="modal-btn" onclick="copiarEnlaceConPrecios()"><span class="material-symbols-outlined">attach_money</span>Compartir URL con precios</button>
+        <button class="modal-btn <?= !$isPublicView && empty($catalog['prices_url_active']) ? 'opacity-40 pointer-events-none' : '' ?>" onclick="copiarEnlaceConPrecios()"><span class="material-symbols-outlined">attach_money</span><?= !$isPublicView && empty($catalog['prices_url_active']) ? 'URL con precios (inactiva)' : 'Compartir URL con precios' ?></button>
         <button class="modal-btn" onclick="copiarEnlaceSinPrecios()"><span class="material-symbols-outlined">money_off</span>Compartir URL sin precios</button>
         <button class="modal-btn modal-btn-close" onclick="cerrarModalCompartir()">Cancelar</button>
     </div>
@@ -317,6 +322,9 @@ function mostrarToast(msg) {
     var t = document.getElementById('toastShare');
     t.textContent = msg; t.classList.add('show');
     setTimeout(function(){ t.classList.remove('show'); }, 2000);
+}
+function copiarEnlaceActual() {
+    copiarEnlace(window.location.href);
 }
 function abrirModalCompartir() {
     document.getElementById('modalCompartir').classList.add('open');

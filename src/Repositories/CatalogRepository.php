@@ -62,7 +62,7 @@ class CatalogRepository
 
     public function update(int $id, array $data): bool
     {
-        $fields = ['name', 'slug', 'description', 'cover_image', 'back_cover_image', 'status', 'currency', 'public_pdf_download'];
+        $fields = ['name', 'slug', 'description', 'cover_image', 'back_cover_image', 'status', 'currency', 'public_pdf_download', 'prices_url_active'];
         $sets = [];
         $params = [':id' => $id];
         foreach ($fields as $f) {

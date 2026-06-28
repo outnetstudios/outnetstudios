@@ -38,6 +38,11 @@ if (!$isPublicView) {
         echo 'Descarga de PDF no disponible para este catálogo.';
         exit;
     }
+    if ($showPrices && empty($catalog['prices_url_active'])) {
+        http_response_code(404);
+        echo 'Catálogo no disponible.';
+        exit;
+    }
 }
 
 $pageRepo = new CatalogPageRepository();

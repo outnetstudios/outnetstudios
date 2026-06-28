@@ -52,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'cover_image' => $coverImage,
                 'back_cover_image' => $backCoverImage,
                 'public_pdf_download' => !empty($_POST['public_pdf_download']) ? 1 : 0,
+                'prices_url_active' => !empty($_POST['prices_url_active']) ? 1 : 0,
             ]);
             header('Location: index.php');
             exit;
@@ -151,6 +152,16 @@ foreach ($codes as $cc) {
 <div class="flex flex-col gap-1">
     <span class="font-body-xs text-body-xs text-on-surface-variant/60">URL con precios: <code class="text-primary text-[0.7rem]">ver_catalogo.php?c=<?= htmlspecialchars($publicCodePrices, ENT_QUOTES, 'UTF-8') ?></code></span>
     <span class="font-body-xs text-body-xs text-on-surface-variant/60">URL sin precios: <code class="text-primary text-[0.7rem]">ver_catalogo.php?c=<?= htmlspecialchars($publicCodeNoPrices, ENT_QUOTES, 'UTF-8') ?></code></span>
+</div>
+<div class="flex items-center justify-between flex-wrap gap-sm pt-sm">
+<div class="flex items-center gap-2">
+    <span class="material-symbols-outlined text-[18px] <?= !empty($catalog['prices_url_active']) ? 'text-primary' : 'text-on-surface-variant/40' ?>">attach_money</span>
+    <span class="font-body-sm text-body-sm text-on-surface-variant">URL con precios activa</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+    <input type="checkbox" name="prices_url_active" value="1" <?= !empty($catalog['prices_url_active']) ? 'checked' : '' ?> class="sr-only peer">
+    <div class="w-11 h-6 bg-surface-variant/30 rounded-full peer peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+</label>
 </div>
 <button type="submit" name="regenerate_codes" value="1" class="self-start px-md py-1 rounded-full border border-outline-variant font-label-caps text-label-caps text-on-surface-variant hover:bg-warning/10 hover:text-warning hover:border-warning/30 transition-all">Regenerar códigos</button>
 </div>
