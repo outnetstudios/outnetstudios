@@ -8,12 +8,12 @@
 <div class="flex items-center gap-sm">
 <div class="hidden md:flex items-center gap-sm"><?= $navbarExtra ?? '' ?></div>
 <div class="relative" id="userDropdown">
-    <button onclick="toggleUserMenu()" class="flex items-center gap-1 cursor-pointer group">
+    <div onclick="toggleUserMenu()" class="flex items-center gap-1 cursor-pointer group">
         <div class="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/30 group-hover:border-primary transition-colors bg-surface-container-high flex items-center justify-center" style="box-shadow: 0 0 10px rgba(108,140,255,0.1);">
             <span class="material-symbols-outlined text-primary text-[20px]">person</span>
         </div>
         <span class="hidden md:block font-body-sm text-body-sm font-bold text-on-surface"><?= htmlspecialchars($userName, ENT_QUOTES, 'UTF-8') ?></span>
-    </button>
+    </div>
     <div id="userMenu" class="hidden absolute right-0 top-full mt-2 w-48 bg-surface-container backdrop-blur-xl rounded-2xl border border-primary/10 shadow-xl overflow-hidden" style="box-shadow: 0 8px 32px rgba(0,0,0,0.5);">
         <a href="collaborators.php" class="flex items-center gap-2 px-md py-sm hover:bg-surface-variant/30 transition-colors no-underline">
             <span class="material-symbols-outlined text-primary text-[18px]">group</span>
