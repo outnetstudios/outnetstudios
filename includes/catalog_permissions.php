@@ -24,17 +24,20 @@ function catalogGetAccessLevel(int $catalogId, int $userId): string
     if ($catalog && (int)$catalog['user_id'] === $userId) {
         return ACCESS_OWNER;
     }
-    $collabRepo = new CollaboratorRepository();
-    $collab = $collabRepo->findByUserAndCatalog($userId, $catalogId);
-    if ($collab) {
-        $perms = json_decode($collab['permissions'], true);
-        if (is_array($perms)) {
-            foreach (ALL_PERMISSIONS as $p) {
-                if (!empty($perms[$p])) {
-                    return ACCESS_COLLABORATOR;
+    try {
+        $collabRepo = new CollaboratorRepository();
+        $collab = $collabRepo->findByUserAndCatalog($userId, $catalogId);
+        if ($collab) {
+            $perms = json_decode($collab['permissions'], true);
+            if (is_array($perms)) {
+                foreach (ALL_PERMISSIONS as $p) {
+                    if (!empty($perms[$p])) {
+                        return ACCESS_COLLABORATOR;
+                    }
                 }
             }
         }
+    } catch (\Throwable $e) {
     }
     return ACCESS_NONE;
 }
@@ -46,11 +49,14 @@ function catalogCanEdit(int $catalogId, int $userId, string $section): bool
     if ($catalog && (int)$catalog['user_id'] === $userId) {
         return true;
     }
-    $collabRepo = new CollaboratorRepository();
-    $collab = $collabRepo->findByUserAndCatalog($userId, $catalogId);
-    if ($collab) {
-        $perms = json_decode($collab['permissions'], true);
-        return !empty($perms[$section]);
+    try {
+        $collabRepo = new CollaboratorRepository();
+        $collab = $collabRepo->findByUserAndCatalog($userId, $catalogId);
+        if ($collab) {
+            $perms = json_decode($collab['permissions'], true);
+            return !empty($perms[$section]);
+        }
+    } catch (\Throwable $e) {
     }
     return false;
 }

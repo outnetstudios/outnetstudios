@@ -37,16 +37,23 @@ class CatalogRepository
 
     public function allAccessibleByUser(int $userId): array
     {
-        $query = "SELECT c.*, 'owner' AS _access_level FROM catalogs c WHERE c.user_id = :user_id
-                  UNION
-                  SELECT c.*, 'collaborator' AS _access_level
-                  FROM catalog_collaborators cc
-                  JOIN catalogs c ON cc.catalog_id = c.id
-                  WHERE cc.user_id = :user_id2
-                  ORDER BY created_at DESC";
-        $stmt = $this->connection->prepare($query);
-        $stmt->execute([':user_id' => $userId, ':user_id2' => $userId]);
-        return $stmt->fetchAll();
+        try {
+            $query = "SELECT c.*, 'owner' AS _access_level FROM catalogs c WHERE c.user_id = :user_id
+                      UNION
+                      SELECT c.*, 'collaborator' AS _access_level
+                      FROM catalog_collaborators cc
+                      JOIN catalogs c ON cc.catalog_id = c.id
+                      WHERE cc.user_id = :user_id2
+                      ORDER BY created_at DESC";
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute([':user_id' => $userId, ':user_id2' => $userId]);
+            return $stmt->fetchAll();
+        } catch (\Throwable $e) {
+            $query = 'SELECT c.*, \'owner\' AS _access_level FROM catalogs c WHERE c.user_id = :user_id ORDER BY created_at DESC';
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute([':user_id' => $userId]);
+            return $stmt->fetchAll();
+        }
     }
 
     public function findById(int $id)

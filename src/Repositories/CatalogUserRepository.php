@@ -42,6 +42,14 @@ class CatalogUserRepository
         return $stmt ? $stmt->fetchAll() : [];
     }
 
+    public function findByCreatedBy(int $createdBy): array
+    {
+        $query = 'SELECT id, name, email, status, created_at FROM catalog_users WHERE created_by = :created_by ORDER BY created_at DESC';
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute([':created_by' => $createdBy]);
+        return $stmt->fetchAll();
+    }
+
     public function findByEmail(string $email)
     {
         $query = 'SELECT * FROM catalog_users WHERE email = :email LIMIT 1';

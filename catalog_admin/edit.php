@@ -3,8 +3,6 @@ require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
 require_once __DIR__ . '/../includes/catalog_permissions.php';
 require_once __DIR__ . '/../includes/upload_helper.php';
 require_once __DIR__ . '/../src/Repositories/CatalogRepository.php';
-require_once __DIR__ . '/../src/Repositories/CollaboratorRepository.php';
-require_once __DIR__ . '/../src/Repositories/CatalogUserRepository.php';
 
 catalogRequireLogin();
 $userName = htmlspecialchars(catalogGetUserName(), ENT_QUOTES, 'UTF-8');
@@ -26,50 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_POST['regenerate_codes'])) {
         $repo->regenerateCatalogCodes($id);
         $success = 'Códigos públicos regenerados. Las URLs anteriores han dejado de funcionar.';
-    } elseif (!empty($_POST['add_collaborator'])) {
-        $collabRepo = new CollaboratorRepository();
-        $email = trim($_POST['collab_email'] ?? '');
-        if ($email === '') {
-            $error = 'Ingresa un email de usuario.';
-        } else {
-            $userRepo = new \CatalogUserRepository();
-            $user = $userRepo->findByEmail($email);
-            if (!$user) {
-                $error = 'No se encontró un usuario con ese email.';
-            } elseif ((int)$user['id'] === $userId) {
-                $error = 'No puedes agregarte a ti mismo como colaborador.';
-            } else {
-                $existing = $collabRepo->findByUserAndCatalog((int)$user['id'], $id);
-                if ($existing) {
-                    $error = 'Ese usuario ya es colaborador de este catálogo.';
-                } else {
-                    $perms = [
-                        PERM_EDIT_CATALOG => !empty($_POST['perm_edit_catalog']),
-                        PERM_EDIT_PAGES => !empty($_POST['perm_edit_pages']),
-                        PERM_EDIT_PRODUCTS => !empty($_POST['perm_edit_products']),
-                        PERM_EDIT_CATEGORIES => !empty($_POST['perm_edit_categories']),
-                    ];
-                    $collabRepo->create($id, (int)$user['id'], $perms);
-                    $success = 'Colaborador agregado.';
-                }
-            }
-        }
-    } elseif (!empty($_POST['remove_collaborator'])) {
-        $collabRepo = new CollaboratorRepository();
-        $collabId = (int)($_POST['collab_id'] ?? 0);
-        $collabRepo->delete($collabId);
-        $success = 'Colaborador eliminado.';
-    } elseif (!empty($_POST['update_collab_perms'])) {
-        $collabRepo = new CollaboratorRepository();
-        $collabId = (int)($_POST['collab_id'] ?? 0);
-        $perms = [
-            PERM_EDIT_CATALOG => !empty($_POST['perm_edit_catalog']),
-            PERM_EDIT_PAGES => !empty($_POST['perm_edit_pages']),
-            PERM_EDIT_PRODUCTS => !empty($_POST['perm_edit_products']),
-            PERM_EDIT_CATEGORIES => !empty($_POST['perm_edit_categories']),
-        ];
-        $collabRepo->updatePermissions($collabId, $perms);
-        $success = 'Permisos actualizados.';
     } else {
         $name = trim($_POST['name'] ?? '');
         $slug = trim($_POST['slug'] ?? '');
@@ -115,10 +69,6 @@ foreach ($codes as $cc) {
     if ((int)$cc['show_prices'] === 1) $publicCodePrices = $cc['code'];
     else $publicCodeNoPrices = $cc['code'];
 }
-
-// Load collaborators
-$collabRepo = new CollaboratorRepository();
-$collaborators = $collabRepo->findByCatalog($id);
 ?>
 <?php $pageTitle = 'Editar catálogo'; require_once __DIR__ . '/../templates/partials/admin_head.php'; ?>
 <?php require_once __DIR__ . '/../templates/partials/admin_navbar.php'; ?>
@@ -132,7 +82,7 @@ $collaborators = $collabRepo->findByCatalog($id);
 <?php endif; ?>
 <?php if ($success !== ''): ?>
 <div class="bg-tertiary/20 border border-tertiary/30 rounded-xl px-md py-sm mb-md">
-<p class="font-body-sm text-body-sm text-tertiary"><?= htmlspecialchars($success, ENT_QUOTES, 'UTF-8') ?></p>
+<p class="font-body-sm text-body-sm text-tertiary"><?= $success ?></p>
 </div>
 <?php endif; ?>
 <form method="post" class="space-y-lg" enctype="multipart/form-data">
@@ -221,89 +171,8 @@ $collaborators = $collabRepo->findByCatalog($id);
 <a href="index.php" class="px-lg py-sm rounded-full border border-outline-variant font-title-sm text-title-sm text-on-surface-variant hover:bg-surface-variant/50 hover:border-error/30 hover:text-error transition-all no-underline">Cancelar</a>
 </div>
 </form>
-
-<?php if (catalogIsOwner($id, $userId)): ?>
-<div class="mt-xl pt-xl border-t border-outline-variant/20">
-<h3 class="font-title-sm text-title-sm text-on-surface mb-md flex items-center gap-2">
-    <span class="material-symbols-outlined text-primary text-[18px]">group</span>
-    Colaboradores
-</h3>
-
-<?php if ($success): ?>
-<div class="bg-success-container/20 border border-success/30 rounded-xl px-md py-sm mb-md">
-<p class="font-body-sm text-body-sm text-success"><?= htmlspecialchars($success, ENT_QUOTES, 'UTF-8') ?></p>
 </div>
-<?php endif; ?>
-<?php if ($error): ?>
-<div class="bg-error-container/20 border border-error/30 rounded-xl px-md py-sm mb-md">
-<p class="font-body-sm text-body-sm text-error"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></p>
 </div>
-<?php endif; ?>
-
-<?php if (count($collaborators) > 0): ?>
-<div class="flex flex-col gap-sm mb-md">
-<?php foreach ($collaborators as $collab): ?>
-<div class="flex flex-col md:flex-row md:items-center justify-between gap-sm p-sm rounded-xl bg-surface-variant/10 border border-outline-variant/20">
-    <div class="flex items-center gap-2 min-w-0">
-        <span class="material-symbols-outlined text-on-surface-variant/60 text-[18px]">person</span>
-        <span class="font-body-sm text-body-sm text-on-surface truncate"><?= htmlspecialchars($collab['user_email'] ?? "Usuario #{$collab['user_id']}", ENT_QUOTES, 'UTF-8') ?></span>
-    </div>
-    <form method="POST" class="flex flex-wrap items-center gap-x-md gap-y-1">
-        <input type="hidden" name="collab_id" value="<?= (int)$collab['id'] ?>">
-        <?php $perms = is_string($collab['permissions']) ? json_decode($collab['permissions'], true) : ($collab['permissions'] ?? []); ?>
-        <label class="flex items-center gap-1 cursor-pointer">
-            <input type="checkbox" name="perm_edit_catalog" value="1" <?= !empty($perms[PERM_EDIT_CATALOG]) ? 'checked' : '' ?> class="accent-primary">
-            <span class="font-body-xs text-body-xs text-on-surface-variant">Catálogo</span>
-        </label>
-        <label class="flex items-center gap-1 cursor-pointer">
-            <input type="checkbox" name="perm_edit_pages" value="1" <?= !empty($perms[PERM_EDIT_PAGES]) ? 'checked' : '' ?> class="accent-primary">
-            <span class="font-body-xs text-body-xs text-on-surface-variant">Páginas</span>
-        </label>
-        <label class="flex items-center gap-1 cursor-pointer">
-            <input type="checkbox" name="perm_edit_products" value="1" <?= !empty($perms[PERM_EDIT_PRODUCTS]) ? 'checked' : '' ?> class="accent-primary">
-            <span class="font-body-xs text-body-xs text-on-surface-variant">Productos</span>
-        </label>
-        <label class="flex items-center gap-1 cursor-pointer">
-            <input type="checkbox" name="perm_edit_categories" value="1" <?= !empty($perms[PERM_EDIT_CATEGORIES]) ? 'checked' : '' ?> class="accent-primary">
-            <span class="font-body-xs text-body-xs text-on-surface-variant">Categorías</span>
-        </label>
-        <div class="flex gap-1">
-            <button type="submit" name="update_collab_perms" value="1" class="px-sm py-0.5 rounded-full border border-outline-variant font-label-caps text-label-caps text-on-surface-variant hover:bg-primary/10 hover:text-primary hover:border-primary/30 transition-all text-[0.65rem]">Actualizar</button>
-            <button type="submit" name="remove_collaborator" value="1" class="px-sm py-0.5 rounded-full border border-outline-variant font-label-caps text-label-caps text-on-surface-variant hover:bg-error/10 hover:text-error hover:border-error/30 transition-all text-[0.65rem]" onclick="return confirm('¿Eliminar este colaborador?')">Quitar</button>
-        </div>
-    </form>
-</div>
-<?php endforeach; ?>
-</div>
-<?php endif; ?>
-
-<form method="POST" class="flex flex-col gap-sm p-sm rounded-xl bg-surface-variant/10 border border-outline-variant/20">
-<h4 class="font-label-caps text-label-caps text-on-surface-variant">Agregar colaborador</h4>
-<div class="flex flex-col md:flex-row gap-sm">
-    <input type="email" name="collab_email" placeholder="Email del usuario" required class="form-input flex-1">
-    <div class="flex flex-wrap items-center gap-x-md gap-y-1">
-        <label class="flex items-center gap-1 cursor-pointer">
-            <input type="checkbox" name="perm_edit_catalog" value="1" checked class="accent-primary">
-            <span class="font-body-xs text-body-xs text-on-surface-variant">Catálogo</span>
-        </label>
-        <label class="flex items-center gap-1 cursor-pointer">
-            <input type="checkbox" name="perm_edit_pages" value="1" checked class="accent-primary">
-            <span class="font-body-xs text-body-xs text-on-surface-variant">Páginas</span>
-        </label>
-        <label class="flex items-center gap-1 cursor-pointer">
-            <input type="checkbox" name="perm_edit_products" value="1" checked class="accent-primary">
-            <span class="font-body-xs text-body-xs text-on-surface-variant">Productos</span>
-        </label>
-        <label class="flex items-center gap-1 cursor-pointer">
-            <input type="checkbox" name="perm_edit_categories" value="1" checked class="accent-primary">
-            <span class="font-body-xs text-body-xs text-on-surface-variant">Categorías</span>
-        </label>
-    </div>
-    <button type="submit" name="add_collaborator" value="1" class="primary-gradient text-white px-md py-sm rounded-full font-label-caps text-label-caps active:scale-95 transition-transform primary-glow whitespace-nowrap">Agregar</button>
-</div>
-</form>
-</div>
-<?php endif; ?>
-</div>
+</main>
 </body>
 </html>

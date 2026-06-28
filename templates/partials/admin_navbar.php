@@ -7,12 +7,36 @@
 </div>
 <div class="flex items-center gap-sm">
 <div class="hidden md:flex items-center gap-sm"><?= $navbarExtra ?? '' ?></div>
-<div class="flex items-center gap-1 cursor-pointer group">
-<div class="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/30 group-hover:border-primary transition-colors bg-surface-container-high flex items-center justify-center" style="box-shadow: 0 0 10px rgba(108,140,255,0.1);">
-<span class="material-symbols-outlined text-primary text-[20px]">person</span>
+<div class="relative" id="userDropdown">
+    <button onclick="toggleUserMenu()" class="flex items-center gap-1 cursor-pointer group">
+        <div class="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/30 group-hover:border-primary transition-colors bg-surface-container-high flex items-center justify-center" style="box-shadow: 0 0 10px rgba(108,140,255,0.1);">
+            <span class="material-symbols-outlined text-primary text-[20px]">person</span>
+        </div>
+        <span class="hidden md:block font-body-sm text-body-sm font-bold text-on-surface"><?= htmlspecialchars($userName, ENT_QUOTES, 'UTF-8') ?></span>
+    </button>
+    <div id="userMenu" class="hidden absolute right-0 top-full mt-2 w-48 bg-surface-container backdrop-blur-xl rounded-2xl border border-primary/10 shadow-xl overflow-hidden" style="box-shadow: 0 8px 32px rgba(0,0,0,0.5);">
+        <a href="collaborators.php" class="flex items-center gap-2 px-md py-sm hover:bg-surface-variant/30 transition-colors no-underline">
+            <span class="material-symbols-outlined text-primary text-[18px]">group</span>
+            <span class="font-body-sm text-body-sm text-on-surface">Colaboradores</span>
+        </a>
+        <hr class="border-outline-variant/20">
+        <a href="../catalog_auth/logout.php" class="flex items-center gap-2 px-md py-sm hover:bg-error/10 transition-colors no-underline">
+            <span class="material-symbols-outlined text-error/70 text-[18px]">logout</span>
+            <span class="font-body-sm text-body-sm text-error/70">Cerrar sesión</span>
+        </a>
+    </div>
 </div>
-<span class="hidden md:block font-body-sm text-body-sm font-bold text-on-surface"><?= htmlspecialchars($userName, ENT_QUOTES, 'UTF-8') ?></span>
 </div>
-<a href="../catalog_auth/logout.php" class="p-1.5 hover:bg-error/10 rounded-full text-error/70 hover:text-error transition-all" title="Cerrar sesión"><span class="material-symbols-outlined">logout</span></a>
-</div>
+<script>
+function toggleUserMenu() {
+    var menu = document.getElementById('userMenu');
+    menu.classList.toggle('hidden');
+}
+document.addEventListener('click', function(e) {
+    var dd = document.getElementById('userDropdown');
+    if (dd && !dd.contains(e.target)) {
+        document.getElementById('userMenu')?.classList.add('hidden');
+    }
+});
+</script>
 </header>
