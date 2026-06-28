@@ -110,6 +110,29 @@ class CatalogUserRepository
         return $stmt->execute([':token' => $token]);
     }
 
+    public function update(int $id, array $data): bool
+    {
+        $fields = [];
+        $params = [':id' => $id];
+        foreach (['name', 'password', 'must_change_password', 'temp_password_expires_at', 'status'] as $field) {
+            if (array_key_exists($field, $data)) {
+                $fields[] = "$field = :$field";
+                $params[":$field"] = $data[$field];
+            }
+        }
+        if (empty($fields)) return false;
+        $query = 'UPDATE catalog_users SET ' . implode(', ', $fields) . ' WHERE id = :id';
+        $stmt = $this->connection->prepare($query);
+        return $stmt->execute($params);
+    }
+
+    public function setStatus(int $id, string $status): bool
+    {
+        $query = 'UPDATE catalog_users SET status = :status WHERE id = :id';
+        $stmt = $this->connection->prepare($query);
+        return $stmt->execute([':status' => $status, ':id' => $id]);
+    }
+
     public function delete(int $id): bool
     {
         $query = 'DELETE FROM catalog_users WHERE id = :id';

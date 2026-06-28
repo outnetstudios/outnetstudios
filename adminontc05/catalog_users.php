@@ -38,8 +38,8 @@ try {
             if ($deleteId > 0) {
                 $collabRepo = new CollaboratorRepository();
                 $collabRepo->deleteByUser($deleteId);
-                $catalogUserRepository->delete($deleteId);
-                $flashMessage = 'Usuario eliminado.';
+                $catalogUserRepository->setStatus($deleteId, 'inactive');
+                $flashMessage = 'Usuario desactivado.';
             }
         } else {
         $name = trim($_POST['name'] ?? '');
@@ -53,26 +53,43 @@ try {
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errorMessage = 'El correo no tiene un formato válido.';
         } else {
-            $temporaryPassword = $tempPasswordInput !== '' ? $tempPasswordInput : generateTemporaryPassword();
-            $hashedPassword = password_hash($temporaryPassword, PASSWORD_DEFAULT);
+            $existing = $catalogUserRepository->findByEmail($email);
+            if ($existing && $existing['status'] === 'inactive') {
+                $temporaryPassword = $tempPasswordInput !== '' ? $tempPasswordInput : generateTemporaryPassword();
+                $hashedPassword = password_hash($temporaryPassword, PASSWORD_DEFAULT);
 
-            $createdAt = null;
-            if ($expiresAtInput !== '') {
-                $createdAt = date('Y-m-d H:i:s', strtotime($expiresAtInput));
+                $catalogUserRepository->update($existing['id'], [
+                    'name' => $name,
+                    'password' => $hashedPassword,
+                    'must_change_password' => 1,
+                    'temp_password_expires_at' => $expiresAtInput !== '' ? date('Y-m-d H:i:s', strtotime($expiresAtInput)) : null,
+                    'status' => $status,
+                ]);
+
+                $flashMessage = 'Usuario reactivado correctamente.';
+                $flashPassword = $temporaryPassword;
+            } else {
+                $temporaryPassword = $tempPasswordInput !== '' ? $tempPasswordInput : generateTemporaryPassword();
+                $hashedPassword = password_hash($temporaryPassword, PASSWORD_DEFAULT);
+
+                $createdAt = null;
+                if ($expiresAtInput !== '') {
+                    $createdAt = date('Y-m-d H:i:s', strtotime($expiresAtInput));
+                }
+
+                $catalogUserRepository->create([
+                    'name' => $name,
+                    'email' => $email,
+                    'password' => $hashedPassword,
+                    'must_change_password' => 1,
+                    'temp_password_expires_at' => $createdAt,
+                    'status' => $status,
+                    'created_by' => null,
+                ]);
+
+                $flashMessage = 'Usuario del catálogo creado correctamente.';
+                $flashPassword = $temporaryPassword;
             }
-
-            $catalogUserRepository->create([
-                'name' => $name,
-                'email' => $email,
-                'password' => $hashedPassword,
-                'must_change_password' => 1,
-                'temp_password_expires_at' => $createdAt,
-                'status' => $status,
-                'created_by' => null,
-            ]);
-
-            $flashMessage = 'Usuario del catálogo creado correctamente.';
-            $flashPassword = $temporaryPassword;
         }
     }
     }
