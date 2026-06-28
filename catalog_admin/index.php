@@ -19,6 +19,7 @@ foreach ($catalogs as $c) {
 }
 $activeCount = count(array_filter($catalogs, fn($c) => $c['status'] === 'published'));
 $totalCount = count($catalogs);
+$isPureCollaborator = $totalCount > 0 && !array_filter($catalogs, fn($c) => ($c['_access_level'] ?? 'owner') === 'owner');
 ?>
 <!DOCTYPE html>
 <html class="dark" lang="es">
@@ -40,7 +41,9 @@ $totalCount = count($catalogs);
                         <h1 class="font-display-lg-mobile text-display-lg-mobile text-on-surface">Mis Catálogos</h1>
                     </div>
                     <div class="flex items-center gap-xs">
+                        <?php if (!$isPureCollaborator): ?>
                         <a href="create.php" class="primary-gradient text-white px-sm py-xs rounded-full font-title-sm text-title-sm active:scale-95 transition-transform primary-glow no-underline">+ Nuevo catálogo</a>
+                        <?php endif; ?>
                         <div class="glass-panel px-sm py-xs rounded-xl flex items-center gap-xs">
                             <span class="material-symbols-outlined text-[18px] text-primary">auto_awesome</span>
                             <div class="flex items-center gap-1">
@@ -56,7 +59,9 @@ $totalCount = count($catalogs);
                         <span class="material-symbols-outlined text-6xl text-on-surface-variant/30 mb-md">menu_book</span>
                         <p class="font-title-sm text-title-sm text-on-surface mb-xs">Aún no tienes catálogos</p>
                         <p class="font-body-sm text-body-sm text-on-surface-variant/70 mb-md">Crea tu primer catálogo para empezar a agregar productos.</p>
+                    <?php if (!$isPureCollaborator): ?>
                         <a href="create.php" class="primary-gradient text-white px-lg py-sm rounded-full font-title-sm text-title-sm inline-flex active:scale-95 transition-transform primary-glow no-underline">+ Crear catálogo</a>
+                    <?php endif; ?>
                     </div>
                 <?php else: ?>
                     <!-- Table Container -->

@@ -2,8 +2,6 @@
 require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
 require_once __DIR__ . '/../includes/upload_helper.php';
 require_once __DIR__ . '/../src/Repositories/CatalogRepository.php';
-require_once __DIR__ . '/../src/Repositories/CollaboratorRepository.php';
-require_once __DIR__ . '/../src/Repositories/CatalogUserRepository.php';
 require_once __DIR__ . '/../includes/catalog_preview_renderer.php';
 
 catalogRequireLogin();
@@ -29,33 +27,8 @@ $coverImage = uploadImage($_FILES['cover_image'] ?? []);
 $backCoverImage = uploadImage($_FILES['back_cover_image'] ?? []);
 
 $repo = new CatalogRepository();
-$collabRepo = new CollaboratorRepository();
-
-// Determine the effective owner: if the creator is a "pure collaborator"
-// (no owned catalogs), assign the catalog to the admin who added them.
-$assignUserId = $userId;
-try {
-    $ownedCatalogs = $repo->allByUser($userId);
-    $collabEntries = $collabRepo->findCatalogsByUser($userId);
-    $isPureCollaborator = count($ownedCatalogs) === 0 && count($collabEntries) > 0;
-
-    if ($isPureCollaborator && count($collabEntries) > 0) {
-        $collab = $collabRepo->findMostRecentByUser($userId);
-        if ($collab) {
-            $catalog = $repo->findById((int)$collab['catalog_id']);
-            if ($catalog) {
-                $assignUserId = (int)$catalog['user_id'];
-            }
-        }
-    }
-} catch (\Throwable $e) {
-    $assignUserId = $userId;
-}
-
-$isPureCollaborator = $assignUserId !== $userId;
-
 $id = $repo->create([
-    'user_id' => $assignUserId,
+    'user_id' => $userId,
     'name' => $name,
     'slug' => $slug,
     'description' => $description,
@@ -68,17 +41,6 @@ $id = $repo->create([
 if ($id) {
     $repo->createCatalogCode($id, generatePublicCode(), true);
     $repo->createCatalogCode($id, generatePublicCode(), false);
-
-    // If the catalog was created for an admin, add the creator as collaborator
-    if ($isPureCollaborator && $assignUserId !== $userId) {
-        $collabRepo->create($id, $userId, [
-            PERM_EDIT_CATALOG => true,
-            PERM_EDIT_PAGES => true,
-            PERM_EDIT_PRODUCTS => true,
-            PERM_EDIT_CATEGORIES => true,
-        ]);
-    }
-
     header('Location: index.php');
     exit;
 }
