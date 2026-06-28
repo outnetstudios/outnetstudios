@@ -268,7 +268,7 @@ $catalogoCount = count($access);
 </td>
 <td class="p-md text-right">
 <div class="flex justify-end gap-1">
-<button onclick="toggleAccess(<?= $uid ?>)" id="toggle-btn-<?= $uid ?>" class="p-2 hover:bg-primary/10 rounded-full text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined">settings</span></button>
+<button onclick="toggleAccess(<?= $uid ?>)" id="toggle-btn-<?= $uid ?>" class="p-2 hover:bg-primary/10 rounded-full text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined transition-transform duration-200 toggle-arrow-<?= $uid ?>">chevron_right</span></button>
 <form method="POST">
 <input type="hidden" name="target_user_id" value="<?= $uid ?>">
 <button type="submit" name="reset_password" value="1" class="p-2 hover:bg-warning/10 rounded-full text-on-surface-variant hover:text-warning transition-all" title="Generar nueva contraseña"><span class="material-symbols-outlined">key</span></button>
@@ -278,12 +278,12 @@ $catalogoCount = count($access);
 </tr>
 <tr id="access-<?= $uid ?>" class="hidden">
 <td colspan="3" class="p-0">
-<div class="bg-surface-container-low/30 p-md border-t border-outline-variant/5">
+<div class="bg-surface-container-low/50 p-md space-y-3">
 <?php if ($catalogoCount > 0): ?>
-<div class="flex flex-col gap-2 mb-3">
+<div class="flex flex-col gap-2">
 <?php foreach ($access as $a): ?>
 <?php $perms = is_string($a['permissions']) ? json_decode($a['permissions'], true) : ($a['permissions'] ?? []); ?>
-<div class="flex flex-col md:flex-row md:items-center justify-between gap-2 p-3 rounded-xl bg-surface-variant/20 border border-outline-variant/20">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-2 bg-surface-variant/20 rounded-xl p-3">
 <div class="flex items-center gap-2 min-w-0">
 <span class="material-symbols-outlined text-primary text-[16px] shrink-0">folder</span>
 <span class="font-body-sm text-body-sm text-on-surface font-semibold truncate"><?= htmlspecialchars($a['name'], ENT_QUOTES, 'UTF-8') ?></span>
@@ -310,24 +310,26 @@ $catalogoCount = count($access);
 <input type="checkbox" name="perm_edit_categories" value="1" <?= !empty($perms[PERM_EDIT_CATEGORIES]) ? 'checked' : '' ?> class="sr-only peer">
 <div class="w-9 h-5 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all relative"></div>
 </label>
+<div class="flex items-center gap-1">
 <button type="submit" name="update_perms" value="1" title="Guardar" class="p-1.5 rounded-lg hover:bg-primary/15 text-primary transition-all"><span class="material-symbols-outlined text-[16px]">check</span></button>
 <button type="submit" name="remove_access" value="1" onclick="return confirm('¿Quitar acceso a este catálogo?')" title="Quitar" class="p-1.5 rounded-lg hover:bg-error/15 text-error/70 transition-all"><span class="material-symbols-outlined text-[16px]">close</span></button>
+</div>
 </form>
 </div>
 <?php endforeach; ?>
 </div>
 <?php else: ?>
-<div class="flex items-center gap-2 p-3 rounded-xl bg-surface-variant/20 border border-dashed border-outline-variant/20 mb-3">
+<div class="flex items-center gap-2 bg-surface-variant/20 rounded-xl p-3">
 <span class="material-symbols-outlined text-on-surface-variant/30 text-[16px]">info</span>
 <p class="font-body-xs text-body-xs text-on-surface-variant/50">Sin acceso a ningún catálogo.</p>
 </div>
 <?php endif; ?>
 
-<div class="flex flex-col md:flex-row items-start md:items-center gap-2 p-3 rounded-xl bg-surface-variant/20 border border-dashed border-outline-variant/20">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60 whitespace-nowrap">Agregar acceso:</span>
-<form method="POST" class="flex flex-col md:flex-row items-start md:items-center gap-2 w-full">
+<div class="bg-surface-variant/20 rounded-xl p-3">
+<p class="font-label-caps text-label-caps text-on-surface-variant/60 mb-2">Agregar acceso</p>
+<form method="POST" class="flex flex-col md:flex-row items-start md:items-center gap-2">
 <input type="hidden" name="target_user_id" value="<?= $uid ?>">
-<select name="catalog_id" class="form-input py-1 px-2 text-[0.75rem] flex-1 w-full md:w-auto">
+<select name="catalog_id" class="form-input py-1 px-2 text-[0.75rem] w-full md:w-auto">
 <option value="">Seleccionar catálogo</option>
 <?php foreach ($myCatalogs as $cat): ?>
 <option value="<?= (int)$cat['id'] ?>"><?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?></option>
@@ -354,7 +356,7 @@ $catalogoCount = count($access);
 <input type="checkbox" name="perm_edit_categories" value="1" checked class="sr-only peer">
 <div class="w-7 h-4 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all relative"></div>
 </label>
-<button type="submit" name="add_access" value="1" class="px-3 py-1 rounded-full bg-primary/15 text-primary font-label-caps text-[0.65rem] hover:bg-primary/25 transition-all flex items-center gap-1 border border-primary/20 whitespace-nowrap">
+<button type="submit" name="add_access" value="1" class="px-3 py-1 rounded-full bg-primary/15 text-primary font-label-caps text-[0.65rem] hover:bg-primary/25 transition-all flex items-center gap-1 whitespace-nowrap">
 <span class="material-symbols-outlined text-[12px]">add</span> Agregar
 </button>
 </div>
@@ -390,7 +392,7 @@ $catalogoCount = count($access);
 </div>
 </div>
 <div class="mobile-card-actions">
-<button onclick="toggleAccess(<?= $uid ?>)" id="toggle-btn-<?= $uid ?>" class="mobile-card-btn"><span class="material-symbols-outlined">settings</span></button>
+<button onclick="toggleAccess(<?= $uid ?>)" id="toggle-btn-mobile-<?= $uid ?>" class="mobile-card-btn"><span class="material-symbols-outlined transition-transform duration-200 toggle-arrow-<?= $uid ?>">chevron_right</span></button>
 <form method="POST">
 <input type="hidden" name="target_user_id" value="<?= $uid ?>">
 <button type="submit" name="reset_password" value="1" class="mobile-card-btn" title="Generar nueva contraseña"><span class="material-symbols-outlined">key</span></button>
@@ -398,19 +400,18 @@ $catalogoCount = count($access);
 </div>
 </div>
 <div id="access-mobile-<?= $uid ?>" class="hidden">
-<div class="bg-surface-container-low/30 p-md border-t border-outline-variant/5">
+<div class="bg-surface-container-low/50 p-md space-y-3">
 <?php if ($catalogoCount > 0): ?>
-<div class="flex flex-col gap-2 mb-3">
+<div class="flex flex-col gap-2">
 <?php foreach ($access as $a): ?>
 <?php $perms = is_string($a['permissions']) ? json_decode($a['permissions'], true) : ($a['permissions'] ?? []); ?>
-<div class="flex flex-col gap-2 p-3 rounded-xl bg-surface-variant/20 border border-outline-variant/20">
+<div class="flex flex-col gap-2 bg-surface-variant/20 rounded-xl p-3">
 <div class="flex items-center gap-2">
 <span class="material-symbols-outlined text-primary text-[16px]">folder</span>
 <span class="font-body-sm text-body-sm text-on-surface font-semibold"><?= htmlspecialchars($a['name'], ENT_QUOTES, 'UTF-8') ?></span>
 </div>
 <form method="POST" class="flex flex-wrap items-center gap-2">
 <input type="hidden" name="collab_id" value="<?= (int)($a['collab_id'] ?? $a['id']) ?>">
-<?php $perms = is_string($a['permissions']) ? json_decode($a['permissions'], true) : ($a['permissions'] ?? []); ?>
 <label class="flex items-center gap-1.5 cursor-pointer group">
 <span class="font-body-xs text-body-xs text-on-surface-variant/60">Cat</span>
 <input type="checkbox" name="perm_edit_catalog" value="1" <?= !empty($perms[PERM_EDIT_CATALOG]) ? 'checked' : '' ?> class="sr-only peer">
@@ -440,13 +441,13 @@ $catalogoCount = count($access);
 <?php endforeach; ?>
 </div>
 <?php else: ?>
-<div class="flex items-center gap-2 p-3 rounded-xl bg-surface-variant/20 border border-dashed border-outline-variant/20 mb-3">
+<div class="flex items-center gap-2 bg-surface-variant/20 rounded-xl p-3">
 <span class="material-symbols-outlined text-on-surface-variant/30 text-[16px]">info</span>
 <p class="font-body-xs text-body-xs text-on-surface-variant/50">Sin acceso a ningún catálogo.</p>
 </div>
 <?php endif; ?>
 
-<div class="flex flex-col gap-2 p-3 rounded-xl bg-surface-variant/20 border border-dashed border-outline-variant/20">
+<div class="flex flex-col gap-2 bg-surface-variant/20 rounded-xl p-3">
 <span class="font-body-xs text-body-xs text-on-surface-variant/60">Agregar acceso:</span>
 <form method="POST" class="flex flex-col gap-2">
 <input type="hidden" name="target_user_id" value="<?= $uid ?>">
@@ -524,9 +525,10 @@ $catalogoCount = count($access);
 function toggleAccess(id) {
 var desktopRow = document.getElementById('access-' + id);
 var mobileRow = document.getElementById('access-mobile-' + id);
+var arrows = document.querySelectorAll('.toggle-arrow-' + id);
+var isHidden = desktopRow ? desktopRow.classList.contains('hidden') : true;
 [desktopRow, mobileRow].forEach(function(el) {
 if (!el) return;
-var isHidden = el.classList.contains('hidden');
 el.classList.toggle('hidden');
 if (isHidden) {
 el.style.maxHeight = '0px';
@@ -541,7 +543,9 @@ el.style.opacity = '0';
 setTimeout(function() { el.classList.add('hidden'); }, 300);
 }
 });
+arrows.forEach(function(a) {
+a.style.transform = isHidden ? 'rotate(90deg)' : '';
+});
 }
-</script>
 </body>
 </html>
