@@ -15,10 +15,22 @@
         <span class="hidden md:block font-body-sm text-body-sm font-bold text-on-surface"><?= htmlspecialchars($userName, ENT_QUOTES, 'UTF-8') ?></span>
     </div>
     <div id="userMenu" class="hidden absolute right-0 top-full mt-2 w-48 bg-surface-container backdrop-blur-xl rounded-2xl border border-primary/10 shadow-xl overflow-hidden" style="box-shadow: 0 8px 32px rgba(0,0,0,0.5);">
+        <?php
+        $isAdmin = (function() {
+            if (!function_exists('catalogGetUserId')) return false;
+            $uid = catalogGetUserId();
+            if (!$uid) return false;
+            require_once __DIR__ . '/../../src/Repositories/CatalogRepository.php';
+            $r = new CatalogRepository();
+            return count($r->allByUser($uid)) > 0;
+        })();
+        ?>
+        <?php if ($isAdmin): ?>
         <a href="collaborators.php" class="flex items-center gap-2 px-md py-sm hover:bg-surface-variant/30 transition-colors no-underline">
             <span class="material-symbols-outlined text-primary text-[18px]">group</span>
             <span class="font-body-sm text-body-sm text-on-surface">Colaboradores</span>
         </a>
+        <?php endif; ?>
         <hr class="border-outline-variant/20">
         <a href="../catalog_auth/logout.php" class="flex items-center gap-2 px-md py-sm hover:bg-error/10 transition-colors no-underline">
             <span class="material-symbols-outlined text-error/70 text-[18px]">logout</span>
