@@ -25,6 +25,12 @@ function generatePassword(int $length = 10): string
     return $password;
 }
 
+function isAdminUser(int $userId): bool
+{
+    $catRepo = new CatalogRepository();
+    return count($catRepo->allByUser($userId)) > 0;
+}
+
 $error = '';
 $success = '';
 $generatedPassword = '';
@@ -40,7 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $existing = $userRepo->findByEmail($email);
             if ($existing) {
-                $success = 'El usuario <strong>' . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . '</strong> ya existe. Puedes asignarle acceso a catálogos desde la lista.';
+                if (isAdminUser((int)$existing['id'])) {
+                    $error = 'Este usuario ya es un creador de catálogos (admin), no puede ser agregado como colaborador.';
+                } else {
+                    $success = 'El usuario <strong>' . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . '</strong> ya existe. Puedes asignarle acceso a catálogos desde la lista.';
+                }
             } else {
                 $password = generatePassword();
                 $userRepo->create([
@@ -59,6 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $catalogId = (int)($_POST['catalog_id'] ?? 0);
         if ($targetUserId <= 0 || $catalogId <= 0) {
             $error = 'Selecciona un usuario y un catálogo.';
+        } elseif (isAdminUser($targetUserId)) {
+            $error = 'Este usuario es un creador de catálogos (admin), no puede ser agregado como colaborador.';
         } else {
             $existing = $collabRepo->findByUserAndCatalog($targetUserId, $catalogId);
             if ($existing) {
@@ -90,9 +102,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $success = 'Permisos actualizados.';
     } elseif (!empty($_POST['reset_password'])) {
         $targetUserId = (int)($_POST['target_user_id'] ?? 0);
-        $newPassword = generatePassword();
-        $userRepo->updatePassword($targetUserId, password_hash($newPassword, PASSWORD_DEFAULT));
-        $success = 'Contraseña generada para <strong>' . htmlspecialchars($userRepo->findById($targetUserId)['email'] ?? '', ENT_QUOTES, 'UTF-8') . '</strong>: <code>' . htmlspecialchars($newPassword, ENT_QUOTES, 'UTF-8') . '</code>';
+        if (isAdminUser($targetUserId)) {
+            $error = 'No puedes cambiar la contraseña de un administrador.';
+        } else {
+            $newPassword = generatePassword();
+            $userRepo->updatePassword($targetUserId, password_hash($newPassword, PASSWORD_DEFAULT));
+            $success = 'Contraseña generada para <strong>' . htmlspecialchars($userRepo->findById($targetUserId)['email'] ?? '', ENT_QUOTES, 'UTF-8') . '</strong>: <code>' . htmlspecialchars($newPassword, ENT_QUOTES, 'UTF-8') . '</code>';
+        }
     }
 }
 
