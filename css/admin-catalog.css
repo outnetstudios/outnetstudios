@@ -591,3 +591,7 @@ footer {
 .section-header td {
   border-bottom: 1px solid rgba(128, 128, 128, 0.1);
 }
+@media (max-width: 767px) {
+  .form-btn-row { flex-direction: column; align-items: stretch !important; justify-content: center; }
+  .form-btn-row > * { width: 100%; text-align: center; }
+}

@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <option value="inactive" <?= $category['status'] === 'inactive' ? 'selected' : '' ?>>Inactivo</option>
 </select>
 </div>
-<div class="flex gap-sm pt-md">
+<div class="flex gap-sm pt-md form-btn-row">
 <button class="primary-gradient text-white px-lg py-sm rounded-full font-title-sm text-title-sm active:scale-95 transition-transform primary-glow" type="submit">Guardar cambios</button>
 <a href="categories.php?catalog_id=<?= $catalogId ?>" class="px-lg py-sm rounded-full border border-outline-variant font-title-sm text-title-sm text-on-surface-variant hover:bg-surface-variant/50 hover:border-error/30 hover:text-error transition-all no-underline">Cancelar</a>
 </div>

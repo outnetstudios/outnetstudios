@@ -124,7 +124,7 @@ $catalogName = htmlspecialchars($catalog['name'], ENT_QUOTES, 'UTF-8');
 <label class="font-label-caps text-label-caps text-primary uppercase ml-xs">Descripción del Producto</label>
 <textarea class="w-full bg-white/5 border border-outline-variant/30 rounded-[20px] p-md text-on-surface placeholder:text-on-surface-variant/50 focus:ring-1 focus:ring-primary focus:border-primary transition-all outline-none resize-none" id="description" name="description" rows="5" placeholder="Describe las especificaciones técnicas, materiales y beneficios del producto..."><?= htmlspecialchars($description, ENT_QUOTES, 'UTF-8') ?></textarea>
 </div>
-<div class="pt-md border-t border-white/5 flex justify-between items-center">
+<div class="pt-md border-t border-white/5 flex justify-between items-center form-btn-row">
 <a href="products.php?catalog_id=<?= $catalogId ?>" class="px-lg py-sm rounded-full border border-outline-variant font-title-sm text-title-sm text-on-surface-variant hover:bg-surface-variant/50 hover:border-error/30 hover:text-error transition-all no-underline">Cancelar</a>
 <button class="primary-gradient text-on-primary px-xl py-sm rounded-full font-title-sm text-title-sm btn-glow active:scale-95 transition-all shadow-lg" type="submit">Guardar cambios</button>
 </div>

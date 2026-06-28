@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="w-11 h-6 bg-surface-variant/30 rounded-full peer peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
 </label>
 </div>
-<div class="flex gap-sm">
+<div class="flex gap-sm form-btn-row">
 <button class="primary-gradient text-white px-lg py-sm rounded-full font-title-sm text-title-sm active:scale-95 transition-transform primary-glow" type="submit">Guardar cambios</button>
 <a href="index.php" class="px-lg py-sm rounded-full border border-outline-variant font-title-sm text-title-sm text-on-surface-variant hover:bg-surface-variant/50 hover:border-error/30 hover:text-error transition-all no-underline">Cancelar</a>
 </div>

@@ -45,7 +45,7 @@ $navbarBackUrl = 'index.php';
 <option value="published">Publicado</option>
 </select>
 </div>
-<div class="flex gap-sm pt-md">
+<div class="flex gap-sm pt-md form-btn-row">
 <button class="primary-gradient text-white px-lg py-sm rounded-full font-title-sm text-title-sm active:scale-95 transition-transform primary-glow" type="submit">Crear catálogo</button>
 <a href="index.php" class="px-lg py-sm rounded-full border border-outline-variant font-title-sm text-title-sm text-on-surface-variant hover:bg-surface-variant/50 hover:border-error/30 hover:text-error transition-all no-underline">Cancelar</a>
 </div>
