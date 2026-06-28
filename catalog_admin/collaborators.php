@@ -199,23 +199,24 @@ foreach ($collaborators as $u) {
 
 <?php if ($isAdmin): ?>
 <!-- Nuevo colaborador -->
-<div id="new-collab-form" class="glass-panel rounded-3xl p-md md:p-xl mb-xl">
-<div class="p-md border-b border-outline-variant/10 flex items-center gap-xs bg-surface-container-highest/20">
-<h2 class="font-title-sm text-title-sm text-primary flex items-center gap-xs"><span class="material-symbols-outlined">person_add</span> Nuevo colaborador</h2>
+<div id="new-collab-form" class="glass-panel rounded-2xl p-sm md:p-md mb-lg">
+<div class="flex items-center gap-xs mb-sm">
+<span class="material-symbols-outlined text-primary">person_add</span>
+<h2 class="font-body-sm text-body-sm text-primary font-semibold">Nuevo colaborador</h2>
 </div>
 <form class="module-form" method="post" action="">
-<div class="grid-two">
-<div>
+<div class="flex flex-col md:flex-row gap-sm">
+<div class="flex-1">
 <label class="font-body-xs text-body-xs text-on-surface-variant/60 block mb-1">Correo electrónico</label>
 <input type="email" name="email" required class="form-input" placeholder="correo@ejemplo.com">
 </div>
-<div>
+<div class="flex-1">
 <label class="font-body-xs text-body-xs text-on-surface-variant/60 block mb-1">Nombre completo</label>
 <input type="text" name="name" required class="form-input" placeholder="Nombre completo">
 </div>
 </div>
-<div class="form-actions">
-<button class="primary-gradient text-white px-lg py-sm rounded-full font-title-sm text-title-sm active:scale-95 transition-transform primary-glow" type="submit" name="create_collaborator" value="1">+ Crear colaborador</button>
+<div class="form-actions mt-sm">
+<button class="primary-gradient text-white px-md py-xs rounded-full font-label-lg text-label-lg active:scale-95 transition-transform primary-glow" type="submit" name="create_collaborator" value="1">+ Crear colaborador</button>
 </div>
 </form>
 </div>
@@ -268,7 +269,7 @@ $catalogoCount = count($access);
 </td>
 <td class="p-md text-right">
 <div class="flex justify-end gap-1">
-<button onclick="toggleAccess(<?= $uid ?>)" id="toggle-btn-<?= $uid ?>" class="p-2 hover:bg-primary/10 rounded-full text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined transition-transform duration-200 toggle-arrow-<?= $uid ?>">chevron_right</span></button>
+<button onclick="toggleAccess(<?= $uid ?>)" id="toggle-btn-<?= $uid ?>" class="p-2 hover:bg-primary/10 rounded-full text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined transition-transform duration-200 toggle-arrow-<?= $uid ?>">expand_more</span></button>
 <form method="POST">
 <input type="hidden" name="target_user_id" value="<?= $uid ?>">
 <button type="submit" name="reset_password" value="1" class="p-2 hover:bg-warning/10 rounded-full text-on-surface-variant hover:text-warning transition-all" title="Generar nueva contraseña"><span class="material-symbols-outlined">key</span></button>
@@ -392,7 +393,7 @@ $catalogoCount = count($access);
 </div>
 </div>
 <div class="mobile-card-actions">
-<button onclick="toggleAccess(<?= $uid ?>)" id="toggle-btn-mobile-<?= $uid ?>" class="mobile-card-btn"><span class="material-symbols-outlined transition-transform duration-200 toggle-arrow-<?= $uid ?>">chevron_right</span></button>
+<button onclick="toggleAccess(<?= $uid ?>)" id="toggle-btn-mobile-<?= $uid ?>" class="mobile-card-btn"><span class="material-symbols-outlined transition-transform duration-200 toggle-arrow-<?= $uid ?>">expand_more</span></button>
 <form method="POST">
 <input type="hidden" name="target_user_id" value="<?= $uid ?>">
 <button type="submit" name="reset_password" value="1" class="mobile-card-btn" title="Generar nueva contraseña"><span class="material-symbols-outlined">key</span></button>
@@ -544,7 +545,7 @@ setTimeout(function() { el.classList.add('hidden'); }, 300);
 }
 });
 arrows.forEach(function(a) {
-a.style.transform = isHidden ? 'rotate(90deg)' : '';
+a.style.transform = isHidden ? '' : 'rotate(180deg)';
 });
 }
 </body>
