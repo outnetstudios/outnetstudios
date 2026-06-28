@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
 require_once __DIR__ . '/../includes/upload_helper.php';
 require_once __DIR__ . '/../src/Repositories/CatalogPageRepository.php';
+require_once __DIR__ . '/../src/Repositories/CatalogRepository.php';
 require_once __DIR__ . '/../src/Repositories/ProductRepository.php';
 require_once __DIR__ . '/../includes/catalog_preview_renderer.php';
 
@@ -24,7 +25,7 @@ $content = $page['content_json'] ? json_decode($page['content_json'], true) : []
 $error = '';
 $catRepo = new CatalogRepository();
 $catalog = $catRepo->findById($catalogId);
-if ($catalog) $GLOBALS['currencySymbol'] = currencySymbol($catalog['currency'] ?? null);
+$GLOBALS['currencySymbol'] = currencySymbol($catalog ? ($catalog['currency'] ?? null) : null);
 $prodRepo = new ProductRepository();
 $allProducts = $prodRepo->allByCatalog($catalogId);
 $selectedProductId = (int)($content['product_id'] ?? 0);
