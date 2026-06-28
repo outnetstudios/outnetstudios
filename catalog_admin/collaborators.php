@@ -31,12 +31,15 @@ function isAdminUser(int $userId): bool
     return count($catRepo->allByUser($userId)) > 0;
 }
 
+$isAdmin = isAdminUser($userId);
 $error = '';
 $success = '';
 $generatedPassword = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!empty($_POST['create_collaborator'])) {
+    if (!$isAdmin) {
+        $error = 'Solo los administradores pueden gestionar colaboradores.';
+    } elseif (!empty($_POST['create_collaborator'])) {
         $email = trim($_POST['email'] ?? '');
         $name = trim($_POST['name'] ?? '');
         if ($email === '') {
@@ -173,7 +176,7 @@ foreach ($collaborators as $u) {
 <?php endif; ?>
 
 <?php if (count($collaborators) === 0): ?>
-<p class="font-body-sm text-body-sm text-on-surface-variant/60 mb-md">Aún no has creado colaboradores.</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant/60 mb-md">Aún no hay colaboradores.</p>
 <?php else: ?>
 <div class="flex flex-col gap-sm mb-xl">
 <?php foreach ($collaborators as $u):
@@ -271,6 +274,7 @@ foreach ($collaborators as $u) {
 </div>
 <?php endif; ?>
 
+<?php if ($isAdmin): ?>
 <div class="border-t border-outline-variant/20 pt-md">
 <h3 class="font-label-caps text-label-caps text-on-surface-variant mb-sm">Nuevo colaborador</h3>
 <form method="POST" class="flex flex-col md:flex-row gap-sm items-start md:items-end">
@@ -285,6 +289,7 @@ foreach ($collaborators as $u) {
     <button type="submit" name="create_collaborator" value="1" class="primary-gradient text-white px-lg py-sm rounded-full font-label-caps text-label-caps active:scale-95 transition-transform primary-glow whitespace-nowrap">Crear colaborador</button>
 </form>
 </div>
+<?php endif; ?>
 </div>
 
 </div>
