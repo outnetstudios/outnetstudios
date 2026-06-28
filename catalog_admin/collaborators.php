@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $existing = $userRepo->findByEmail($email);
             if ($existing) {
-                $error = 'Ya existe un usuario con ese email.';
+                $success = 'El usuario <strong>' . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . '</strong> ya existe. Puedes asignarle acceso a catálogos desde la lista.';
             } else {
                 $password = generatePassword();
                 $userRepo->create([
@@ -93,6 +93,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $collaborators = $userRepo->findByCreatedBy($userId);
 $myCatalogs = $catRepo->allByUser($userId);
+
+// Collect all distinct collaborator users across my catalogs
+$collaboratorUserIds = [];
+foreach ($myCatalogs as $cat) {
+    $cid = (int)$cat['id'];
+    $entries = $collabRepo->findByCatalog($cid);
+    foreach ($entries as $e) {
+        $collaboratorUserIds[(int)$e['user_id']] = true;
+    }
+}
+
+// Show users I created + users that are collaborators on my catalogs
+$createdByMe = $userRepo->findByCreatedBy($userId);
+$collabUsers = [];
+if (!empty($collaboratorUserIds)) {
+    $collabUsers = $userRepo->findByIds(array_keys($collaboratorUserIds));
+}
+
+// Merge: prefer users I created (they have more info), add others
+$merged = [];
+foreach ($createdByMe as $u) {
+    $merged[(int)$u['id']] = $u;
+}
+foreach ($collabUsers as $u) {
+    $uid = (int)$u['id'];
+    if (!isset($merged[$uid])) {
+        $merged[$uid] = $u;
+    }
+}
+$collaborators = array_values($merged);
 
 // Load access data for each collaborator
 $collabAccess = [];

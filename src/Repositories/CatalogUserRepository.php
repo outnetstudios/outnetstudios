@@ -50,6 +50,16 @@ class CatalogUserRepository
         return $stmt->fetchAll();
     }
 
+    public function findByIds(array $ids): array
+    {
+        if (empty($ids)) return [];
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $query = "SELECT id, name, email, status, created_at FROM catalog_users WHERE id IN ($placeholders) ORDER BY created_at DESC";
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute(array_values($ids));
+        return $stmt->fetchAll();
+    }
+
     public function findByEmail(string $email)
     {
         $query = 'SELECT * FROM catalog_users WHERE email = :email LIMIT 1';
