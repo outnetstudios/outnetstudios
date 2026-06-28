@@ -65,6 +65,13 @@ class CollaboratorRepository
         return $stmt->execute([':user_id' => $userId, ':catalog_id' => $catalogId]);
     }
 
+    public function deleteByUser(int $userId): bool
+    {
+        $query = 'DELETE FROM catalog_collaborators WHERE user_id = :user_id';
+        $stmt = $this->connection->prepare($query);
+        return $stmt->execute([':user_id' => $userId]);
+    }
+
     public function findCatalogsByUser(int $userId): array
     {
         $query = 'SELECT c.*, cc.permissions, cc.id AS collab_id

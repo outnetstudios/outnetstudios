@@ -109,4 +109,11 @@ class CatalogUserRepository
         $stmt = $this->connection->prepare($query);
         return $stmt->execute([':token' => $token]);
     }
+
+    public function delete(int $id): bool
+    {
+        $query = 'DELETE FROM catalog_users WHERE id = :id';
+        $stmt = $this->connection->prepare($query);
+        return $stmt->execute([':id' => $id]);
+    }
 }

@@ -7,6 +7,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 }
 
 require_once __DIR__ . '/../src/Repositories/CatalogUserRepository.php';
+require_once __DIR__ . '/../src/Repositories/CollaboratorRepository.php';
 require_once __DIR__ . '/../includes/plan_helpers.php';
 
 $pageTitle = 'Usuarios catálogo';
@@ -32,6 +33,15 @@ try {
     $catalogUserRepository = new CatalogUserRepository();
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (!empty($_POST['delete_user'])) {
+            $deleteId = (int)($_POST['user_id'] ?? 0);
+            if ($deleteId > 0) {
+                $collabRepo = new CollaboratorRepository();
+                $collabRepo->deleteByUser($deleteId);
+                $catalogUserRepository->delete($deleteId);
+                $flashMessage = 'Usuario eliminado.';
+            }
+        } else {
         $name = trim($_POST['name'] ?? '');
         $email = trim($_POST['email'] ?? '');
         $tempPasswordInput = trim($_POST['temporary_password'] ?? '');
@@ -64,6 +74,7 @@ try {
             $flashMessage = 'Usuario del catálogo creado correctamente.';
             $flashPassword = $temporaryPassword;
         }
+    }
     }
 
     $users = $catalogUserRepository->all();
@@ -169,12 +180,13 @@ try {
                                 <th>Cambio obligatorio</th>
                                 <th>Expira temporal</th>
                                 <th>Creado</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if (empty($users)): ?>
                                 <tr>
-                                    <td colspan="6" style="text-align:center; color: rgba(255,255,255,0.7);">Aún no hay usuarios del catálogo.</td>
+                                    <td colspan="7" style="text-align:center; color: rgba(255,255,255,0.7);">Aún no hay usuarios del catálogo.</td>
                                 </tr>
                             <?php else: ?>
                                 <?php foreach ($users as $user): ?>
@@ -185,6 +197,12 @@ try {
                                         <td><?php echo !empty($user['must_change_password']) ? 'Sí' : 'No'; ?></td>
                                         <td><?php echo htmlspecialchars($user['temp_password_expires_at'] ?? '-', ENT_QUOTES, 'UTF-8'); ?></td>
                                         <td><?php echo htmlspecialchars($user['created_at'] ?? '-', ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td>
+                                            <form method="post" onsubmit="return confirm('¿Eliminar este usuario?');">
+                                                <input type="hidden" name="user_id" value="<?= (int)$user['id'] ?>">
+                                                <button type="submit" name="delete_user" value="1" class="btn-gen" style="color:#e74c3c; border-color:rgba(231,76,60,0.3); background:rgba(231,76,60,0.1);">Eliminar</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php endif; ?>
