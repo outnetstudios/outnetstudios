@@ -33,21 +33,26 @@ $collabRepo = new CollaboratorRepository();
 
 // Determine the effective owner: if the creator is a "pure collaborator"
 // (no owned catalogs), assign the catalog to the admin who added them.
-$ownedCatalogs = $repo->allByUser($userId);
-$collabEntries = $collabRepo->findCatalogsByUser($userId);
 $assignUserId = $userId;
-$isPureCollaborator = count($ownedCatalogs) === 0 && count($collabEntries) > 0;
+try {
+    $ownedCatalogs = $repo->allByUser($userId);
+    $collabEntries = $collabRepo->findCatalogsByUser($userId);
+    $isPureCollaborator = count($ownedCatalogs) === 0 && count($collabEntries) > 0;
 
-if ($isPureCollaborator && count($collabEntries) > 0) {
-    // Find the admin who owns the catalog of the most recent collaborator entry
-    $collab = $collabRepo->findMostRecentByUser($userId);
-    if ($collab) {
-        $catalog = $repo->findById((int)$collab['catalog_id']);
-        if ($catalog) {
-            $assignUserId = (int)$catalog['user_id'];
+    if ($isPureCollaborator && count($collabEntries) > 0) {
+        $collab = $collabRepo->findMostRecentByUser($userId);
+        if ($collab) {
+            $catalog = $repo->findById((int)$collab['catalog_id']);
+            if ($catalog) {
+                $assignUserId = (int)$catalog['user_id'];
+            }
         }
     }
+} catch (\Throwable $e) {
+    $assignUserId = $userId;
 }
+
+$isPureCollaborator = $assignUserId !== $userId;
 
 $id = $repo->create([
     'user_id' => $assignUserId,
