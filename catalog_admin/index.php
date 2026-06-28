@@ -120,7 +120,7 @@ $totalCount = count($catalogs);
                                         </td>
                                         <td class="p-md text-center">
                                             <div class="flex justify-center gap-1">
-                                                <button onclick="copiarEnlace(<?= $c['id'] ?>)" class="p-2 hover:bg-primary/20 rounded-lg text-primary transition-colors" title="Compartir"><span class="material-symbols-outlined text-[20px]">share</span></button>
+                                                <button onclick="abrirModalCompartir(<?= $c['id'] ?>)" class="p-2 hover:bg-primary/20 rounded-lg text-primary transition-colors" title="Compartir"><span class="material-symbols-outlined text-[20px]">share</span></button>
                                                 <a href="preview.php?catalog_id=<?= $c['id'] ?>" class="p-2 hover:bg-tertiary/20 rounded-lg text-tertiary transition-colors" title="Vista previa"><span class="material-symbols-outlined text-[20px]">visibility</span></a>
                                                 <a href="edit.php?id=<?= $c['id'] ?>" class="p-2 hover:bg-on-surface-variant/20 rounded-lg text-on-surface-variant transition-colors" title="Editar"><span class="material-symbols-outlined text-[20px]">edit</span></a>
                                                 <a href="delete.php?id=<?= $c['id'] ?>" class="p-2 hover:bg-error/20 rounded-lg text-error transition-colors" title="Borrar" onclick="return confirm('¿Borrar este catálogo y todos sus datos?')"><span class="material-symbols-outlined text-[20px]">delete</span></a>
@@ -159,7 +159,7 @@ $totalCount = count($catalogs);
                                 <span class="mobile-card-title"><?= htmlspecialchars($c['name'], ENT_QUOTES, 'UTF-8') ?></span>
                                 <span class="mobile-card-slug"><?= htmlspecialchars($c['slug'], ENT_QUOTES, 'UTF-8') ?></span>
                             </div>
-                            <button onclick="copiarEnlace(<?= $c['id'] ?>)" class="mobile-card-btn mobile-card-share" title="Compartir"><span class="material-symbols-outlined">share</span></button>
+                            <button onclick="abrirModalCompartir(<?= $c['id'] ?>)" class="mobile-card-btn mobile-card-share" title="Compartir"><span class="material-symbols-outlined">share</span></button>
                         </div>
                         <div class="mobile-card-body">
                             <div class="mobile-card-row">
@@ -253,25 +253,50 @@ $totalCount = count($catalogs);
 
 <style>
 .toast-share{position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:100;padding:0.6rem 1.2rem;border-radius:999px;background:rgba(0,200,150,0.9);color:#fff;font-size:0.85rem;font-weight:600;opacity:0;transition:opacity 0.3s;pointer-events:none}.toast-share.show{opacity:1}
+.modal-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}.modal-overlay.open{opacity:1;visibility:visible}.modal-box{background:#1e2133;border-radius:12px;padding:1.5rem;max-width:360px;width:90%;display:flex;flex-direction:column;gap:0.75rem;transform:scale(0.92);transition:transform .25s}.modal-overlay.open .modal-box{transform:scale(1)}.modal-box h3{margin:0;font-size:1rem;font-weight:600;color:#e8ecf6}.modal-btn{display:flex;align-items:center;gap:0.75rem;width:100%;padding:0.75rem 1rem;border:none;border-radius:8px;background:#2a2e42;color:#dee2f4;font-size:0.9rem;font-weight:500;cursor:pointer;transition:background .15s;text-align:left}.modal-btn:hover{background:#353a52}.modal-btn span{font-size:1.25rem}.modal-btn-close{background:transparent;color:#888;justify-content:center;font-size:0.8rem;padding:0.5rem}.modal-btn-close:hover{background:#2a2e42;color:#dee2f4}
 </style>
 <div class="toast-share" id="toastShare"></div>
+<div class="modal-overlay" id="modalCompartir" onclick="if(event.target===this)cerrarModalCompartir()">
+    <div class="modal-box">
+        <h3>Compartir catálogo</h3>
+        <button class="modal-btn" onclick="copiarEnlaceConPrecios()"><span class="material-symbols-outlined">attach_money</span>Compartir URL con precios</button>
+        <button class="modal-btn" onclick="copiarEnlaceSinPrecios()"><span class="material-symbols-outlined">money_off</span>Compartir URL sin precios</button>
+        <button class="modal-btn modal-btn-close" onclick="cerrarModalCompartir()">Cancelar</button>
+    </div>
+</div>
 <script>
+    var shareCatalogId = null;
     function mostrarToast(msg) {
         var t = document.getElementById('toastShare');
         t.textContent = msg; t.classList.add('show');
         setTimeout(function(){ t.classList.remove('show'); }, 2000);
     }
-    function copiarEnlace(id) {
-        var url = (location.protocol === 'https:' ? 'https' : 'http') + '://' + location.host + '/ver_catalogo.php?id=' + id;
+    function abrirModalCompartir(id) {
+        shareCatalogId = id;
+        document.getElementById('modalCompartir').classList.add('open');
+    }
+    function cerrarModalCompartir() {
+        document.getElementById('modalCompartir').classList.remove('open');
+    }
+    function copiarUrl(url) {
         if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(url).then(function(){ mostrarToast('¡Enlace copiado!'); });
+            navigator.clipboard.writeText(url).then(function(){ mostrarToast('¡Enlace copiado!'); cerrarModalCompartir(); });
         } else {
             var ta = document.createElement('textarea');
             ta.value = url; ta.style.position = 'fixed'; ta.style.left = '-9999px';
             document.body.appendChild(ta); ta.select();
             try { document.execCommand('copy'); mostrarToast('¡Enlace copiado!'); } catch(e) { prompt('Copia el enlace:', url); }
             document.body.removeChild(ta);
+            cerrarModalCompartir();
         }
+    }
+    function copiarEnlaceConPrecios() {
+        var proto = location.protocol === 'https:' ? 'https' : 'http';
+        copiarUrl(proto + '://' + location.host + '/ver_catalogo.php?id=' + shareCatalogId);
+    }
+    function copiarEnlaceSinPrecios() {
+        var proto = location.protocol === 'https:' ? 'https' : 'http';
+        copiarUrl(proto + '://' + location.host + '/ver_catalogo.php?id=' + shareCatalogId + '&no_prices=1');
     }
     document.querySelectorAll('tbody tr').forEach(row => {
         row.addEventListener('mouseenter', () => {

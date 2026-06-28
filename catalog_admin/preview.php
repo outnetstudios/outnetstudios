@@ -58,6 +58,10 @@ if ($isPublicView) {
 
 $catalogName = htmlspecialchars($catalog['name'], ENT_QUOTES, 'UTF-8');
 $GLOBALS['currencySymbol'] = currencySymbol($catalog['currency'] ?? null);
+$showPrices = empty($_GET['no_prices']) && ($GLOBALS['showPrices'] ?? true);
+$GLOBALS['showPrices'] = $showPrices;
+$publicUrlWithPrices = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/ver_catalogo.php?id=' . $catalogId;
+$publicUrlNoPrices = $publicUrlWithPrices . '&no_prices=1';
 
 // Expand pages: category pages auto-flow products
 $expandedPages = buildExpandedPages($pages, $products, $categories);
@@ -88,7 +92,6 @@ $pageTitle = 'Vista previa - ' . $catalogName;
 if (!$isPublicView):
     require_once __DIR__ . '/../templates/partials/admin_head.php';
 else:
-    $publicUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/ver_catalogo.php?id=' . $catalogId;
     ?><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"><title><?= $catalogName ?> — Catálogo</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><?php endif; ?>
     <style>
     *, *::before, *::after { box-sizing: border-box; }
@@ -208,14 +211,14 @@ else:
 <div class="preview-header">
     <span class="preview-header-title"><?= $catalogName ?></span>
     <div class="preview-header-actions">
-        <button onclick="copiarEnlace()" class="preview-btn preview-btn-always" title="Compartir"><span class="material-symbols-outlined preview-btn-icon">share</span><span class="preview-btn-label">Compartir</span></button>
+        <button onclick="abrirModalCompartir()" class="preview-btn preview-btn-always" title="Compartir"><span class="material-symbols-outlined preview-btn-icon">share</span><span class="preview-btn-label">Compartir</span></button>
         <button onclick="zoomOut()" class="preview-btn preview-btn-always" title="Alejar"><span class="material-symbols-outlined preview-btn-icon">zoom_out</span><span class="preview-btn-label">Alejar</span></button>
         <span class="preview-zoom-label" id="zoomLevel">100%</span>
         <button onclick="zoomIn()" class="preview-btn preview-btn-always" title="Acercar"><span class="material-symbols-outlined preview-btn-icon">zoom_in</span><span class="preview-btn-label">Acercar</span></button>
         <button onclick="zoomFit()" class="preview-btn preview-btn-always" title="Ajustar al ancho"><span class="material-symbols-outlined preview-btn-icon">fit_width</span><span class="preview-btn-label">Ajustar</span></button>
 <?php if ($isPublicView): ?>
         <?php if ($allowPdf): ?>
-        <a href="descargar_pdf.php?id=<?= $catalogId ?>" target="_blank" class="preview-btn preview-btn-always" title="Descargar PDF"><span class="material-symbols-outlined preview-btn-icon">picture_as_pdf</span><span class="preview-btn-label">PDF</span></a>
+        <a href="descargar_pdf.php?id=<?= $catalogId ?><?= $showPrices ? '' : '&no_prices=1' ?>" target="_blank" class="preview-btn preview-btn-always" title="Descargar PDF"><span class="material-symbols-outlined preview-btn-icon">picture_as_pdf</span><span class="preview-btn-label">PDF</span></a>
         <?php endif; ?>
 <?php else: ?>
         <a href="export_pdf.php?catalog_id=<?= $catalogId ?>" target="_blank" class="preview-btn preview-btn-always" title="Exportar PDF"><span class="material-symbols-outlined preview-btn-icon">picture_as_pdf</span><span class="preview-btn-label">PDF</span></a>
@@ -246,19 +249,19 @@ else:
 <nav class="preview-footer">
     <div>
         <?php if ($pageIndex > 1): ?>
-        <a class="preview-footer-btn" href="?<?= $isPublicView ? 'id' : 'catalog_id' ?>=<?= $catalogId ?>&page=<?= $pageIndex - 1 ?>" id="prevPage"><span class="material-symbols-outlined" style="font-size:1.1rem">chevron_left</span> Anterior</a>
+        <a class="preview-footer-btn" href="?<?= $isPublicView ? 'id' : 'catalog_id' ?>=<?= $catalogId ?>&page=<?= $pageIndex - 1 ?><?= $showPrices ? '' : '&no_prices=1' ?>" id="prevPage"><span class="material-symbols-outlined" style="font-size:1.1rem">chevron_left</span> Anterior</a>
         <?php else: ?>
         <span class="preview-footer-btn disabled"><span class="material-symbols-outlined" style="font-size:1.1rem">chevron_left</span> Anterior</span>
         <?php endif; ?>
     </div>
     <div class="preview-page-numbers">
         <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-        <a href="?<?= $isPublicView ? 'id' : 'catalog_id' ?>=<?= $catalogId ?>&page=<?= $i ?>" class="preview-page-num <?= $i === $pageIndex ? 'active' : '' ?>"><?= $i ?></a>
+        <a href="?<?= $isPublicView ? 'id' : 'catalog_id' ?>=<?= $catalogId ?>&page=<?= $i ?><?= $showPrices ? '' : '&no_prices=1' ?>" class="preview-page-num <?= $i === $pageIndex ? 'active' : '' ?>"><?= $i ?></a>
         <?php endfor; ?>
     </div>
     <div>
         <?php if ($pageIndex < $totalPages): ?>
-        <a class="preview-footer-btn" href="?<?= $isPublicView ? 'id' : 'catalog_id' ?>=<?= $catalogId ?>&page=<?= $pageIndex + 1 ?>" id="nextPage">Siguiente <span class="material-symbols-outlined" style="font-size:1.1rem">chevron_right</span></a>
+        <a class="preview-footer-btn" href="?<?= $isPublicView ? 'id' : 'catalog_id' ?>=<?= $catalogId ?>&page=<?= $pageIndex + 1 ?><?= $showPrices ? '' : '&no_prices=1' ?>" id="nextPage">Siguiente <span class="material-symbols-outlined" style="font-size:1.1rem">chevron_right</span></a>
         <?php else: ?>
         <span class="preview-footer-btn disabled">Siguiente <span class="material-symbols-outlined" style="font-size:1.1rem">chevron_right</span></span>
         <?php endif; ?>
@@ -268,26 +271,43 @@ else:
 
 <style>
 .toast-share{position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:200;padding:0.6rem 1.2rem;border-radius:999px;background:rgba(0,200,150,0.9);color:#fff;font-size:0.85rem;font-weight:600;opacity:0;transition:opacity 0.3s;pointer-events:none}.toast-share.show{opacity:1}
+.modal-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}.modal-overlay.open{opacity:1;visibility:visible}.modal-box{background:#1e2133;border-radius:12px;padding:1.5rem;max-width:360px;width:90%;display:flex;flex-direction:column;gap:0.75rem;transform:scale(0.92);transition:transform .25s}.modal-overlay.open .modal-box{transform:scale(1)}.modal-box h3{margin:0;font-size:1rem;font-weight:600;color:#e8ecf6}.modal-btn{display:flex;align-items:center;gap:0.75rem;width:100%;padding:0.75rem 1rem;border:none;border-radius:8px;background:#2a2e42;color:#dee2f4;font-size:0.9rem;font-weight:500;cursor:pointer;transition:background .15s;text-align:left}.modal-btn:hover{background:#353a52}.modal-btn span{font-size:1.25rem}.modal-btn-close{background:transparent;color:#888;justify-content:center;font-size:0.8rem;padding:0.5rem}.modal-btn-close:hover{background:#2a2e42;color:#dee2f4}
 </style>
 <div class="toast-share" id="toastShare"></div>
+<div class="modal-overlay" id="modalCompartir" onclick="if(event.target===this)cerrarModalCompartir()">
+    <div class="modal-box">
+        <h3>Compartir catálogo</h3>
+        <button class="modal-btn" onclick="copiarEnlaceConPrecios()"><span class="material-symbols-outlined">attach_money</span>Compartir URL con precios</button>
+        <button class="modal-btn" onclick="copiarEnlaceSinPrecios()"><span class="material-symbols-outlined">money_off</span>Compartir URL sin precios</button>
+        <button class="modal-btn modal-btn-close" onclick="cerrarModalCompartir()">Cancelar</button>
+    </div>
+</div>
 <script>
 function mostrarToast(msg) {
     var t = document.getElementById('toastShare');
     t.textContent = msg; t.classList.add('show');
     setTimeout(function(){ t.classList.remove('show'); }, 2000);
 }
-function copiarEnlace() {
-    var url = <?= $isPublicView ? "'$publicUrl'" : "'https://' + location.host + '/ver_catalogo.php?id=$catalogId'" ?>;
+function abrirModalCompartir() {
+    document.getElementById('modalCompartir').classList.add('open');
+}
+function cerrarModalCompartir() {
+    document.getElementById('modalCompartir').classList.remove('open');
+}
+function copiarEnlace(url) {
     if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url).then(function(){ mostrarToast('¡Enlace copiado!'); });
+        navigator.clipboard.writeText(url).then(function(){ mostrarToast('¡Enlace copiado!'); cerrarModalCompartir(); });
     } else {
         var ta = document.createElement('textarea');
         ta.value = url; ta.style.position = 'fixed'; ta.style.left = '-9999px';
         document.body.appendChild(ta); ta.select();
         try { document.execCommand('copy'); mostrarToast('¡Enlace copiado!'); } catch(e) { prompt('Copia el enlace:', url); }
         document.body.removeChild(ta);
+        cerrarModalCompartir();
     }
 }
+function copiarEnlaceConPrecios() { copiarEnlace('<?= $publicUrlWithPrices ?>'); }
+function copiarEnlaceSinPrecios() { copiarEnlace('<?= $publicUrlNoPrices ?>'); }
 let zoom = 1;
 const zoomLabel = document.getElementById('zoomLevel');
 const storageKey = '<?= $isPublicView ? 'public' : 'catalog' ?>_zoom_<?= $catalogId ?>';

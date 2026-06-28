@@ -47,6 +47,8 @@ if ($isPublicView) {
 
 $catalogName = htmlspecialchars($catalog['name'], ENT_QUOTES, 'UTF-8');
 $GLOBALS['currencySymbol'] = currencySymbol($catalog['currency'] ?? null);
+$showPrices = empty($_GET['no_prices']) && ($GLOBALS['showPrices'] ?? true);
+$GLOBALS['showPrices'] = $showPrices;
 
 // Expand pages: category pages auto-flow products
 $expandedPages = buildExpandedPages($pages, $products, $categories);
