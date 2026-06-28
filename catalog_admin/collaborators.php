@@ -186,7 +186,7 @@ foreach ($collaborators as $u) {
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-1 p-1.5 rounded-lg bg-surface-variant/20">
             <span class="font-body-xs text-body-xs text-on-surface truncate"><?= htmlspecialchars($a['name'], ENT_QUOTES, 'UTF-8') ?></span>
             <form method="POST" class="flex flex-wrap items-center gap-x-sm gap-y-0.5">
-                <input type="hidden" name="collab_id" value="<?= (int)$a['id'] ?>">
+                <input type="hidden" name="collab_id" value="<?= (int)($a['collab_id'] ?? $a['id']) ?>">
                 <?php $perms = is_string($a['permissions']) ? json_decode($a['permissions'], true) : ($a['permissions'] ?? []); ?>
                 <label class="flex items-center gap-0.5 cursor-pointer text-[0.65rem]">
                     <input type="checkbox" name="perm_edit_catalog" value="1" <?= !empty($perms[PERM_EDIT_CATALOG]) ? 'checked' : '' ?> class="accent-primary w-3 h-3">

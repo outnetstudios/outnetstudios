@@ -67,7 +67,7 @@ class CollaboratorRepository
 
     public function findCatalogsByUser(int $userId): array
     {
-        $query = 'SELECT c.*, cc.permissions
+        $query = 'SELECT c.*, cc.permissions, cc.id AS collab_id
                   FROM catalog_collaborators cc
                   JOIN catalogs c ON cc.catalog_id = c.id
                   WHERE cc.user_id = :user_id
@@ -75,5 +75,13 @@ class CollaboratorRepository
         $stmt = $this->connection->prepare($query);
         $stmt->execute([':user_id' => $userId]);
         return $stmt->fetchAll();
+    }
+
+    public function findMostRecentByUser(int $userId)
+    {
+        $query = 'SELECT cc.* FROM catalog_collaborators cc WHERE cc.user_id = :user_id ORDER BY cc.id DESC LIMIT 1';
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute([':user_id' => $userId]);
+        return $stmt->fetch();
     }
 }
