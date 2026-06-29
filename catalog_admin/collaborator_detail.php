@@ -129,8 +129,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $access = $collabRepo->findCatalogsByUser($targetUserId);
 $myCatalogs = $catRepo->allByUser($userId);
 
-$pwdValue = !empty($targetUser['password_encrypted']) ? decryptPassword($targetUser['password_encrypted']) : null;
+$pwdValue = null;
 $hasPwd = !empty($targetUser['password_encrypted']);
+if ($hasPwd) {
+    try {
+        $pwdValue = decryptPassword($targetUser['password_encrypted']);
+    } catch (RuntimeException $e) {
+        $pwdValue = null;
+        $hasPwd = false;
+    }
+}
 ?>
 <?php $pageTitle = 'Colaborador'; require_once __DIR__ . '/../templates/partials/admin_head.php'; ?>
 <?php require_once __DIR__ . '/../templates/partials/admin_navbar.php'; ?>
