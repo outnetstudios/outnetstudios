@@ -123,6 +123,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $targetUser = $userRepo->findById($targetUserId);
             $success = 'Contraseña generada.';
         }
+    } elseif (!empty($_POST['delete_collaborator'])) {
+        if (isAdminUser($targetUserId)) {
+            $error = 'No puedes eliminar un administrador.';
+        } else {
+            $collabRepo->deleteByUser($targetUserId);
+            $userRepo->delete($targetUserId);
+            header('Location: collaborators.php');
+            exit;
+        }
     }
 }
 
@@ -285,6 +294,19 @@ $perms = is_string($a['permissions']) ? json_decode($a['permissions'], true) : (
 </button>
 </div>
 <?php endif; ?>
+</div>
+
+<div class="glass-panel rounded-2xl p-md">
+<div class="flex items-center justify-between gap-2">
+<h2 class="font-title-sm text-title-sm text-error flex items-center gap-xs">
+<span class="material-symbols-outlined">delete</span> Eliminar colaborador
+</h2>
+<form method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este colaborador? Se perderá todo su acceso a catálogos.')">
+<button type="submit" name="delete_collaborator" value="1" class="px-3 py-1 rounded-full bg-error/15 text-error font-label-caps text-[0.65rem] hover:bg-error/25 transition-all flex items-center gap-1 border border-error/30 whitespace-nowrap">
+<span class="material-symbols-outlined text-[12px]">delete</span> Borrar
+</button>
+</form>
+</div>
 </div>
 
 </div>
