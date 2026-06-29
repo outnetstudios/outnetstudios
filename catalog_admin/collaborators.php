@@ -524,27 +524,16 @@ $catalogoCount = count($access);
 </style>
 <script>
 function toggleAccess(id) {
-var isMobile = window.innerWidth < 769;
-var row = document.getElementById(isMobile ? 'access-mobile-' + id : 'access-' + id);
-if (!row) return;
-var arrows = document.querySelectorAll('.toggle-arrow-' + id);
-var isHidden = row.classList.contains('hidden');
-if (isHidden) {
-row.classList.remove('hidden');
-row.style.maxHeight = '0px';
-requestAnimationFrame(function() {
-row.style.maxHeight = row.scrollHeight + 'px';
-row.style.opacity = '1';
-});
-} else {
-row.style.maxHeight = '0px';
-row.style.opacity = '0';
-var r = row;
-setTimeout(function() { r.classList.add('hidden'); }, 300);
+  var isMobile = window.innerWidth < 769;
+  var row = document.getElementById(isMobile ? "access-mobile-" + id : "access-" + id);
+  if (!row) return;
+  row.classList.toggle("hidden");
+  var arrows = document.querySelectorAll(".toggle-arrow-" + id);
+  var isHidden = row.classList.contains("hidden");
+  arrows.forEach(function(a) {
+    a.style.transform = isHidden ? "" : "rotate(180deg)";
+  });
 }
-arrows.forEach(function(a) {
-a.style.transform = isHidden ? '' : 'rotate(180deg)';
-});
-}
-</body>
+</script>
 </html>
+
