@@ -591,16 +591,11 @@ function toggleAccess(id) {
   var isMobile = window.innerWidth < 769;
   var row = document.getElementById(isMobile ? "access-mobile-" + id : "access-" + id);
   if (!row) return;
-  var isHidden = row.style.display === 'none' || row.classList.contains('hidden');
-  if (isHidden) {
-    row.style.display = '';
-    row.classList.remove('hidden');
-  } else {
-    row.style.display = 'none';
-  }
+  row.classList.toggle("hidden");
   var arrows = document.querySelectorAll(".toggle-arrow-" + id);
+  var isHidden = row.classList.contains("hidden");
   arrows.forEach(function(a) {
-    a.style.transform = isHidden ? "rotate(180deg)" : "";
+    a.style.transform = isHidden ? "" : "rotate(180deg)";
   });
 }
 function togglePwdVisibility(id, isMobile) {
