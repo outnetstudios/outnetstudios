@@ -374,7 +374,7 @@ $catalogoCount = count($access);
                 $pwdValue = $showPwd ? $generatedPwdValue : (!empty($u['password_encrypted']) ? decryptPassword($u['password_encrypted']) : null);
                 $hasPwd = $showPwd || !empty($u['password_encrypted']);
                 ?>
-                <div class="bg-surface-variant/20 rounded-xl p-3 overflow-hidden" id="pwd-section-<?= $uid ?>">
+                <div class="bg-surface-variant/20 rounded-xl p-3" id="pwd-section-<?= $uid ?>">
                 <div class="flex items-center justify-between gap-2">
                 <span class="font-label-caps text-label-caps text-on-surface-variant/60">Contraseña</span>
                 <form method="POST" class="shrink-0">
@@ -386,7 +386,7 @@ $catalogoCount = count($access);
                 </div>
                 <?php if ($hasPwd): ?>
                 <div class="flex items-center gap-2 mt-3">
-                <div class="relative shrink min-w-0" style="width:80%">
+                <div class="relative min-w-0" style="flex:0 1 80%">
                 <input type="password" id="pwd-field-<?= $uid ?>" value="<?= htmlspecialchars($pwdValue, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1.5 px-2 text-[0.8rem] w-full font-mono pr-8">
                 <button type="button" onclick="togglePwdVisibility(<?= $uid ?>)" class="absolute right-1 top-1/2 -translate-y-1/2 p-1 text-on-surface-variant/60 hover:text-on-surface transition-all" title="Mostrar/ocultar">
                 <span class="material-symbols-outlined text-[16px]" id="pwd-eye-<?= $uid ?>">visibility</span>
@@ -535,7 +535,7 @@ $catalogoCount = count($access);
                 </div>
                 <?php if ($hasPwdMobile): ?>
                 <div class="flex items-center gap-2 mt-3">
-                <div class="relative shrink min-w-0" style="width:80%">
+                <div class="relative min-w-0" style="flex:0 1 80%">
                 <input type="password" id="pwd-field-m-<?= $uid ?>" value="<?= htmlspecialchars($pwdValueMobile, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1.5 px-2 text-[0.8rem] w-full font-mono pr-8">
                 <button type="button" onclick="togglePwdVisibility(<?= $uid ?>, true)" class="absolute right-1 top-1/2 -translate-y-1/2 p-1 text-on-surface-variant/60 hover:text-on-surface transition-all" title="Mostrar/ocultar">
                 <span class="material-symbols-outlined text-[16px]" id="pwd-eye-m-<?= $uid ?>">visibility</span>
