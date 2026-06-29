@@ -206,15 +206,15 @@ foreach ($collaborators as $u) {
 </div>
 <form class="module-form" method="post" action="">
 <div class="flex flex-col md:flex-row gap-sm items-start md:items-end">
-<div class="flex-1 w-full">
+<div class="flex-1">
 <label class="font-body-xs text-body-xs text-on-surface-variant/60 block mb-1">Correo electrónico</label>
 <input type="email" name="email" required class="form-input" placeholder="correo@ejemplo.com">
 </div>
-<div class="flex-1 w-full">
+<div class="flex-1">
 <label class="font-body-xs text-body-xs text-on-surface-variant/60 block mb-1">Nombre completo</label>
 <input type="text" name="name" required class="form-input" placeholder="Nombre completo">
 </div>
-<button class="primary-gradient text-white px-lg py-sm rounded-full font-title-sm text-title-sm active:scale-95 transition-transform primary-glow w-full md:w-auto" type="submit" name="create_collaborator" value="1">+ Crear colaborador</button>
+<button class="primary-gradient text-white px-lg py-sm rounded-full font-title-sm text-title-sm active:scale-95 transition-transform primary-glow btn-create-collab" type="submit" name="create_collaborator" value="1">+ Crear colaborador</button>
 </div>
 </form>
 </div>
@@ -515,9 +515,11 @@ $catalogoCount = count($access);
 .mobile-card-btn { display: inline-flex; align-items: center; justify-content: center; width: 2.4rem; height: 2.4rem; border-radius: 50%; color: rgba(255,255,255,0.5); text-decoration: none; transition: all 0.15s; background: transparent; border: none; cursor: pointer; }
 .mobile-card-btn span { font-size: 1.15rem; }
 .mobile-card-btn:hover { background: rgba(255,255,255,0.06); color: var(--text-on-surface, #e0e0f0); }
+.btn-create-collab { width: 100%; }
 }
 @media (min-width: 769px) {
 .mobile-cards { display: none; }
+.btn-create-collab { width: auto; }
 }
 </style>
 <script>
