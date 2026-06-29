@@ -206,11 +206,11 @@ foreach ($collaborators as $u) {
 </div>
 <form class="module-form" method="post" action="">
 <div class="flex flex-col md:flex-row gap-sm items-start md:items-end">
-<div class="flex-1">
+<div class="flex-1 w-full">
 <label class="font-body-xs text-body-xs text-on-surface-variant/60 block mb-1">Correo electrónico</label>
 <input type="email" name="email" required class="form-input" placeholder="correo@ejemplo.com">
 </div>
-<div class="flex-1">
+<div class="flex-1 w-full">
 <label class="font-body-xs text-body-xs text-on-surface-variant/60 block mb-1">Nombre completo</label>
 <input type="text" name="name" required class="form-input" placeholder="Nombre completo">
 </div>
