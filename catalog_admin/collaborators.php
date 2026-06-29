@@ -110,7 +110,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $newPassword = generatePassword();
             $userRepo->updatePassword($targetUserId, password_hash($newPassword, PASSWORD_DEFAULT));
-            $success = 'Contraseña generada para <strong>' . htmlspecialchars($userRepo->findById($targetUserId)['email'] ?? '', ENT_QUOTES, 'UTF-8') . '</strong>: <code>' . htmlspecialchars($newPassword, ENT_QUOTES, 'UTF-8') . '</code>';
+            $generatedPwdUid = $targetUserId;
+            $generatedPwdValue = $newPassword;
+            $success = 'Contraseña generada. Puedes copiarla debajo.';
         }
     }
 }
@@ -268,10 +270,6 @@ $catalogoCount = count($access);
 <td class="p-md text-right">
 <div class="flex justify-end gap-1">
 <button onclick="toggleAccess(<?= $uid ?>)" id="toggle-btn-<?= $uid ?>" class="p-2 hover:bg-primary/10 rounded-full text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined transition-transform duration-200 toggle-arrow-<?= $uid ?>">expand_more</span></button>
-<form method="POST">
-<input type="hidden" name="target_user_id" value="<?= $uid ?>">
-<button type="submit" name="reset_password" value="1" class="p-2 hover:bg-warning/10 rounded-full text-on-surface-variant hover:text-warning transition-all" title="Generar nueva contraseña"><span class="material-symbols-outlined">key</span></button>
-</form>
 </div>
 </td>
 </tr>
@@ -361,6 +359,32 @@ $catalogoCount = count($access);
 </div>
 </form>
 </div>
+
+<!-- Password section -->
+<div class="bg-surface-variant/20 rounded-xl p-3" id="pwd-section-<?= $uid ?>">
+<div class="flex items-center justify-between gap-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant/60">Contraseña</span>
+<form method="POST">
+<input type="hidden" name="target_user_id" value="<?= $uid ?>">
+<button type="submit" name="reset_password" value="1" class="px-3 py-1 rounded-full bg-warning/15 text-warning font-label-caps text-[0.65rem] hover:bg-warning/25 transition-all flex items-center gap-1 border border-warning/20">
+<span class="material-symbols-outlined text-[12px]">key</span> Generar
+</button>
+</form>
+</div>
+<?php if (isset($generatedPwdUid) && $generatedPwdUid === $uid): ?>
+<div class="flex items-center gap-2 mt-2">
+<div class="relative flex-1">
+<input type="password" id="pwd-field-<?= $uid ?>" value="<?= htmlspecialchars($generatedPwdValue, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1 px-2 text-[0.75rem] w-full font-mono">
+<button type="button" onclick="togglePwdVisibility(<?= $uid ?>)" class="absolute right-1 top-1/2 -translate-y-1/2 p-1 text-on-surface-variant/60 hover:text-on-surface transition-all" title="Mostrar/ocultar">
+<span class="material-symbols-outlined text-[14px]" id="pwd-eye-<?= $uid ?>">visibility</span>
+</button>
+</div>
+<button type="button" onclick="copyPwd(<?= $uid ?>)" class="p-1.5 rounded-lg hover:bg-primary/15 text-primary transition-all" title="Copiar">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+<?php endif; ?>
+</div>
 </div>
 </td>
 </tr>
@@ -392,10 +416,6 @@ $catalogoCount = count($access);
 </div>
 <div class="mobile-card-actions">
 <button onclick="toggleAccess(<?= $uid ?>)" id="toggle-btn-mobile-<?= $uid ?>" class="mobile-card-btn"><span class="material-symbols-outlined transition-transform duration-200 toggle-arrow-<?= $uid ?>">expand_more</span></button>
-<form method="POST">
-<input type="hidden" name="target_user_id" value="<?= $uid ?>">
-<button type="submit" name="reset_password" value="1" class="mobile-card-btn" title="Generar nueva contraseña"><span class="material-symbols-outlined">key</span></button>
-</form>
 </div>
 </div>
 <div id="access-mobile-<?= $uid ?>" class="hidden">
@@ -483,6 +503,31 @@ $catalogoCount = count($access);
 </div>
 </form>
 </div>
+<!-- Password section -->
+<div class="bg-surface-variant/20 rounded-xl p-3">
+<div class="flex items-center justify-between gap-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant/60">Contraseña</span>
+<form method="POST">
+<input type="hidden" name="target_user_id" value="<?= $uid ?>">
+<button type="submit" name="reset_password" value="1" class="px-3 py-1 rounded-full bg-warning/15 text-warning font-label-caps text-[0.65rem] hover:bg-warning/25 transition-all flex items-center gap-1 border border-warning/20">
+<span class="material-symbols-outlined text-[12px]">key</span> Generar
+</button>
+</form>
+</div>
+<?php if (isset($generatedPwdUid) && $generatedPwdUid === $uid): ?>
+<div class="flex items-center gap-2 mt-2">
+<div class="relative flex-1">
+<input type="password" id="pwd-field-m-<?= $uid ?>" value="<?= htmlspecialchars($generatedPwdValue, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1 px-2 text-[0.75rem] w-full font-mono">
+<button type="button" onclick="togglePwdVisibility(<?= $uid ?>, true)" class="absolute right-1 top-1/2 -translate-y-1/2 p-1 text-on-surface-variant/60 hover:text-on-surface transition-all" title="Mostrar/ocultar">
+<span class="material-symbols-outlined text-[14px]" id="pwd-eye-m-<?= $uid ?>">visibility</span>
+</button>
+</div>
+<button type="button" onclick="copyPwd(<?= $uid ?>, true)" class="p-1.5 rounded-lg hover:bg-primary/15 text-primary transition-all" title="Copiar">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+</div>
+<?php endif; ?>
+</div>
 </div>
 </div>
 <?php endforeach; ?>
@@ -534,6 +579,38 @@ function toggleAccess(id) {
     a.style.transform = isHidden ? "" : "rotate(180deg)";
   });
 }
+function togglePwdVisibility(id, isMobile) {
+  var suffix = isMobile ? '-m-' : '-';
+  var field = document.getElementById('pwd-field' + suffix + id);
+  var eye = document.getElementById('pwd-eye' + suffix + id);
+  if (!field || !eye) return;
+  var isPassword = field.type === 'password';
+  field.type = isPassword ? 'text' : 'password';
+  eye.textContent = isPassword ? 'visibility_off' : 'visibility';
+}
+function copyPwd(id, isMobile) {
+  var suffix = isMobile ? '-m-' : '-';
+  var field = document.getElementById('pwd-field' + suffix + id);
+  if (!field) return;
+  navigator.clipboard.writeText(field.value).then(function() {
+    var btn = field.parentElement.nextElementSibling || field.closest('.flex').querySelector('[onclick*="copyPwd"]');
+    if (btn) {
+      var icon = btn.querySelector('.material-symbols-outlined');
+      if (icon) {
+        var orig = icon.textContent;
+        icon.textContent = 'check';
+        setTimeout(function() { icon.textContent = orig; }, 1500);
+      }
+    }
+  });
+}
+(function() {
+  var pwdSections = document.querySelectorAll('[id^="pwd-section-"]');
+  pwdSections.forEach(function(s) {
+    var id = s.id.replace('pwd-section-', '');
+    toggleAccess(parseInt(id));
+  });
+})();
 </script>
 </html>
 
