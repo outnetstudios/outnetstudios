@@ -160,6 +160,7 @@ body {
 .hover\:text-primary-fixed-dim:hover { color: var(--primary-fixed-dim); }
 .hover\:text-tertiary:hover { color: var(--tertiary); }
 .hover\:text-tertiary-fixed-dim:hover { color: var(--tertiary-fixed-dim); }
+.hover\:text-on-surface:hover { color: var(--on-surface); }
 .hover\:bg-error\/10:hover { background-color: color-mix(in srgb, var(--neon-pink) 10%, transparent); }
 .hover\:bg-error\/20:hover { background-color: color-mix(in srgb, var(--neon-pink) 20%, transparent); }
 .hover\:bg-on-surface-variant\/20:hover { background-color: color-mix(in srgb, var(--on-surface-variant) 20%, transparent); }

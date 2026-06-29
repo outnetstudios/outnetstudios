@@ -274,7 +274,7 @@ $perms = is_string($a['permissions']) ? json_decode($a['permissions'], true) : (
 </div>
 <?php if ($hasPwd): ?>
 <div class="flex items-center gap-2 mt-3">
-<div class="relative min-w-0" style="flex:0 1 80%">
+<div class="relative flex-1 min-w-0">
 <input type="password" id="pwd-field-<?= $targetUserId ?>" value="<?= htmlspecialchars($pwdValue ?? '', ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1.5 px-2 text-[0.8rem] w-full font-mono pr-8">
 <button type="button" onclick="togglePwdVisibility(<?= $targetUserId ?>)" class="absolute right-1 top-1/2 -translate-y-1/2 p-1 text-on-surface-variant/60 hover:text-on-surface transition-all" title="Mostrar/ocultar">
 <span class="material-symbols-outlined text-[16px]" id="pwd-eye-<?= $targetUserId ?>">visibility</span>

@@ -2,6 +2,17 @@
 
 function getEncryptionKey(): string
 {
+    $b64 = getenv('ENCRYPTION_KEY_BASE64');
+    if ($b64 !== false && $b64 !== '') {
+        $decoded = base64_decode($b64, true);
+        if ($decoded !== false && strlen($decoded) === 32) {
+            return $decoded;
+        }
+    }
+    $raw = getenv('ENCRYPTION_KEY');
+    if ($raw !== false && $raw !== '' && strlen($raw) === 32) {
+        return $raw;
+    }
     $keyFile = __DIR__ . '/../config/encryption.key';
     if (!file_exists($keyFile)) {
         $key = random_bytes(32);
