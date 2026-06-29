@@ -605,10 +605,12 @@ function copyPwd(id, isMobile) {
   });
 }
 (function() {
-  var pwdSections = document.querySelectorAll('[id^="pwd-section-"]');
-  pwdSections.forEach(function(s) {
-    var id = s.id.replace('pwd-section-', '');
-    toggleAccess(parseInt(id));
+  var sections = document.querySelectorAll('[id^="pwd-section-"]');
+  sections.forEach(function(s) {
+    if (s.querySelector('[id^="pwd-field-"], [id^="pwd-field-m-"]')) {
+      var id = s.id.replace('pwd-section-', '');
+      toggleAccess(parseInt(id));
+    }
   });
 })();
 </script>
