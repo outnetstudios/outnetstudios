@@ -1,4 +1,5 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once __DIR__ . '/../includes/catalog_auth_helpers.php';
 require_once __DIR__ . '/../includes/catalog_permissions.php';
 require_once __DIR__ . '/../src/Repositories/CatalogRepository.php';
@@ -110,10 +111,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $newPassword = generatePassword();
             $userRepo->updatePassword($targetUserId, password_hash($newPassword, PASSWORD_DEFAULT));
-            $generatedPwdUid = $targetUserId;
-            $generatedPwdValue = $newPassword;
-            $success = 'Contraseña generada. Puedes copiarla debajo.';
+            $_SESSION['pending_passwords'][$targetUserId] = $newPassword;
+            $success = 'Contraseña generada. Se muestra en la sección del colaborador.';
         }
+    } elseif (!empty($_POST['dismiss_password'])) {
+        $targetUserId = (int)($_POST['target_user_id'] ?? 0);
+        unset($_SESSION['pending_passwords'][$targetUserId]);
+        $success = 'Contraseña descartada.';
     }
 }
 
@@ -371,10 +375,11 @@ $catalogoCount = count($access);
 </button>
 </form>
 </div>
-<?php if (isset($generatedPwdUid) && $generatedPwdUid === $uid): ?>
+<?php $pwdValue = $_SESSION['pending_passwords'][$uid] ?? null; ?>
+<?php if ($pwdValue): ?>
 <div class="flex items-center gap-2 mt-2">
 <div class="relative flex-1">
-<input type="password" id="pwd-field-<?= $uid ?>" value="<?= htmlspecialchars($generatedPwdValue, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1 px-2 text-[0.75rem] w-full font-mono">
+<input type="password" id="pwd-field-<?= $uid ?>" value="<?= htmlspecialchars($pwdValue, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1 px-2 text-[0.75rem] w-full font-mono">
 <button type="button" onclick="togglePwdVisibility(<?= $uid ?>)" class="absolute right-1 top-1/2 -translate-y-1/2 p-1 text-on-surface-variant/60 hover:text-on-surface transition-all" title="Mostrar/ocultar">
 <span class="material-symbols-outlined text-[14px]" id="pwd-eye-<?= $uid ?>">visibility</span>
 </button>
@@ -382,6 +387,12 @@ $catalogoCount = count($access);
 <button type="button" onclick="copyPwd(<?= $uid ?>)" class="p-1.5 rounded-lg hover:bg-primary/15 text-primary transition-all" title="Copiar">
 <span class="material-symbols-outlined text-[16px]">content_copy</span>
 </button>
+<form method="POST" class="inline">
+<input type="hidden" name="target_user_id" value="<?= $uid ?>">
+<button type="submit" name="dismiss_password" value="1" class="p-1.5 rounded-lg hover:bg-error/15 text-error/70 transition-all" title="Descartar">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</form>
 </div>
 <?php endif; ?>
 </div>
@@ -514,10 +525,11 @@ $catalogoCount = count($access);
 </button>
 </form>
 </div>
-<?php if (isset($generatedPwdUid) && $generatedPwdUid === $uid): ?>
+<?php $mobilePwd = $_SESSION['pending_passwords'][$uid] ?? null; ?>
+<?php if ($mobilePwd): ?>
 <div class="flex items-center gap-2 mt-2">
 <div class="relative flex-1">
-<input type="password" id="pwd-field-m-<?= $uid ?>" value="<?= htmlspecialchars($generatedPwdValue, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1 px-2 text-[0.75rem] w-full font-mono">
+<input type="password" id="pwd-field-m-<?= $uid ?>" value="<?= htmlspecialchars($mobilePwd, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1 px-2 text-[0.75rem] w-full font-mono">
 <button type="button" onclick="togglePwdVisibility(<?= $uid ?>, true)" class="absolute right-1 top-1/2 -translate-y-1/2 p-1 text-on-surface-variant/60 hover:text-on-surface transition-all" title="Mostrar/ocultar">
 <span class="material-symbols-outlined text-[14px]" id="pwd-eye-m-<?= $uid ?>">visibility</span>
 </button>
@@ -525,6 +537,12 @@ $catalogoCount = count($access);
 <button type="button" onclick="copyPwd(<?= $uid ?>, true)" class="p-1.5 rounded-lg hover:bg-primary/15 text-primary transition-all" title="Copiar">
 <span class="material-symbols-outlined text-[16px]">content_copy</span>
 </button>
+<form method="POST" class="inline">
+<input type="hidden" name="target_user_id" value="<?= $uid ?>">
+<button type="submit" name="dismiss_password" value="1" class="p-1.5 rounded-lg hover:bg-error/15 text-error/70 transition-all" title="Descartar">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</form>
 </div>
 <?php endif; ?>
 </div>
