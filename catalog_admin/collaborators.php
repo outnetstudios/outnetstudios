@@ -199,24 +199,22 @@ foreach ($collaborators as $u) {
 
 <?php if ($isAdmin): ?>
 <!-- Nuevo colaborador -->
-<div id="new-collab-form" class="glass-panel rounded-2xl p-sm md:p-md mb-lg">
+<div id="new-collab-form" class="glass-panel rounded-2xl p-sm md:p-md mb-xl">
 <div class="flex items-center gap-xs mb-sm">
 <span class="material-symbols-outlined text-primary">person_add</span>
 <h2 class="font-body-sm text-body-sm text-primary font-semibold">Nuevo colaborador</h2>
 </div>
 <form class="module-form" method="post" action="">
-<div class="flex flex-col md:flex-row gap-sm">
-<div class="flex-1">
+<div class="flex flex-col md:flex-row gap-sm items-start md:items-end">
+<div class="flex-1 w-full">
 <label class="font-body-xs text-body-xs text-on-surface-variant/60 block mb-1">Correo electrónico</label>
 <input type="email" name="email" required class="form-input" placeholder="correo@ejemplo.com">
 </div>
-<div class="flex-1">
+<div class="flex-1 w-full">
 <label class="font-body-xs text-body-xs text-on-surface-variant/60 block mb-1">Nombre completo</label>
 <input type="text" name="name" required class="form-input" placeholder="Nombre completo">
 </div>
-</div>
-<div class="form-actions mt-sm">
-<button class="primary-gradient text-white px-md py-xs rounded-full font-label-lg text-label-lg active:scale-95 transition-transform primary-glow" type="submit" name="create_collaborator" value="1">+ Crear colaborador</button>
+<button class="primary-gradient text-white px-lg py-sm rounded-full font-title-sm text-title-sm active:scale-95 transition-transform primary-glow w-full md:w-auto" type="submit" name="create_collaborator" value="1">+ Crear colaborador</button>
 </div>
 </form>
 </div>
