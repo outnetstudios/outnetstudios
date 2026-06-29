@@ -35,7 +35,6 @@ function isAdminUser(int $userId): bool
 $isAdmin = isAdminUser($userId);
 $error = '';
 $success = '';
-$expandedUid = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$isAdmin) {
@@ -64,62 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'must_change_password' => 0,
                     'created_by' => $userId,
                 ]);
-                $generatedPwdUid = $newId;
-                $generatedPwdValue = $password;
-                $expandedUid = $newId;
-                $success = 'Usuario <strong>' . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . '</strong> creado. La contraseña se muestra en la sección del colaborador.';
+                header('Location: collaborator_detail.php?id=' . $newId);
+                exit;
             }
-        }
-    } elseif (!empty($_POST['add_access'])) {
-        $targetUserId = (int)($_POST['target_user_id'] ?? 0);
-        $catalogId = (int)($_POST['catalog_id'] ?? 0);
-        if ($targetUserId <= 0 || $catalogId <= 0) {
-            $error = 'Selecciona un usuario y un catálogo.';
-        } elseif (isAdminUser($targetUserId)) {
-            $error = 'Este usuario es un creador de catálogos (admin), no puede ser agregado como colaborador.';
-        } else {
-            $existing = $collabRepo->findByUserAndCatalog($targetUserId, $catalogId);
-            if ($existing) {
-                $error = 'Este usuario ya tiene acceso a ese catálogo.';
-            } else {
-                $perms = [
-                    PERM_EDIT_CATALOG => !empty($_POST['perm_edit_catalog']),
-                    PERM_EDIT_PAGES => !empty($_POST['perm_edit_pages']),
-                    PERM_EDIT_PRODUCTS => !empty($_POST['perm_edit_products']),
-                    PERM_EDIT_CATEGORIES => !empty($_POST['perm_edit_categories']),
-                ];
-                $collabRepo->create($catalogId, $targetUserId, $perms);
-                $expandedUid = $targetUserId;
-                $success = 'Acceso agregado.';
-            }
-        }
-    } elseif (!empty($_POST['remove_access'])) {
-        $collabId = (int)($_POST['collab_id'] ?? 0);
-        $expandedUid = (int)($_POST['target_user_id'] ?? 0);
-        $collabRepo->delete($collabId);
-        $success = 'Acceso eliminado.';
-    } elseif (!empty($_POST['update_perms'])) {
-        $collabId = (int)($_POST['collab_id'] ?? 0);
-        $expandedUid = (int)($_POST['target_user_id'] ?? 0);
-        $perms = [
-            PERM_EDIT_CATALOG => !empty($_POST['perm_edit_catalog']),
-            PERM_EDIT_PAGES => !empty($_POST['perm_edit_pages']),
-            PERM_EDIT_PRODUCTS => !empty($_POST['perm_edit_products']),
-            PERM_EDIT_CATEGORIES => !empty($_POST['perm_edit_categories']),
-        ];
-        $collabRepo->updatePermissions($collabId, $perms);
-        $success = 'Permisos actualizados.';
-    } elseif (!empty($_POST['reset_password'])) {
-        $targetUserId = (int)($_POST['target_user_id'] ?? 0);
-        if (isAdminUser($targetUserId)) {
-            $error = 'No puedes cambiar la contraseña de un administrador.';
-        } else {
-            $newPassword = generatePassword();
-            $userRepo->updatePasswordEncrypted($targetUserId, $newPassword);
-            $generatedPwdUid = $targetUserId;
-            $generatedPwdValue = $newPassword;
-            $expandedUid = $targetUserId;
-            $success = 'Contraseña generada. Se muestra en la sección del colaborador.';
         }
     }
 }
@@ -127,7 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $collaborators = $userRepo->findByCreatedBy($userId);
 $myCatalogs = $catRepo->allByUser($userId);
 
-// Collect all distinct collaborator users across my catalogs
 $collaboratorUserIds = [];
 foreach ($myCatalogs as $cat) {
     $cid = (int)$cat['id'];
@@ -137,14 +82,12 @@ foreach ($myCatalogs as $cat) {
     }
 }
 
-// Show users I created + users that are collaborators on my catalogs
 $createdByMe = $userRepo->findByCreatedBy($userId);
 $collabUsers = [];
 if (!empty($collaboratorUserIds)) {
     $collabUsers = $userRepo->findByIds(array_keys($collaboratorUserIds));
 }
 
-// Merge: prefer users I created (they have more info), add others
 $merged = [];
 foreach ($createdByMe as $u) {
     $merged[(int)$u['id']] = $u;
@@ -157,7 +100,6 @@ foreach ($collabUsers as $u) {
 }
 $collaborators = array_values($merged);
 
-// Load access data for each collaborator
 $collabAccess = [];
 foreach ($collaborators as $u) {
     $uid = (int)$u['id'];
@@ -183,7 +125,6 @@ foreach ($collaborators as $u) {
 </div>
 <?php endif; ?>
 
-<!-- Header -->
 <header class="mb-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
 <div>
 <h1 class="font-display-lg-mobile text-display-lg-mobile text-on-surface">Colaboradores</h1>
@@ -207,7 +148,6 @@ foreach ($collaborators as $u) {
 </header>
 
 <?php if ($isAdmin): ?>
-<!-- Nuevo colaborador -->
 <div id="new-collab-form" class="glass-panel rounded-2xl p-sm md:p-md mb-xl">
 <div class="flex items-center gap-xs mb-sm">
 <span class="material-symbols-outlined text-primary">person_add</span>
@@ -239,7 +179,6 @@ foreach ($collaborators as $u) {
 <?php endif; ?>
 </div>
 <?php else: ?>
-<!-- Desktop table -->
 <div class="glass-panel rounded-3xl overflow-hidden mb-xl">
 <div class="p-md border-b border-outline-variant/10 flex flex-wrap gap-md justify-between items-center bg-surface-container-highest/20">
 <h2 class="font-title-sm text-title-sm text-primary flex items-center gap-xs"><span class="material-symbols-outlined">group</span> Colaboradores</h2>
@@ -276,128 +215,7 @@ $catalogoCount = count($access);
 </td>
 <td class="p-md text-right">
 <div class="flex justify-end gap-1">
-<button onclick="toggleAccess(<?= $uid ?>)" id="toggle-btn-<?= $uid ?>" class="p-2 hover:bg-primary/10 rounded-full text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined transition-transform duration-200 toggle-arrow-<?= $uid ?>" <?= ($expandedUid === $uid) ? 'style="transform: rotate(180deg)"' : '' ?>>expand_more</span></button>
-</div>
-</td>
-</tr>
-<tr id="access-<?= $uid ?>" class="<?= ($expandedUid === $uid) ? '' : 'hidden' ?>">
-<td colspan="3" class="p-0">
-<div class="bg-surface-container-low/50 p-md space-y-md">
-<?php if ($catalogoCount > 0): ?>
-<div class="flex flex-col gap-2">
-<?php foreach ($access as $a): ?>
-<?php $perms = is_string($a['permissions']) ? json_decode($a['permissions'], true) : ($a['permissions'] ?? []); ?>
-<div class="flex flex-col md:flex-row md:items-center justify-between gap-2 bg-surface-variant/20 rounded-xl p-3">
-<div class="flex items-center gap-2 min-w-0">
-<span class="material-symbols-outlined text-primary text-[16px] shrink-0">folder</span>
-<span class="font-body-sm text-body-sm text-on-surface font-semibold truncate"><?= htmlspecialchars($a['name'], ENT_QUOTES, 'UTF-8') ?></span>
-</div>
-<form method="POST" class="flex flex-wrap items-center gap-2">
-<input type="hidden" name="collab_id" value="<?= (int)($a['collab_id'] ?? $a['id']) ?>">
-<input type="hidden" name="target_user_id" value="<?= $uid ?>">
-<label class="flex items-center gap-1.5 cursor-pointer group">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60">Cat</span>
-<input type="checkbox" name="perm_edit_catalog" value="1" <?= !empty($perms[PERM_EDIT_CATALOG]) ? 'checked' : '' ?> class="sr-only peer">
-<div class="w-9 h-5 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all relative"></div>
-</label>
-<label class="flex items-center gap-1.5 cursor-pointer group">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60">Pag</span>
-<input type="checkbox" name="perm_edit_pages" value="1" <?= !empty($perms[PERM_EDIT_PAGES]) ? 'checked' : '' ?> class="sr-only peer">
-<div class="w-9 h-5 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all relative"></div>
-</label>
-<label class="flex items-center gap-1.5 cursor-pointer group">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60">Prod</span>
-<input type="checkbox" name="perm_edit_products" value="1" <?= !empty($perms[PERM_EDIT_PRODUCTS]) ? 'checked' : '' ?> class="sr-only peer">
-<div class="w-9 h-5 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all relative"></div>
-</label>
-<label class="flex items-center gap-1.5 cursor-pointer group">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60">Catg</span>
-<input type="checkbox" name="perm_edit_categories" value="1" <?= !empty($perms[PERM_EDIT_CATEGORIES]) ? 'checked' : '' ?> class="sr-only peer">
-<div class="w-9 h-5 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all relative"></div>
-</label>
-<div class="flex items-center gap-1">
-<button type="submit" name="update_perms" value="1" title="Guardar" class="p-1.5 rounded-lg hover:bg-primary/15 text-primary transition-all"><span class="material-symbols-outlined text-[16px]">check</span></button>
-<button type="submit" name="remove_access" value="1" onclick="return confirm('¿Quitar acceso a este catálogo?')" title="Quitar" class="p-1.5 rounded-lg hover:bg-error/15 text-error/70 transition-all"><span class="material-symbols-outlined text-[16px]">close</span></button>
-</div>
-</form>
-</div>
-<?php endforeach; ?>
-</div>
-<?php else: ?>
-<div class="flex items-center gap-2 bg-surface-variant/20 rounded-xl p-3">
-<span class="material-symbols-outlined text-on-surface-variant/30 text-[16px]">info</span>
-<p class="font-body-xs text-body-xs text-on-surface-variant/50">Sin acceso a ningún catálogo.</p>
-</div>
-<?php endif; ?>
-
-<div class="bg-surface-variant/20 rounded-xl p-3">
-<p class="font-label-caps text-label-caps text-on-surface-variant/60 mb-2">Agregar acceso</p>
-<form method="POST" class="flex flex-col md:flex-row items-start md:items-center gap-2">
-<input type="hidden" name="target_user_id" value="<?= $uid ?>">
-<select name="catalog_id" class="form-input py-1 px-2 text-[0.75rem] w-full md:w-auto">
-<option value="">Seleccionar catálogo</option>
-<?php foreach ($myCatalogs as $cat): ?>
-<option value="<?= (int)$cat['id'] ?>"><?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?></option>
-<?php endforeach; ?>
-</select>
-<div class="flex flex-wrap items-center gap-2">
-<label class="flex items-center gap-1 cursor-pointer group">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60">Cat</span>
-<input type="checkbox" name="perm_edit_catalog" value="1" checked class="sr-only peer">
-<div class="w-7 h-4 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all relative"></div>
-</label>
-<label class="flex items-center gap-1 cursor-pointer group">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60">Pag</span>
-<input type="checkbox" name="perm_edit_pages" value="1" checked class="sr-only peer">
-<div class="w-7 h-4 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all relative"></div>
-</label>
-<label class="flex items-center gap-1 cursor-pointer group">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60">Prod</span>
-<input type="checkbox" name="perm_edit_products" value="1" checked class="sr-only peer">
-<div class="w-7 h-4 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all relative"></div>
-</label>
-<label class="flex items-center gap-1 cursor-pointer group">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60">Catg</span>
-<input type="checkbox" name="perm_edit_categories" value="1" checked class="sr-only peer">
-<div class="w-7 h-4 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all relative"></div>
-</label>
-<button type="submit" name="add_access" value="1" class="px-3 py-1 rounded-full bg-primary/15 text-primary font-label-caps text-[0.65rem] hover:bg-primary/25 transition-all flex items-center gap-1 whitespace-nowrap">
-<span class="material-symbols-outlined text-[12px]">add</span> Agregar
-</button>
-</div>
-</form>
-</div>
-
-                <!-- Password section -->
-                <?php
-                $showPwd = (isset($generatedPwdUid) && $generatedPwdUid === $uid);
-                $pwdValue = $showPwd ? $generatedPwdValue : (!empty($u['password_encrypted']) ? decryptPassword($u['password_encrypted']) : null);
-                $hasPwd = $showPwd || !empty($u['password_encrypted']);
-                ?>
-                <div class="bg-surface-variant/20 rounded-xl p-3" id="pwd-section-<?= $uid ?>">
-                <div class="flex items-center justify-between gap-2">
-                <span class="font-label-caps text-label-caps text-on-surface-variant/60">Contraseña</span>
-                <form method="POST" class="shrink-0">
-                <input type="hidden" name="target_user_id" value="<?= $uid ?>">
-                <button type="submit" name="reset_password" value="1" class="px-3 py-1 rounded-full bg-warning/15 text-warning font-label-caps text-[0.65rem] hover:bg-warning/25 transition-all flex items-center gap-1 border border-warning/20 whitespace-nowrap">
-                <span class="material-symbols-outlined text-[12px]">key</span> Generar
-                </button>
-                </form>
-                </div>
-                <?php if ($hasPwd): ?>
-                <div class="flex items-center gap-2 mt-3">
-                <div class="relative min-w-0" style="flex:0 1 80%">
-                <input type="password" id="pwd-field-<?= $uid ?>" value="<?= htmlspecialchars($pwdValue, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1.5 px-2 text-[0.8rem] w-full font-mono pr-8">
-                <button type="button" onclick="togglePwdVisibility(<?= $uid ?>)" class="absolute right-1 top-1/2 -translate-y-1/2 p-1 text-on-surface-variant/60 hover:text-on-surface transition-all" title="Mostrar/ocultar">
-                <span class="material-symbols-outlined text-[16px]" id="pwd-eye-<?= $uid ?>">visibility</span>
-                </button>
-                </div>
-                <button type="button" onclick="copyPwd(<?= $uid ?>)" class="px-2 py-1.5 rounded-lg hover:bg-primary/15 text-primary transition-all flex items-center justify-center shrink-0" title="Copiar">
-                <span class="material-symbols-outlined text-[18px]">content_copy</span>
-                </button>
-                </div>
-                <?php endif; ?>
-                </div>
+<a href="collaborator_detail.php?id=<?= $uid ?>" class="p-2 hover:bg-primary/10 rounded-full text-on-surface-variant hover:text-primary transition-all inline-flex items-center justify-center" title="Gestionar"><span class="material-symbols-outlined">arrow_forward</span></a>
 </div>
 </td>
 </tr>
@@ -406,7 +224,6 @@ $catalogoCount = count($access);
 </table>
 </div>
 
-<!-- Mobile cards -->
 <div class="mobile-cards">
 <?php foreach ($collaborators as $u):
 $uid = (int)$u['id'];
@@ -428,125 +245,7 @@ $catalogoCount = count($access);
 </div>
 </div>
 <div class="mobile-card-actions">
-<button onclick="toggleAccess(<?= $uid ?>)" id="toggle-btn-mobile-<?= $uid ?>" class="mobile-card-btn"><span class="material-symbols-outlined transition-transform duration-200 toggle-arrow-<?= $uid ?>" <?= ($expandedUid === $uid) ? 'style="transform: rotate(180deg)"' : '' ?>>expand_more</span></button>
-</div>
-</div>
-<div id="access-mobile-<?= $uid ?>" class="<?= ($expandedUid === $uid) ? '' : 'hidden' ?>">
-<div class="bg-surface-container-low/50 p-md space-y-md">
-<?php if ($catalogoCount > 0): ?>
-<div class="flex flex-col gap-2">
-<?php foreach ($access as $a): ?>
-<?php $perms = is_string($a['permissions']) ? json_decode($a['permissions'], true) : ($a['permissions'] ?? []); ?>
-<div class="flex flex-col gap-2 bg-surface-variant/20 rounded-xl p-3">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-[16px]">folder</span>
-<span class="font-body-sm text-body-sm text-on-surface font-semibold"><?= htmlspecialchars($a['name'], ENT_QUOTES, 'UTF-8') ?></span>
-</div>
-<form method="POST" class="flex flex-wrap items-center gap-2">
-<input type="hidden" name="collab_id" value="<?= (int)($a['collab_id'] ?? $a['id']) ?>">
-<input type="hidden" name="target_user_id" value="<?= $uid ?>">
-<label class="flex items-center gap-1.5 cursor-pointer group">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60">Cat</span>
-<input type="checkbox" name="perm_edit_catalog" value="1" <?= !empty($perms[PERM_EDIT_CATALOG]) ? 'checked' : '' ?> class="sr-only peer">
-<div class="w-9 h-5 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all relative"></div>
-</label>
-<label class="flex items-center gap-1.5 cursor-pointer group">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60">Pag</span>
-<input type="checkbox" name="perm_edit_pages" value="1" <?= !empty($perms[PERM_EDIT_PAGES]) ? 'checked' : '' ?> class="sr-only peer">
-<div class="w-9 h-5 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all relative"></div>
-</label>
-<label class="flex items-center gap-1.5 cursor-pointer group">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60">Prod</span>
-<input type="checkbox" name="perm_edit_products" value="1" <?= !empty($perms[PERM_EDIT_PRODUCTS]) ? 'checked' : '' ?> class="sr-only peer">
-<div class="w-9 h-5 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all relative"></div>
-</label>
-<label class="flex items-center gap-1.5 cursor-pointer group">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60">Catg</span>
-<input type="checkbox" name="perm_edit_categories" value="1" <?= !empty($perms[PERM_EDIT_CATEGORIES]) ? 'checked' : '' ?> class="sr-only peer">
-<div class="w-9 h-5 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all relative"></div>
-</label>
-<div class="flex items-center gap-1">
-<button type="submit" name="update_perms" value="1" title="Guardar" class="p-1.5 rounded-lg hover:bg-primary/15 text-primary transition-all"><span class="material-symbols-outlined text-[16px]">check</span></button>
-<button type="submit" name="remove_access" value="1" onclick="return confirm('¿Quitar acceso a este catálogo?')" title="Quitar" class="p-1.5 rounded-lg hover:bg-error/15 text-error/70 transition-all"><span class="material-symbols-outlined text-[16px]">close</span></button>
-</div>
-</form>
-</div>
-<?php endforeach; ?>
-</div>
-<?php else: ?>
-<div class="flex items-center gap-2 bg-surface-variant/20 rounded-xl p-3">
-<span class="material-symbols-outlined text-on-surface-variant/30 text-[16px]">info</span>
-<p class="font-body-xs text-body-xs text-on-surface-variant/50">Sin acceso a ningún catálogo.</p>
-</div>
-<?php endif; ?>
-
-<div class="flex flex-col gap-2 bg-surface-variant/20 rounded-xl p-3">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60">Agregar acceso:</span>
-<form method="POST" class="flex flex-col gap-2">
-<input type="hidden" name="target_user_id" value="<?= $uid ?>">
-<select name="catalog_id" class="form-input py-1 px-2 text-[0.75rem]">
-<option value="">Seleccionar catálogo</option>
-<?php foreach ($myCatalogs as $cat): ?>
-<option value="<?= (int)$cat['id'] ?>"><?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?></option>
-<?php endforeach; ?>
-</select>
-<div class="flex flex-wrap items-center gap-2">
-<label class="flex items-center gap-1 cursor-pointer group">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60">Cat</span>
-<input type="checkbox" name="perm_edit_catalog" value="1" checked class="sr-only peer">
-<div class="w-7 h-4 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all relative"></div>
-</label>
-<label class="flex items-center gap-1 cursor-pointer group">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60">Pag</span>
-<input type="checkbox" name="perm_edit_pages" value="1" checked class="sr-only peer">
-<div class="w-7 h-4 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all relative"></div>
-</label>
-<label class="flex items-center gap-1 cursor-pointer group">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60">Prod</span>
-<input type="checkbox" name="perm_edit_products" value="1" checked class="sr-only peer">
-<div class="w-7 h-4 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all relative"></div>
-</label>
-<label class="flex items-center gap-1 cursor-pointer group">
-<span class="font-body-xs text-body-xs text-on-surface-variant/60">Catg</span>
-<input type="checkbox" name="perm_edit_categories" value="1" checked class="sr-only peer">
-<div class="w-7 h-4 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all relative"></div>
-</label>
-<button type="submit" name="add_access" value="1" class="px-3 py-1 rounded-full bg-primary/15 text-primary font-label-caps text-[0.65rem] hover:bg-primary/25 transition-all flex items-center gap-1 border border-primary/20">
-<span class="material-symbols-outlined text-[12px]">add</span> Agregar
-</button>
-</div>
-</form>
-</div>
-                <!-- Password section -->
-                <?php
-                $showPwdMobile = (isset($generatedPwdUid) && $generatedPwdUid === $uid);
-                $pwdValueMobile = $showPwdMobile ? $generatedPwdValue : (!empty($u['password_encrypted']) ? decryptPassword($u['password_encrypted']) : null);
-                $hasPwdMobile = $showPwdMobile || !empty($u['password_encrypted']);
-                ?>
-                <div class="bg-surface-variant/20 rounded-xl p-3 overflow-hidden">
-                <div class="flex items-center justify-between gap-2">
-                <span class="font-label-caps text-label-caps text-on-surface-variant/60">Contraseña</span>
-                <form method="POST" class="shrink-0">
-                <input type="hidden" name="target_user_id" value="<?= $uid ?>">
-                <button type="submit" name="reset_password" value="1" class="px-3 py-1 rounded-full bg-warning/15 text-warning font-label-caps text-[0.65rem] hover:bg-warning/25 transition-all flex items-center gap-1 border border-warning/20 whitespace-nowrap">
-                <span class="material-symbols-outlined text-[12px]">key</span> Generar
-                </button>
-                </form>
-                </div>
-                <?php if ($hasPwdMobile): ?>
-                <div class="flex items-center gap-2 mt-3">
-                <div class="relative min-w-0" style="flex:0 1 80%">
-                <input type="password" id="pwd-field-m-<?= $uid ?>" value="<?= htmlspecialchars($pwdValueMobile, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1.5 px-2 text-[0.8rem] w-full font-mono pr-8">
-                <button type="button" onclick="togglePwdVisibility(<?= $uid ?>, true)" class="absolute right-1 top-1/2 -translate-y-1/2 p-1 text-on-surface-variant/60 hover:text-on-surface transition-all" title="Mostrar/ocultar">
-                <span class="material-symbols-outlined text-[16px]" id="pwd-eye-m-<?= $uid ?>">visibility</span>
-                </button>
-                </div>
-                <button type="button" onclick="copyPwd(<?= $uid ?>, true)" class="px-2 py-1.5 rounded-lg hover:bg-primary/15 text-primary transition-all flex items-center justify-center shrink-0" title="Copiar">
-                <span class="material-symbols-outlined text-[18px]">content_copy</span>
-                </button>
-                </div>
-                <?php endif; ?>
-                </div>
+<a href="collaborator_detail.php?id=<?= $uid ?>" class="mobile-card-btn" title="Gestionar"><span class="material-symbols-outlined">arrow_forward</span></a>
 </div>
 </div>
 <?php endforeach; ?>
@@ -586,43 +285,4 @@ $catalogoCount = count($access);
 .btn-create-collab { width: auto; }
 }
 </style>
-<script>
-function toggleAccess(id) {
-  var isMobile = window.innerWidth < 769;
-  var row = document.getElementById(isMobile ? "access-mobile-" + id : "access-" + id);
-  if (!row) return;
-  row.classList.toggle("hidden");
-  var arrows = document.querySelectorAll(".toggle-arrow-" + id);
-  var isHidden = row.classList.contains("hidden");
-  arrows.forEach(function(a) {
-    a.style.transform = isHidden ? "" : "rotate(180deg)";
-  });
-}
-function togglePwdVisibility(id, isMobile) {
-  var suffix = isMobile ? '-m-' : '-';
-  var field = document.getElementById('pwd-field' + suffix + id);
-  var eye = document.getElementById('pwd-eye' + suffix + id);
-  if (!field || !eye) return;
-  var isPassword = field.type === 'password';
-  field.type = isPassword ? 'text' : 'password';
-  eye.textContent = isPassword ? 'visibility_off' : 'visibility';
-}
-function copyPwd(id, isMobile) {
-  var suffix = isMobile ? '-m-' : '-';
-  var field = document.getElementById('pwd-field' + suffix + id);
-  if (!field) return;
-  navigator.clipboard.writeText(field.value).then(function() {
-    var btn = field.parentElement.nextElementSibling || field.closest('.flex').querySelector('[onclick*="copyPwd"]');
-    if (btn) {
-      var icon = btn.querySelector('.material-symbols-outlined');
-      if (icon) {
-        var orig = icon.textContent;
-        icon.textContent = 'check';
-        setTimeout(function() { icon.textContent = orig; }, 1500);
-      }
-    }
-  });
-}
-</script>
 </html>
-
