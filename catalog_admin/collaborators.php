@@ -35,6 +35,7 @@ function isAdminUser(int $userId): bool
 $isAdmin = isAdminUser($userId);
 $error = '';
 $success = '';
+$expandedUid = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$isAdmin) {
@@ -65,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
                 $generatedPwdUid = $newId;
                 $generatedPwdValue = $password;
+                $expandedUid = $newId;
                 $success = 'Usuario <strong>' . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . '</strong> creado. La contraseña se muestra en la sección del colaborador.';
             }
         }
@@ -87,15 +89,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     PERM_EDIT_CATEGORIES => !empty($_POST['perm_edit_categories']),
                 ];
                 $collabRepo->create($catalogId, $targetUserId, $perms);
+                $expandedUid = $targetUserId;
                 $success = 'Acceso agregado.';
             }
         }
     } elseif (!empty($_POST['remove_access'])) {
         $collabId = (int)($_POST['collab_id'] ?? 0);
+        $expandedUid = (int)($_POST['target_user_id'] ?? 0);
         $collabRepo->delete($collabId);
         $success = 'Acceso eliminado.';
     } elseif (!empty($_POST['update_perms'])) {
         $collabId = (int)($_POST['collab_id'] ?? 0);
+        $expandedUid = (int)($_POST['target_user_id'] ?? 0);
         $perms = [
             PERM_EDIT_CATALOG => !empty($_POST['perm_edit_catalog']),
             PERM_EDIT_PAGES => !empty($_POST['perm_edit_pages']),
@@ -113,6 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userRepo->updatePasswordEncrypted($targetUserId, $newPassword);
             $generatedPwdUid = $targetUserId;
             $generatedPwdValue = $newPassword;
+            $expandedUid = $targetUserId;
             $success = 'Contraseña generada. Se muestra en la sección del colaborador.';
         }
     }
@@ -270,11 +276,11 @@ $catalogoCount = count($access);
 </td>
 <td class="p-md text-right">
 <div class="flex justify-end gap-1">
-<button onclick="toggleAccess(<?= $uid ?>)" id="toggle-btn-<?= $uid ?>" class="p-2 hover:bg-primary/10 rounded-full text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined transition-transform duration-200 toggle-arrow-<?= $uid ?>">expand_more</span></button>
+<button onclick="toggleAccess(<?= $uid ?>)" id="toggle-btn-<?= $uid ?>" class="p-2 hover:bg-primary/10 rounded-full text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined transition-transform duration-200 toggle-arrow-<?= $uid ?>" <?= ($expandedUid === $uid) ? 'style="transform: rotate(180deg)"' : '' ?>>expand_more</span></button>
 </div>
 </td>
 </tr>
-<tr id="access-<?= $uid ?>" class="hidden">
+<tr id="access-<?= $uid ?>" class="<?= ($expandedUid === $uid) ? '' : 'hidden' ?>">
 <td colspan="3" class="p-0">
 <div class="bg-surface-container-low/50 p-md space-y-md">
 <?php if ($catalogoCount > 0): ?>
@@ -288,6 +294,7 @@ $catalogoCount = count($access);
 </div>
 <form method="POST" class="flex flex-wrap items-center gap-2">
 <input type="hidden" name="collab_id" value="<?= (int)($a['collab_id'] ?? $a['id']) ?>">
+<input type="hidden" name="target_user_id" value="<?= $uid ?>">
 <label class="flex items-center gap-1.5 cursor-pointer group">
 <span class="font-body-xs text-body-xs text-on-surface-variant/60">Cat</span>
 <input type="checkbox" name="perm_edit_catalog" value="1" <?= !empty($perms[PERM_EDIT_CATALOG]) ? 'checked' : '' ?> class="sr-only peer">
@@ -367,7 +374,7 @@ $catalogoCount = count($access);
                 $pwdValue = $showPwd ? $generatedPwdValue : (!empty($u['password_encrypted']) ? decryptPassword($u['password_encrypted']) : null);
                 $hasPwd = $showPwd || !empty($u['password_encrypted']);
                 ?>
-                <div class="bg-surface-variant/20 rounded-xl p-3" id="pwd-section-<?= $uid ?>">
+                <div class="bg-surface-variant/20 rounded-xl p-3 overflow-hidden" id="pwd-section-<?= $uid ?>">
                 <div class="flex items-center justify-between gap-2">
                 <span class="font-label-caps text-label-caps text-on-surface-variant/60">Contraseña</span>
                 <form method="POST" class="shrink-0">
@@ -378,15 +385,15 @@ $catalogoCount = count($access);
                 </form>
                 </div>
                 <?php if ($hasPwd): ?>
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mt-3">
-                <div class="relative min-w-0 flex-1">
-                <input type="password" id="pwd-field-<?= $uid ?>" value="<?= htmlspecialchars($pwdValue, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1.5 px-2 text-[0.8rem] w-full font-mono pr-8">
+                <div class="flex items-center gap-2 mt-3 min-w-0">
+                <div class="relative flex-1 min-w-0">
+                <input type="password" id="pwd-field-<?= $uid ?>" value="<?= htmlspecialchars($pwdValue, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1.5 px-2 text-[0.8rem] w-full font-mono pr-8 max-w-full">
                 <button type="button" onclick="togglePwdVisibility(<?= $uid ?>)" class="absolute right-1 top-1/2 -translate-y-1/2 p-1 text-on-surface-variant/60 hover:text-on-surface transition-all" title="Mostrar/ocultar">
                 <span class="material-symbols-outlined text-[16px]" id="pwd-eye-<?= $uid ?>">visibility</span>
                 </button>
                 </div>
-                <button type="button" onclick="copyPwd(<?= $uid ?>)" class="px-3 py-1.5 rounded-lg hover:bg-primary/15 text-primary transition-all flex items-center justify-center gap-1 shrink-0 font-body-sm text-body-sm" title="Copiar">
-                <span class="material-symbols-outlined text-[16px]">content_copy</span> <span class="hidden sm:inline">Copiar</span>
+                <button type="button" onclick="copyPwd(<?= $uid ?>)" class="px-2 py-1.5 rounded-lg hover:bg-primary/15 text-primary transition-all flex items-center justify-center shrink-0" title="Copiar">
+                <span class="material-symbols-outlined text-[18px]">content_copy</span>
                 </button>
                 </div>
                 <?php endif; ?>
@@ -421,10 +428,10 @@ $catalogoCount = count($access);
 </div>
 </div>
 <div class="mobile-card-actions">
-<button onclick="toggleAccess(<?= $uid ?>)" id="toggle-btn-mobile-<?= $uid ?>" class="mobile-card-btn"><span class="material-symbols-outlined transition-transform duration-200 toggle-arrow-<?= $uid ?>">expand_more</span></button>
+<button onclick="toggleAccess(<?= $uid ?>)" id="toggle-btn-mobile-<?= $uid ?>" class="mobile-card-btn"><span class="material-symbols-outlined transition-transform duration-200 toggle-arrow-<?= $uid ?>" <?= ($expandedUid === $uid) ? 'style="transform: rotate(180deg)"' : '' ?>>expand_more</span></button>
 </div>
 </div>
-<div id="access-mobile-<?= $uid ?>" class="hidden">
+<div id="access-mobile-<?= $uid ?>" class="<?= ($expandedUid === $uid) ? '' : 'hidden' ?>">
 <div class="bg-surface-container-low/50 p-md space-y-md">
 <?php if ($catalogoCount > 0): ?>
 <div class="flex flex-col gap-2">
@@ -437,6 +444,7 @@ $catalogoCount = count($access);
 </div>
 <form method="POST" class="flex flex-wrap items-center gap-2">
 <input type="hidden" name="collab_id" value="<?= (int)($a['collab_id'] ?? $a['id']) ?>">
+<input type="hidden" name="target_user_id" value="<?= $uid ?>">
 <label class="flex items-center gap-1.5 cursor-pointer group">
 <span class="font-body-xs text-body-xs text-on-surface-variant/60">Cat</span>
 <input type="checkbox" name="perm_edit_catalog" value="1" <?= !empty($perms[PERM_EDIT_CATALOG]) ? 'checked' : '' ?> class="sr-only peer">
@@ -515,7 +523,7 @@ $catalogoCount = count($access);
                 $pwdValueMobile = $showPwdMobile ? $generatedPwdValue : (!empty($u['password_encrypted']) ? decryptPassword($u['password_encrypted']) : null);
                 $hasPwdMobile = $showPwdMobile || !empty($u['password_encrypted']);
                 ?>
-                <div class="bg-surface-variant/20 rounded-xl p-3">
+                <div class="bg-surface-variant/20 rounded-xl p-3 overflow-hidden">
                 <div class="flex items-center justify-between gap-2">
                 <span class="font-label-caps text-label-caps text-on-surface-variant/60">Contraseña</span>
                 <form method="POST" class="shrink-0">
@@ -526,15 +534,15 @@ $catalogoCount = count($access);
                 </form>
                 </div>
                 <?php if ($hasPwdMobile): ?>
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mt-3">
-                <div class="relative min-w-0 flex-1">
-                <input type="password" id="pwd-field-m-<?= $uid ?>" value="<?= htmlspecialchars($pwdValueMobile, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1.5 px-2 text-[0.8rem] w-full font-mono pr-8">
+                <div class="flex items-center gap-2 mt-3 min-w-0">
+                <div class="relative flex-1 min-w-0">
+                <input type="password" id="pwd-field-m-<?= $uid ?>" value="<?= htmlspecialchars($pwdValueMobile, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1.5 px-2 text-[0.8rem] w-full font-mono pr-8 max-w-full">
                 <button type="button" onclick="togglePwdVisibility(<?= $uid ?>, true)" class="absolute right-1 top-1/2 -translate-y-1/2 p-1 text-on-surface-variant/60 hover:text-on-surface transition-all" title="Mostrar/ocultar">
                 <span class="material-symbols-outlined text-[16px]" id="pwd-eye-m-<?= $uid ?>">visibility</span>
                 </button>
                 </div>
-                <button type="button" onclick="copyPwd(<?= $uid ?>, true)" class="px-3 py-1.5 rounded-lg hover:bg-primary/15 text-primary transition-all flex items-center justify-center gap-1 shrink-0 font-body-sm text-body-sm" title="Copiar">
-                <span class="material-symbols-outlined text-[16px]">content_copy</span> <span class="hidden sm:inline">Copiar</span>
+                <button type="button" onclick="copyPwd(<?= $uid ?>, true)" class="px-2 py-1.5 rounded-lg hover:bg-primary/15 text-primary transition-all flex items-center justify-center shrink-0" title="Copiar">
+                <span class="material-symbols-outlined text-[18px]">content_copy</span>
                 </button>
                 </div>
                 <?php endif; ?>
@@ -615,15 +623,6 @@ function copyPwd(id, isMobile) {
     }
   });
 }
-(function() {
-  var sections = document.querySelectorAll('[id^="pwd-section-"]');
-  sections.forEach(function(s) {
-    if (s.querySelector('[id^="pwd-field-"], [id^="pwd-field-m-"]')) {
-      var id = s.id.replace('pwd-section-', '');
-      toggleAccess(parseInt(id));
-    }
-  });
-})();
 </script>
 </html>
 
