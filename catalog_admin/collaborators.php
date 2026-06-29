@@ -370,23 +370,23 @@ $catalogoCount = count($access);
                 <div class="bg-surface-variant/20 rounded-xl p-3" id="pwd-section-<?= $uid ?>">
                 <div class="flex items-center justify-between gap-2">
                 <span class="font-label-caps text-label-caps text-on-surface-variant/60">Contraseña</span>
-                <form method="POST">
+                <form method="POST" class="shrink-0">
                 <input type="hidden" name="target_user_id" value="<?= $uid ?>">
-                <button type="submit" name="reset_password" value="1" class="px-3 py-1 rounded-full bg-warning/15 text-warning font-label-caps text-[0.65rem] hover:bg-warning/25 transition-all flex items-center gap-1 border border-warning/20">
+                <button type="submit" name="reset_password" value="1" class="px-3 py-1 rounded-full bg-warning/15 text-warning font-label-caps text-[0.65rem] hover:bg-warning/25 transition-all flex items-center gap-1 border border-warning/20 whitespace-nowrap">
                 <span class="material-symbols-outlined text-[12px]">key</span> Generar
                 </button>
                 </form>
                 </div>
                 <?php if ($hasPwd): ?>
-                <div class="flex items-center gap-2 mt-2">
-                <div class="relative flex-1">
-                <input type="password" id="pwd-field-<?= $uid ?>" value="<?= htmlspecialchars($pwdValue, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1 px-2 text-[0.75rem] w-full font-mono">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mt-3">
+                <div class="relative min-w-0 flex-1">
+                <input type="password" id="pwd-field-<?= $uid ?>" value="<?= htmlspecialchars($pwdValue, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1.5 px-2 text-[0.8rem] w-full font-mono pr-8">
                 <button type="button" onclick="togglePwdVisibility(<?= $uid ?>)" class="absolute right-1 top-1/2 -translate-y-1/2 p-1 text-on-surface-variant/60 hover:text-on-surface transition-all" title="Mostrar/ocultar">
-                <span class="material-symbols-outlined text-[14px]" id="pwd-eye-<?= $uid ?>">visibility</span>
+                <span class="material-symbols-outlined text-[16px]" id="pwd-eye-<?= $uid ?>">visibility</span>
                 </button>
                 </div>
-                <button type="button" onclick="copyPwd(<?= $uid ?>)" class="p-1.5 rounded-lg hover:bg-primary/15 text-primary transition-all" title="Copiar">
-                <span class="material-symbols-outlined text-[16px]">content_copy</span>
+                <button type="button" onclick="copyPwd(<?= $uid ?>)" class="px-3 py-1.5 rounded-lg hover:bg-primary/15 text-primary transition-all flex items-center justify-center gap-1 shrink-0 font-body-sm text-body-sm" title="Copiar">
+                <span class="material-symbols-outlined text-[16px]">content_copy</span> <span class="hidden sm:inline">Copiar</span>
                 </button>
                 </div>
                 <?php endif; ?>
@@ -518,23 +518,23 @@ $catalogoCount = count($access);
                 <div class="bg-surface-variant/20 rounded-xl p-3">
                 <div class="flex items-center justify-between gap-2">
                 <span class="font-label-caps text-label-caps text-on-surface-variant/60">Contraseña</span>
-                <form method="POST">
+                <form method="POST" class="shrink-0">
                 <input type="hidden" name="target_user_id" value="<?= $uid ?>">
-                <button type="submit" name="reset_password" value="1" class="px-3 py-1 rounded-full bg-warning/15 text-warning font-label-caps text-[0.65rem] hover:bg-warning/25 transition-all flex items-center gap-1 border border-warning/20">
+                <button type="submit" name="reset_password" value="1" class="px-3 py-1 rounded-full bg-warning/15 text-warning font-label-caps text-[0.65rem] hover:bg-warning/25 transition-all flex items-center gap-1 border border-warning/20 whitespace-nowrap">
                 <span class="material-symbols-outlined text-[12px]">key</span> Generar
                 </button>
                 </form>
                 </div>
                 <?php if ($hasPwdMobile): ?>
-                <div class="flex items-center gap-2 mt-2">
-                <div class="relative flex-1">
-                <input type="password" id="pwd-field-m-<?= $uid ?>" value="<?= htmlspecialchars($pwdValueMobile, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1 px-2 text-[0.75rem] w-full font-mono">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mt-3">
+                <div class="relative min-w-0 flex-1">
+                <input type="password" id="pwd-field-m-<?= $uid ?>" value="<?= htmlspecialchars($pwdValueMobile, ENT_QUOTES, 'UTF-8') ?>" readonly class="form-input py-1.5 px-2 text-[0.8rem] w-full font-mono pr-8">
                 <button type="button" onclick="togglePwdVisibility(<?= $uid ?>, true)" class="absolute right-1 top-1/2 -translate-y-1/2 p-1 text-on-surface-variant/60 hover:text-on-surface transition-all" title="Mostrar/ocultar">
-                <span class="material-symbols-outlined text-[14px]" id="pwd-eye-m-<?= $uid ?>">visibility</span>
+                <span class="material-symbols-outlined text-[16px]" id="pwd-eye-m-<?= $uid ?>">visibility</span>
                 </button>
                 </div>
-                <button type="button" onclick="copyPwd(<?= $uid ?>, true)" class="p-1.5 rounded-lg hover:bg-primary/15 text-primary transition-all" title="Copiar">
-                <span class="material-symbols-outlined text-[16px]">content_copy</span>
+                <button type="button" onclick="copyPwd(<?= $uid ?>, true)" class="px-3 py-1.5 rounded-lg hover:bg-primary/15 text-primary transition-all flex items-center justify-center gap-1 shrink-0 font-body-sm text-body-sm" title="Copiar">
+                <span class="material-symbols-outlined text-[16px]">content_copy</span> <span class="hidden sm:inline">Copiar</span>
                 </button>
                 </div>
                 <?php endif; ?>
