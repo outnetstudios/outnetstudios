@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../Database.php';
+require_once __DIR__ . '/../../includes/catalog_encryption.php';
 
 class CatalogUserRepository
 {
@@ -12,16 +13,21 @@ class CatalogUserRepository
 
     public function create(array $data): int
     {
+        $plainPassword = $data['password_plain'] ?? null;
+        $hashedPassword = $data['password'] ?? ($plainPassword ? password_hash($plainPassword, PASSWORD_DEFAULT) : null);
+        $encryptedPassword = $plainPassword ? encryptPassword($plainPassword) : null;
+
         $query = 'INSERT INTO catalog_users
-            (name, email, password, must_change_password, temp_password_expires_at, status, created_by)
+            (name, email, password, password_encrypted, must_change_password, temp_password_expires_at, status, created_by)
             VALUES
-            (:name, :email, :password, :must_change_password, :temp_password_expires_at, :status, :created_by)';
+            (:name, :email, :password, :password_encrypted, :must_change_password, :temp_password_expires_at, :status, :created_by)';
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute([
             ':name' => $data['name'],
             ':email' => $data['email'],
-            ':password' => $data['password'],
+            ':password' => $hashedPassword,
+            ':password_encrypted' => $encryptedPassword,
             ':must_change_password' => $data['must_change_password'] ?? 1,
             ':temp_password_expires_at' => $data['temp_password_expires_at'] ?? null,
             ':status' => $data['status'] ?? 'active',
@@ -44,7 +50,7 @@ class CatalogUserRepository
 
     public function findByCreatedBy(int $createdBy): array
     {
-        $query = 'SELECT id, name, email, status, created_at FROM catalog_users WHERE created_by = :created_by ORDER BY created_at DESC';
+        $query = 'SELECT id, name, email, status, password_encrypted, created_at FROM catalog_users WHERE created_by = :created_by ORDER BY created_at DESC';
         $stmt = $this->connection->prepare($query);
         $stmt->execute([':created_by' => $createdBy]);
         return $stmt->fetchAll();
@@ -54,7 +60,7 @@ class CatalogUserRepository
     {
         if (empty($ids)) return [];
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
-        $query = "SELECT id, name, email, status, created_at FROM catalog_users WHERE id IN ($placeholders) ORDER BY created_at DESC";
+        $query = "SELECT id, name, email, status, password_encrypted, created_at FROM catalog_users WHERE id IN ($placeholders) ORDER BY created_at DESC";
         $stmt = $this->connection->prepare($query);
         $stmt->execute(array_values($ids));
         return $stmt->fetchAll();
@@ -82,6 +88,19 @@ class CatalogUserRepository
         $query = 'UPDATE catalog_users SET password = :password, must_change_password = 0 WHERE id = :id';
         $stmt = $this->connection->prepare($query);
         return $stmt->execute([':password' => $hashedPassword, ':id' => $id]);
+    }
+
+    public function updatePasswordEncrypted(int $id, string $plainPassword): bool
+    {
+        $hashed = password_hash($plainPassword, PASSWORD_DEFAULT);
+        $encrypted = encryptPassword($plainPassword);
+        $query = 'UPDATE catalog_users SET password = :password, password_encrypted = :password_encrypted, must_change_password = 0 WHERE id = :id';
+        $stmt = $this->connection->prepare($query);
+        return $stmt->execute([
+            ':password' => $hashed,
+            ':password_encrypted' => $encrypted,
+            ':id' => $id,
+        ]);
     }
 
     public function createPasswordReset(int $userId, string $token, string $expiresAt): bool
