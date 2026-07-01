@@ -1,10 +1,10 @@
 <?php
 session_name('CATALOG_SESSION');
 session_start();
-$_SESSION = [];
-session_regenerate_id(true);
-session_destroy();
-setcookie(session_name(), '', time() - 42000, '/');
+unset($_SESSION['catalog_loggedin']);
+unset($_SESSION['catalog_admin_bridge']);
+unset($_SESSION['catalog_user_id']);
+session_write_close();
 
 header('Location: catalogos.php');
 exit;
