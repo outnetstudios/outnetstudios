@@ -65,7 +65,7 @@ session_write_close();
             <?php if ($bridgeActive): ?>
                 <div class="notice notice--info">
                     Modo edición activo para <strong><?php echo $bridgeCatalogName; ?></strong>.
-                    <a href="salir_catalogo.php" class="button button--small button--danger" style="margin-left:1rem; background:linear-gradient(90deg,#d63031,#e17055);">Finalizar edición</a>
+                    <a href="#" onclick="event.preventDefault(); fetch('ajax_clear_bridge.php').then(function(){ window.location.href='catalogos.php'; }); return false;" class="button button--small button--danger" style="margin-left:1rem; background:linear-gradient(90deg,#d63031,#e17055);">Finalizar edición</a>
                 </div>
             <?php endif; ?>
 
