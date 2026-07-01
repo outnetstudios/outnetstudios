@@ -17,6 +17,15 @@ $bridgeActive = false;
 $bridgeCatalogId = 0;
 $bridgeCatalogName = '';
 
+if (isset($_GET['exit_bridge'])) {
+    session_name('CATALOG_SESSION');
+    session_start();
+    $_SESSION = [];
+    session_write_close();
+    header('Location: catalogos.php');
+    exit;
+}
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -65,7 +74,7 @@ session_write_close();
             <?php if ($bridgeActive): ?>
                 <div class="notice notice--info">
                     Modo edición activo para <strong><?php echo $bridgeCatalogName; ?></strong>.
-                    <a href="salir_catalogo.php" class="button button--small button--danger" style="margin-left:1rem; background:linear-gradient(90deg,#d63031,#e17055);">Finalizar edición</a>
+                    <a href="catalogos.php?exit_bridge=1" class="button button--small button--danger" style="margin-left:1rem; background:linear-gradient(90deg,#d63031,#e17055);">Finalizar edición</a>
                 </div>
             <?php endif; ?>
 
