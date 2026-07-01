@@ -35,7 +35,9 @@ if (isset($_GET['exit_bridge'])) {
         'httponly' => true,
         'samesite' => 'Lax',
     ]);
-    $bridgeExited = true;
+    session_write_close();
+    header('Location: catalogos.php');
+    exit;
 }
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -133,8 +135,5 @@ session_write_close();
             </div>
         </div>
     </div>
-<?php if (!empty($bridgeExited)): ?>
-<script>history.replaceState({}, '', 'catalogos.php');</script>
-<?php endif; ?>
 </body>
 </html>
