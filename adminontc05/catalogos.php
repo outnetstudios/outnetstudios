@@ -18,11 +18,17 @@ $bridgeCatalogId = 0;
 $bridgeCatalogName = '';
 
 if (isset($_GET['exit_bridge'])) {
-    session_write_close();
-    session_name('CATALOG_SESSION');
-    session_start();
-    $_SESSION = [];
-    session_write_close();
+    $bridgeSessionId = $_COOKIE['CATALOG_SESSION'] ?? '';
+    if ($bridgeSessionId) {
+        try {
+            $pdo = Database::getConnection();
+            $stmt = $pdo->prepare('DELETE FROM sessions WHERE session_id = ?');
+            $stmt->execute([$bridgeSessionId]);
+        } catch (\Throwable $e) {
+            error_log('exit_bridge cleanup failed: ' . $e->getMessage());
+        }
+    }
+    setcookie('CATALOG_SESSION', '', time() - 42000, '/');
     header('Location: catalogos.php');
     exit;
 }
