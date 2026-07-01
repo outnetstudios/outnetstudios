@@ -126,6 +126,7 @@ body {
 
 .bg-background { background-color: var(--background); }
 .bg-primary { background-color: var(--neon-blue); }
+.bg-error { background-color: var(--neon-pink); }
 .bg-primary\/10 { background-color: color-mix(in srgb, var(--neon-blue) 10%, transparent); }
 .bg-on-surface-variant\/10 { background-color: color-mix(in srgb, var(--on-surface-variant) 10%, transparent); }
 .bg-outline { background-color: var(--outline); }

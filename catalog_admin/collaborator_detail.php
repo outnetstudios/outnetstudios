@@ -234,8 +234,8 @@ $perms = is_string($a['permissions']) ? json_decode($a['permissions'], true) : (
 
 <div class="bg-surface-variant/20 rounded-xl p-3">
 <p class="font-label-caps text-label-caps text-on-surface-variant/60 mb-2">Agregar acceso</p>
-<form method="POST" class="flex flex-col md:flex-row items-start md:items-center gap-2">
-<select name="catalog_id" class="form-input py-1 px-2 text-[0.75rem] w-full md:w-auto">
+<form method="POST" class="flex flex-col gap-2">
+<select name="catalog_id" class="form-input py-1 px-2 text-[0.75rem] w-full">
 <option value="">Seleccionar catálogo</option>
 <?php foreach ($myCatalogs as $cat): ?>
 <option value="<?= (int)$cat['id'] ?>"><?= htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8') ?></option>
@@ -262,10 +262,10 @@ $perms = is_string($a['permissions']) ? json_decode($a['permissions'], true) : (
 <input type="checkbox" name="perm_edit_categories" value="1" checked class="sr-only peer">
 <div class="w-7 h-4 bg-surface-variant/40 rounded-full peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3.5 after:w-3.5 after:transition-all relative"></div>
 </label>
-<button type="submit" name="add_access" value="1" class="px-3 py-1 rounded-full bg-primary/15 text-primary font-label-caps text-[0.65rem] hover:bg-primary/25 transition-all flex items-center gap-1 border border-primary/20 whitespace-nowrap">
-<span class="material-symbols-outlined text-[12px]">add</span> Agregar
-</button>
 </div>
+<button type="submit" name="add_access" value="1" class="primary-gradient text-white px-lg py-sm rounded-full font-title-sm text-title-sm active:scale-95 transition-transform primary-glow flex items-center justify-center gap-2 w-full md:w-auto">
+<span class="material-symbols-outlined text-[18px]">add</span> Agregar acceso
+</button>
 </form>
 </div>
 </div>
@@ -297,13 +297,14 @@ $perms = is_string($a['permissions']) ? json_decode($a['permissions'], true) : (
 </div>
 
 <div class="glass-panel rounded-2xl p-md">
-<div class="flex items-center justify-between gap-2">
+<div class="flex flex-col gap-md">
 <h2 class="font-title-sm text-title-sm text-error flex items-center gap-xs">
 <span class="material-symbols-outlined">delete</span> Eliminar colaborador
 </h2>
+<p class="font-body-xs text-body-xs text-on-surface-variant/60">Esta acción eliminará permanentemente al colaborador y todo su acceso a catálogos.</p>
 <form method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este colaborador? Se perderá todo su acceso a catálogos.')">
-<button type="submit" name="delete_collaborator" value="1" class="px-3 py-1 rounded-full bg-error/15 text-error font-label-caps text-[0.65rem] hover:bg-error/25 transition-all flex items-center gap-1 border border-error/30 whitespace-nowrap">
-<span class="material-symbols-outlined text-[12px]">delete</span> Borrar
+<button type="submit" name="delete_collaborator" value="1" class="bg-error text-white px-lg py-sm rounded-full font-title-sm text-title-sm active:scale-95 transition-transform flex items-center justify-center gap-2 w-full md:w-auto">
+<span class="material-symbols-outlined text-[18px]">delete</span> Borrar colaborador
 </button>
 </form>
 </div>
