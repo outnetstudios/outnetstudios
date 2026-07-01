@@ -17,29 +17,6 @@ $bridgeActive = false;
 $bridgeCatalogId = 0;
 $bridgeCatalogName = '';
 
-if (isset($_GET['exit_bridge'])) {
-    $bridgeSessionId = $_COOKIE['CATALOG_SESSION'] ?? '';
-    if ($bridgeSessionId) {
-        try {
-            $pdo = Database::getConnection();
-            $stmt = $pdo->prepare('DELETE FROM sessions WHERE session_id = ?');
-            $stmt->execute([$bridgeSessionId]);
-        } catch (\Throwable $e) {
-            error_log('exit_bridge cleanup failed: ' . $e->getMessage());
-        }
-    }
-    setcookie('CATALOG_SESSION', '', [
-        'expires' => time() - 42000,
-        'path' => '/',
-        'secure' => true,
-        'httponly' => true,
-        'samesite' => 'Lax',
-    ]);
-    session_write_close();
-    header('Location: catalogos.php');
-    exit;
-}
-
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -88,7 +65,7 @@ session_write_close();
             <?php if ($bridgeActive): ?>
                 <div class="notice notice--info">
                     Modo edición activo para <strong><?php echo $bridgeCatalogName; ?></strong>.
-                    <a href="catalogos.php?exit_bridge=1" class="button button--small button--danger" style="margin-left:1rem; background:linear-gradient(90deg,#d63031,#e17055);">Finalizar edición</a>
+                    <a href="salir_catalogo.php" class="button button--small button--danger" style="margin-left:1rem; background:linear-gradient(90deg,#d63031,#e17055);">Finalizar edición</a>
                 </div>
             <?php endif; ?>
 

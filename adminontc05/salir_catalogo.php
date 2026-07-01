@@ -1,9 +1,14 @@
 <?php
+require_once __DIR__ . '/../src/Database.php';
+require_once __DIR__ . '/../src/Session/DatabaseSessionHandler.php';
+
+$pdo = Database::getConnection();
+$handler = new DatabaseSessionHandler($pdo);
+session_set_save_handler($handler, true);
+
 session_name('CATALOG_SESSION');
 session_start();
-unset($_SESSION['catalog_loggedin']);
-unset($_SESSION['catalog_admin_bridge']);
-unset($_SESSION['catalog_user_id']);
+$_SESSION = [];
 session_write_close();
 
 header('Location: catalogos.php');
