@@ -18,6 +18,7 @@ $bridgeCatalogId = 0;
 $bridgeCatalogName = '';
 
 if (isset($_GET['exit_bridge'])) {
+    session_write_close();
     session_name('CATALOG_SESSION');
     session_start();
     $_SESSION = [];
