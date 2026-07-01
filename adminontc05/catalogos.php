@@ -28,9 +28,14 @@ if (isset($_GET['exit_bridge'])) {
             error_log('exit_bridge cleanup failed: ' . $e->getMessage());
         }
     }
-    setcookie('CATALOG_SESSION', '', time() - 42000, '/');
-    header('Location: catalogos.php');
-    exit;
+    setcookie('CATALOG_SESSION', '', [
+        'expires' => time() - 42000,
+        'path' => '/',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+    $bridgeExited = true;
 }
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -128,5 +133,8 @@ session_write_close();
             </div>
         </div>
     </div>
+<?php if (!empty($bridgeExited)): ?>
+<script>history.replaceState({}, '', 'catalogos.php');</script>
+<?php endif; ?>
 </body>
 </html>
