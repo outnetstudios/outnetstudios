@@ -303,7 +303,7 @@ $perms = is_string($a['permissions']) ? json_decode($a['permissions'], true) : (
 </h2>
 <p class="font-body-xs text-body-xs text-on-surface-variant/60">Esta acción eliminará permanentemente al colaborador y todo su acceso a catálogos.</p>
 <form method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este colaborador? Se perderá todo su acceso a catálogos.')">
-<button type="submit" name="delete_collaborator" value="1" class="bg-error text-white px-lg py-sm rounded-full font-title-sm text-title-sm active:scale-95 transition-transform flex items-center justify-center gap-2 w-full md:w-auto">
+<button type="submit" name="delete_collaborator" value="1" class="text-white px-lg py-sm rounded-full font-title-sm text-title-sm active:scale-95 transition-transform flex items-center justify-center gap-2 w-full md:w-auto" style="background-color:#ff5e7a">
 <span class="material-symbols-outlined text-[18px]">delete</span> Borrar colaborador
 </button>
 </form>
