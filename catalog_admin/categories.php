@@ -25,17 +25,15 @@ if (isset($_GET['move'], $_GET['move_id'])) {
     $moveId = (int)$_GET['move_id'];
     $moveCat = $categoryRepo->findById($moveId);
     if ($moveCat && (int)$moveCat['catalog_id'] === $catalogId) {
-        $dir = $_GET['move'] === 'up' ? -1 : 1;
-        $currentOrder = (int)$moveCat['sort_order'];
-        $newOrder = $currentOrder + $dir;
-        $catList = $categories;
-        $other = array_filter($catList, fn($c) => (int)$c['sort_order'] === $newOrder && (int)$c['id'] !== $moveId);
-        if ($other) {
-            $other = reset($other);
-            $categoryRepo->update((int)$other['id'], ['sort_order' => $currentOrder] + $other);
-            $categoryRepo->update($moveId, ['sort_order' => $newOrder] + $moveCat);
-        } else {
-            $categoryRepo->update($moveId, ['sort_order' => $newOrder] + $moveCat);
+        $idx = array_search($moveId, array_column($categories, 'id'));
+        if ($idx === false) { $idx = 0; }
+        $targetIdx = $idx + ($_GET['move'] === 'up' ? -1 : 1);
+        if ($targetIdx >= 0 && $targetIdx < count($categories)) {
+            $other = $categories[$targetIdx];
+            $moveOrder = (int)$moveCat['sort_order'];
+            $otherOrder = (int)$other['sort_order'];
+            $categoryRepo->update($moveId, ['sort_order' => $otherOrder] + $moveCat);
+            $categoryRepo->update((int)$other['id'], ['sort_order' => $moveOrder] + $other);
         }
     }
     header('Location: categories.php?catalog_id=' . $catalogId);
