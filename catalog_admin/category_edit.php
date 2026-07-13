@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'description' => $description,
             'status' => $status,
             'image' => $categoryImage,
+            'sort_order' => (int)$category['sort_order'],
         ]);
         header('Location: categories.php?catalog_id=' . $catalogId);
         exit;
