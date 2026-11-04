@@ -249,27 +249,15 @@ body {
 }
 
 
-#hire-us-link {
-    background-color: var(--action-background);
-    color: var(--action-foreground);
-    font-weight: 600;
-}
-
-
-#hire-us-link:hover {
-    background-color: var(--bottom-hover);
-    color: var(--text-colorthree); /* Color de fondo del botón al pasar el cursor */
-}
-
-
-.hire-us-button {
+.action-button {
     display: inline-flex;
+    min-height: 44px;
     align-items: center;
     justify-content: center;
+    padding: 0.75rem 1.5rem;
     border: 0;
     border-radius: var(--action-radius);
-    padding: 0.75rem 1.5rem;
-    background-color: var(--action-background);
+    background: var(--action-background);
     color: var(--action-foreground);
     font: inherit;
     font-size: 1rem;
@@ -279,24 +267,34 @@ body {
     text-decoration: none;
     cursor: pointer;
     transition: background-color 0.2s ease, color 0.2s ease;
-    margin-top: 1rem; /* Espacio superior para separar el botón del párrafo */
 }
 
-#hire-us-link:hover,
-.hire-us-button:hover {
-    background-color: var(--action-hover-background);
+.action-button:hover,
+.navbar .action-button:hover {
+    background: var(--action-hover-background);
     color: var(--action-hover-foreground);
 }
 
+.navbar .action-button {
+    min-height: 36px;
+    padding: 0.55rem 1rem;
+    font-size: 0.9rem;
+}
+
+.action-button:focus-visible,
 .navbar-item:focus-visible,
-.navbar-toggle:focus-visible,
-.hire-us-button:focus-visible,
-.plan-button:focus-visible,
-.hi-button:focus-visible,
-button[type="submit"]:focus-visible,
-.form-modal__button:focus-visible {
+.navbar-toggle:focus-visible {
     outline: 3px solid #6f9cff;
     outline-offset: 3px;
+}
+
+.action-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.action-button--full {
+    width: 100%;
 }
 
 /* Estilos para el Segundo y Cuarto Bloque: Texto Centrado */
@@ -392,27 +390,6 @@ button[type="submit"]:focus-visible,
     width: 30px;
     height: auto;
     padding-right: 1rem;
-}
-
-.plan-button {
-    border: 0;
-    border-radius: var(--action-radius);
-    padding: 0.75rem 1.5rem;
-    width: 100%;
-    background-color: var(--action-background);
-    color: var(--action-foreground);
-    font: inherit;
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.25;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    margin-top: 1rem; /* Espacio superior para separar el botón del párrafo */
-}
-
-.plan-button:hover {
-    background-color: var(--action-hover-background);
-    color: var(--action-hover-foreground);
 }
 
 /* Contenedor del formulario */

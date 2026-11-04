@@ -17,7 +17,7 @@
             <div class="banner-text">
                 <h1>Tecnología para hacer realidad tus ideas</h1>
                 <p>En Outnet Studios creamos productos digitales que ayudan a personas y negocios a trabajar, conectar y crecer.</p>
-                <a class="hire-us-button" href="hireus.php">Cuéntanos tu proyecto</a>
+                <a class="action-button" href="hireus.php">Cuéntanos tu proyecto</a>
             </div>
         </section>
 

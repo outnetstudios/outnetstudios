@@ -28,7 +28,7 @@
                     <span>Android</span>
                     <span>Windows</span>
                 </div>
-                <a class="hi-button hi-button--whatsapp" href="https://wa.me/50585753910?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20House%20Inventory." target="_blank" rel="noopener noreferrer">Solicitar información por WhatsApp</a>
+                <a class="action-button" href="https://wa.me/50585753910?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20House%20Inventory." target="_blank" rel="noopener noreferrer">Solicitar información por WhatsApp</a>
             </div>
             <figure class="hi-hero__image">
                 <img src="img/house-inventory/dashboard-windows.png" alt="Panel principal de House Inventory en Windows" fetchpriority="high">
@@ -86,7 +86,7 @@
             <span class="hi-eyebrow">¿Te interesa para tu negocio?</span>
             <h2>Conoce más sobre House Inventory</h2>
             <p>Escríbenos y te contamos sobre sus funciones y disponibilidad.</p>
-            <a class="hi-button hi-button--whatsapp" href="https://wa.me/50585753910?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20House%20Inventory." target="_blank" rel="noopener noreferrer">Consultar por WhatsApp</a>
+            <a class="action-button" href="https://wa.me/50585753910?text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20House%20Inventory." target="_blank" rel="noopener noreferrer">Consultar por WhatsApp</a>
         </section>
     </main>
 

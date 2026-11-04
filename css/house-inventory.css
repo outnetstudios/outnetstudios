@@ -100,31 +100,6 @@
     font-weight: 600;
 }
 
-.hi-button {
-    display: inline-flex;
-    min-height: 44px;
-    align-items: center;
-    justify-content: center;
-    padding: 0.75rem 1.5rem;
-    border: 0;
-    border-radius: var(--action-radius);
-    background: var(--action-background);
-    color: var(--action-foreground);
-    font: inherit;
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.25;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.hi-button:hover {
-    background: var(--action-hover-background);
-    color: var(--action-hover-foreground);
-}
-
 .hi-preview__image {
     display: block;
     overflow: hidden;
@@ -179,16 +154,6 @@
 .hi-hero .hi-platforms span {
     border-color: #b7e9df;
     color: #17685e;
-}
-
-.hi-button--whatsapp {
-    background: #1fae69;
-    color: #fff;
-}
-
-.hi-button--whatsapp:hover {
-    background: #188f56;
-    color: #fff;
 }
 
 .hi-hero__image,
