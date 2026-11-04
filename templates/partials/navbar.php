@@ -6,6 +6,7 @@
         <div class="navbar-menu" id="navbarMenu">
             <a href="index.php" class="navbar-item">Home</a>
             <a href="mission.php" class="navbar-item">Misión</a>
+            <a href="house-inventory.php" class="navbar-item">Proyectos</a>
             <a href="hireus.php" class="navbar-item" id="hire-us-link">Contáctanos</a>
         </div>
         <button class="navbar-toggle" id="navbarToggle">

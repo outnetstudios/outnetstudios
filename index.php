@@ -9,6 +9,7 @@
     <meta name="google-site-verification" content="3A_UzG8D84kD29N9yVkM64PNP4fNBhTT46KDVkGCrLY" />
     <title>Outnet Studios - Expertos en eCommerce y Soluciones Digitales</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/house-inventory.css">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -38,6 +39,22 @@
             </div>
             <h2>Desarrollo de Tiendas Online eCommerce con PrestaShop</h2>
             <p>En OutNet Studios, ofrecemos soluciones de desarrollo web especializadas en PrestaShop, diseñadas para mercados europeos y latinoamericanos. Nos enfocamos en ofrecer plataformas de eCommerce que no solo capturan la esencia de tu marca, sino que también optimizan la experiencia del usuario y las oportunidades de venta.</p>
+        </section>
+
+        <section class="hi-preview" aria-labelledby="hi-preview-title">
+            <div class="hi-preview__copy">
+                <span class="hi-eyebrow">Caso de éxito · Software de gestión</span>
+                <h2 id="hi-preview-title">House Inventory</h2>
+                <p>Un sistema de inventario y punto de venta para gestionar productos, ventas, facturas, clientes y proveedores desde un mismo lugar.</p>
+                <div class="hi-platforms" aria-label="Plataformas disponibles">
+                    <span>Disponible para Android</span>
+                    <span>Disponible para Windows</span>
+                </div>
+                <a class="hi-button" href="house-inventory.php">Conoce el proyecto</a>
+            </div>
+            <a class="hi-preview__image" href="house-inventory.php" aria-label="Ver el caso de éxito House Inventory">
+                <img src="img/house-inventory/dashboard-windows.png" alt="Panel de control de House Inventory en Windows" loading="lazy">
+            </a>
         </section>
 
         <section class="text-image">

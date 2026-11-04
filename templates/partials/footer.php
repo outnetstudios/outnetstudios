@@ -3,6 +3,7 @@
         <div class="footer-links">
             <a href="index.php">Home</a>
             <a href="mission.php">Misión</a>
+            <a href="house-inventory.php">House Inventory</a>
             <a href="hireus.php">Contáctanos</a>
         </div>
         <p>&copy; 2024 OutNet Studios. Todos los derechos reservados.</p>
