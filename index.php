@@ -43,7 +43,7 @@
                 </div>
                 <h2>Aplicaciones para Android y Windows</h2>
                 <p>Desarrollamos aplicaciones a la medida para que tus procesos y herramientas estén disponibles en las plataformas que usa tu equipo.</p>
-                <a class="action-button" href="hireus.php?servicio=aplicaciones">Consultar sobre aplicaciones</a>
+                <a class="action-button action-button--teal" href="hireus.php?servicio=aplicaciones">Consultar sobre aplicaciones</a>
             </article>
             <article class="grid-item text-content">
                 <div class="image-center" style="display: flex; justify-content: center; align-items: center; height: 100px;">
@@ -51,7 +51,7 @@
                 </div>
                 <h2>Diseño y desarrollo web</h2>
                 <p>Diseñamos y construimos sitios web claros, adaptables a móviles y enfocados en presentar tu negocio y conectar con tus clientes.</p>
-                <a class="action-button" href="hireus.php?servicio=sitio-web">Consultar sobre sitios web</a>
+                <a class="action-button action-button--teal" href="hireus.php?servicio=sitio-web">Consultar sobre sitios web</a>
             </article>
             <article class="grid-item text-content">
                 <div class="service-platform-logos service-platform-logos--commerce" aria-label="PrestaShop y WooCommerce">
@@ -60,7 +60,7 @@
                 </div>
                 <h2>Tiendas online</h2>
                 <p>Creamos y personalizamos tiendas de comercio electrónico con PrestaShop y WooCommerce, según las necesidades de tu operación.</p>
-                <a class="action-button" href="hireus.php?servicio=tienda-online">Consultar sobre eCommerce</a>
+                <a class="action-button action-button--teal" href="hireus.php?servicio=tienda-online">Consultar sobre eCommerce</a>
             </article>
         </section>
 
@@ -73,7 +73,7 @@
                     <span>Disponible para Android</span>
                     <span>Disponible para Windows</span>
                 </div>
-                <a class="action-button" href="house-inventory.php">Conoce el proyecto</a>
+                <a class="action-button action-button--teal" href="house-inventory.php">Conoce el proyecto</a>
             </div>
             <a class="hi-preview__image" href="house-inventory.php" aria-label="Ver el caso de éxito House Inventory">
                 <img src="img/house-inventory/dashboard-windows.png" alt="Panel de control de House Inventory en Windows" loading="lazy">
@@ -122,7 +122,7 @@
         <section class="centered-text">
             <h2>¿Tienes una idea para tu negocio?</h2>
             <p>Cuéntanos qué necesitas y conversemos sobre la mejor forma de hacerlo realidad.</p>
-            <a class="action-button" href="hireus.php">Cuéntanos tu proyecto</a>
+            <a class="action-button action-button--teal" href="hireus.php">Cuéntanos tu proyecto</a>
         </section>
     </main>
 

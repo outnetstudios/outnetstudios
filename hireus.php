@@ -105,7 +105,7 @@
                         <label for="descripcion">Descripción de Proyecto <span style="color: red;">*</span></label>
                         <textarea id="descripcion" name="descripcion" required placeholder="Describe tu proyecto"></textarea>
                         
-                        <button class="action-button" type="submit">Enviar</button>
+                        <button class="action-button action-button--blue" type="submit">Enviar</button>
                     </form>
                 </div>                
             </div>
@@ -117,7 +117,7 @@
         <div class="form-modal__panel" id="contactModalPanel" data-state="success" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
             <h2 class="form-modal__title" id="contactModalTitle">Gracias</h2>
             <p class="form-modal__message" id="contactModalMessage">Tu información fue enviada correctamente.</p>
-            <button type="button" class="action-button action-button--full" id="contactModalClose">Cerrar</button>
+            <button type="button" class="action-button action-button--blue action-button--full" id="contactModalClose">Cerrar</button>
         </div>
     </div>
 
