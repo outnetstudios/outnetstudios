@@ -6,7 +6,7 @@
     <meta name="description" content="Outnet Studios ofrece soluciones completas para eCommerce, desde desarrollo personalizado con PrestaShop hasta soporte continuo para tu éxito digital.">
     <meta name="keywords" content="Outnet Studios, eCommerce, soluciones digitales">
     <meta name="author" content="Outnet Studios">
-    <meta name="google-site-verification" content="e4auEqqPCwgzCzCcTN13xzrzKqxkYEYp6zbsGzgOJmI">
+    <meta name="google-site-verification" content="3A_UzG8D84kD29N9yVkM64PNP4fNBhTT46KDVkGCrLY" />
     <title>Outnet Studios - Expertos en eCommerce y Soluciones Digitales</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
