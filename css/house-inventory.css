@@ -102,22 +102,27 @@
 
 .hi-button {
     display: inline-flex;
-    min-height: 48px;
+    min-height: 44px;
     align-items: center;
     justify-content: center;
-    padding: 0.8rem 1.3rem;
-    border-radius: 999px;
-    background: #49c9b0;
-    color: #10211f;
-    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    border: 0;
+    border-radius: var(--action-radius);
+    background: var(--action-background);
+    color: var(--action-foreground);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.25;
     text-align: center;
     text-decoration: none;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .hi-button:hover {
-    transform: translateY(-2px);
-    background: #72dfca;
+    background: var(--action-hover-background);
+    color: var(--action-hover-foreground);
 }
 
 .hi-preview__image {
@@ -183,6 +188,7 @@
 
 .hi-button--whatsapp:hover {
     background: #188f56;
+    color: #fff;
 }
 
 .hi-hero__image,

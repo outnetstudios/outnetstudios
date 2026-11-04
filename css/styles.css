@@ -25,6 +25,11 @@ body {
     --box-shadow-color: rgba(0, 0, 0, 0.1);
     --background: white;
     --background-blue:  #1F2126;
+    --action-background: #1F2126;
+    --action-foreground: #fff;
+    --action-hover-background: #41434a;
+    --action-hover-foreground: #fff;
+    --action-radius: 30px;
 }
 
 /* Navbar estilos */
@@ -87,7 +92,7 @@ body {
 }
 
 .navbar-item {
-    border-radius: 30px; /* Asegura que el borde redondeado esté siempre aplicado */
+    border-radius: var(--action-radius); /* Asegura que el borde redondeado esté siempre aplicado */
     color: var(--text-color);
     text-decoration: none;
     padding: 0.75rem 1.5rem;
@@ -245,14 +250,9 @@ body {
 
 
 #hire-us-link {
-    background-color: var(--bottom-color-one); /* Color de fondo del botón */
-    color: var(--text-color); /* Color del texto del botón */
-    border: none; /* Sin bordes */
-    padding: 0.75rem 1.5rem; /* Espaciado interno del botón */
-    font-size: 1rem; /* Tamaño de fuente */
-    cursor: pointer; /* Cambio de cursor al pasar por encima */
-    transition: background-color 0.3s; /* Transición suave para el cambio de color de fondo */
-    border-radius: 30px; /* Bordes redondeados */
+    background-color: var(--action-background);
+    color: var(--action-foreground);
+    font-weight: 600;
 }
 
 
@@ -263,21 +263,40 @@ body {
 
 
 .hire-us-button {
-    background-color: var(--bottom-color-one); /* Color de fondo del botón */
-    color: var(--text-color); /* Color del texto del botón */
-    border: none; /* Sin bordes */
-    padding: 0.75rem 1.5rem; /* Espaciado interno del botón */
-    font-size: 1rem; /* Tamaño de fuente */
-    cursor: pointer; /* Cambio de cursor al pasar por encima */
-    transition: background-color 0.3s; /* Transición suave para el cambio de color de fondo */
-    border-radius: 30px; /* Bordes redondeados */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: var(--action-radius);
+    padding: 0.75rem 1.5rem;
+    background-color: var(--action-background);
+    color: var(--action-foreground);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
     margin-top: 1rem; /* Espacio superior para separar el botón del párrafo */
 }
 
+#hire-us-link:hover,
 .hire-us-button:hover {
-    background-color: var(--bottom-hover);
-    color: var(--text-colorthree); /* Color de fondo del botón al pasar el cursor */
-    border-radius: 30px;
+    background-color: var(--action-hover-background);
+    color: var(--action-hover-foreground);
+}
+
+.navbar-item:focus-visible,
+.navbar-toggle:focus-visible,
+.hire-us-button:focus-visible,
+.plan-button:focus-visible,
+.hi-button:focus-visible,
+button[type="submit"]:focus-visible,
+.form-modal__button:focus-visible {
+    outline: 3px solid #6f9cff;
+    outline-offset: 3px;
 }
 
 /* Estilos para el Segundo y Cuarto Bloque: Texto Centrado */
@@ -376,21 +395,24 @@ body {
 }
 
 .plan-button {
-    background-color: var(--bottom-color); /* Color de fondo del botón */
-    color: var(--text-color); /* Color del texto del botón */
-    border: none; /* Sin bordes */
-    padding: 0.75rem 1.5rem; /* Espaciado interno del botón */
+    border: 0;
+    border-radius: var(--action-radius);
+    padding: 0.75rem 1.5rem;
     width: 100%;
-    font-size: 1rem; /* Tamaño de fuente */
-    cursor: pointer; /* Cambio de cursor al pasar por encima */
-    transition: background-color 0.3s; /* Transición suave para el cambio de color de fondo */
-    border-radius: 30px; /* Bordes redondeados */
+    background-color: var(--action-background);
+    color: var(--action-foreground);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.25;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
     margin-top: 1rem; /* Espacio superior para separar el botón del párrafo */
 }
 
 .plan-button:hover {
-    background-color: #F5A200;
-    color: var(--text-color); /* Color de fondo del botón al pasar el cursor */
+    background-color: var(--action-hover-background);
+    color: var(--action-hover-foreground);
 }
 
 /* Contenedor del formulario */

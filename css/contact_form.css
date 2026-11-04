@@ -57,17 +57,22 @@ select::-ms-expand {
 
 /* Estilo para los botones de enviar */
 button[type="submit"] {
-    background-color: #007BFF; /* Color de fondo para el botón */
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 30px; /* Esquinas redondeadas */
+    background-color: var(--action-background, #1F2126);
+    color: var(--action-foreground, #fff);
+    padding: 0.75rem 1.5rem;
+    border: 0;
+    border-radius: var(--action-radius, 30px);
     cursor: pointer;
-    font-size: 16px;
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.25;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 button[type="submit"]:hover {
-    background-color: #0056b3; /* Color del botón en hover */
+    background-color: var(--action-hover-background, #41434a);
+    color: var(--action-hover-foreground, #fff);
 }
 
 /* Ajustes para etiquetas */
@@ -144,10 +149,18 @@ textarea {
 .form-modal__button {
     width: 100%;
     border: none;
-    border-radius: 24px;
-    padding: 0.95rem 1.2rem;
-    background: linear-gradient(90deg, #0051FF, #0e0edb);
-    color: #fff;
+    border-radius: var(--action-radius, 30px);
+    padding: 0.75rem 1.5rem;
+    background: var(--action-background, #1F2126);
+    color: var(--action-foreground, #fff);
     font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.25;
     cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.form-modal__button:hover {
+    background: var(--action-hover-background, #41434a);
+    color: var(--action-hover-foreground, #fff);
 }
