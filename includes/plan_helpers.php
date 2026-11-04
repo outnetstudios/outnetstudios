@@ -31,6 +31,17 @@ function normalizePlanInteresValue(string $value): string
         'plan profesional' => 'professional',
         'premium' => 'premium',
         'plan premium' => 'premium',
+        'aplicaciones' => 'aplicaciones',
+        'sitio web' => 'sitio-web',
+        'sitio-web' => 'sitio-web',
+        'tienda online' => 'tienda-prestashop',
+        'tienda-online' => 'tienda-prestashop',
+        'tienda prestashop' => 'tienda-prestashop',
+        'tienda-prestashop' => 'tienda-prestashop',
+        'tienda woocommerce' => 'tienda-woocommerce',
+        'tienda-woocommerce' => 'tienda-woocommerce',
+        'otro proyecto' => 'otro-proyecto',
+        'otro-proyecto' => 'otro-proyecto',
     ];
 
     if (isset($map[$key])) {
@@ -51,6 +62,11 @@ function formatPlanInteresLabel(string $value): string
         'basic' => 'Plan Básico',
         'professional' => 'Plan Profesional',
         'premium' => 'Plan Premium',
+        'aplicaciones' => 'Aplicación para Android o Windows',
+        'sitio-web' => 'Sitio web',
+        'tienda-prestashop' => 'Tienda online con PrestaShop',
+        'tienda-woocommerce' => 'Tienda online con WooCommerce',
+        'otro-proyecto' => 'Otro proyecto digital',
     ];
 
     return $map[$normalized] ?? $normalized;

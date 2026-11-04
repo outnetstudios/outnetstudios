@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Outnet Studios ofrece soluciones completas para eCommerce, desde desarrollo personalizado con PrestaShop hasta soporte continuo para tu éxito digital.">
-    <meta name="keywords" content="Outnet Studios, eCommerce, soluciones digitales">
+    <meta name="description" content="En Outnet Studios desarrollamos aplicaciones para Android y Windows, sitios web y tiendas online con PrestaShop y WooCommerce.">
+    <meta name="keywords" content="Outnet Studios, aplicaciones Android, aplicaciones Windows, desarrollo web, PrestaShop, WooCommerce">
     <meta name="author" content="Outnet Studios">
-    <meta name="google-site-verification" content="3A_UzG8D84kD29N9yVkM64PNP4fNBhTT46KDVkGCrLY" />
-    <title>Outnet Studios - Expertos en eCommerce y Soluciones Digitales</title>
+    <meta name="google-site-verification" content="3A_UzG8D84kD29N9yVkM64PNP4fNBhTT46KDVkGCrLY">
+    <title>Outnet Studios | Aplicaciones, sitios web y tiendas online</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/house-inventory.css">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
@@ -15,12 +15,12 @@
 <body>
     <?php include __DIR__ . '/templates/partials/navbar.php'; ?>
 
-    <div class="content">
+    <main class="content">
         <section class="banner" style="background-image: url('https://outnetstudios.github.io/outnetstudios/img/imagen-de-fondo.png');">
             <div class="banner-text">
-                <h1>¡Impulsa tu negocio con una tienda online hecha a medida!</h1>
-                <p>Creamos experiencias de compra excepcionales con PrestaShop que conectan con tus clientes y maximizan tus ingresos. ¡Descubre cómo podemos transformar tu eCommerce hoy mismo!</p>
-                <button class="hire-us-button" onclick="location.href='hireus.php'">Contáctanos</button>
+                <h1>Desarrollamos soluciones digitales para tu negocio</h1>
+                <p>Creamos aplicaciones para Android y Windows, sitios web y tiendas online con PrestaShop o WooCommerce. Tecnología a la medida de tus objetivos.</p>
+                <button class="hire-us-button" onclick="location.href='hireus.php'">Hablemos de tu proyecto</button>
             </div>
             <div class="banner-image">
                 <div class="banner-box">
@@ -31,14 +31,37 @@
             </div>
         </section>
 
-        <section class="centered-text">
-            <div class="image-center">
-                <a href="https://prestashop.es/">
-                    <img src="img/prestashop-logo.svg" alt="" style="width: 70px; height: auto;">
-                </a>
-            </div>
-            <h2>Desarrollo de Tiendas Online eCommerce con PrestaShop</h2>
-            <p>En OutNet Studios, ofrecemos soluciones de desarrollo web especializadas en PrestaShop, diseñadas para mercados europeos y latinoamericanos. Nos enfocamos en ofrecer plataformas de eCommerce que no solo capturan la esencia de tu marca, sino que también optimizan la experiencia del usuario y las oportunidades de venta.</p>
+        <section class="centered-text-two">
+            <h2>Soluciones digitales para cada etapa de tu negocio</h2>
+        </section>
+
+        <section class="adaptive-grid">
+            <article class="grid-item text-content">
+                <div class="service-platform-logos" aria-label="Android y Windows">
+                    <img src="img/android-seeklogo.png" alt="Android">
+                    <img src="img/windows-11-icon-seeklogo.svg" alt="Windows">
+                </div>
+                <h2>Aplicaciones para Android y Windows</h2>
+                <p>Desarrollamos aplicaciones a la medida para que tus procesos y herramientas estén disponibles en las plataformas que usa tu equipo.</p>
+                <a class="hi-button" href="hireus.php?servicio=aplicaciones">Consultar sobre aplicaciones</a>
+            </article>
+            <article class="grid-item text-content">
+                <div class="image-center" style="display: flex; justify-content: center; align-items: center; height: 100px;">
+                    <img src="img/vctrly-business-illustrations-210-live-meet-zoom-conference.svg" alt="" style="width: 100px; height: auto;">
+                </div>
+                <h2>Diseño y desarrollo web</h2>
+                <p>Diseñamos y construimos sitios web claros, adaptables a móviles y enfocados en presentar tu negocio y conectar con tus clientes.</p>
+                <a class="hi-button" href="hireus.php?servicio=sitio-web">Consultar sobre sitios web</a>
+            </article>
+            <article class="grid-item text-content">
+                <div class="service-platform-logos service-platform-logos--commerce" aria-label="PrestaShop y WooCommerce">
+                    <img src="img/prestashop-logo.svg" alt="PrestaShop">
+                    <img src="img/Woo_logo_color.svg" alt="WooCommerce">
+                </div>
+                <h2>Tiendas online</h2>
+                <p>Creamos y personalizamos tiendas de comercio electrónico con PrestaShop y WooCommerce, según las necesidades de tu operación.</p>
+                <a class="hi-button" href="hireus.php?servicio=tienda-online">Consultar sobre eCommerce</a>
+            </article>
         </section>
 
         <section class="hi-preview" aria-labelledby="hi-preview-title">
@@ -57,116 +80,51 @@
             </a>
         </section>
 
-        <section class="text-image">
-            <div class="text-left">
-                <h2>¿Por qué PrestaShop es tu mejor opción para eCommerce?</h2>
-                <p><strong>Diseño Adaptado</strong>: Creación de tiendas online personalizadas que reflejan tu estilo y objetivos.</p>
-                <p><strong>Optimización de Conversiones</strong>: Estrategias diseñadas para aumentar tus ventas y mejorar tu ROI.</p>
-                <p><strong>Funciones Avanzadas</strong>: Integración con métodos de pago locales y herramientas de marketing.</p>
-                <p><strong>Soporte Global</strong>: Asistencia y mantenimiento continuo para asegurar el mejor desempeño.</p>
-            </div>
-            
-            <div class="image-right">
-                <img src="img/simulación.png" alt="">
-            </div>
-        </section>
-
         <section class="centered-text">
             <div class="image-center">
                 <img src="img/vctrly-business-illustrations-1.svg" alt="" style="width: 100px; height: auto;">
             </div>
-            <h2>Cómo Trabajamos Para Tu Éxito</h2>
-            <p><strong>Consulta Inicial</strong>: Analizamos tus necesidades y metas específicas.</p>
-            <p><strong>Diseño y Estrategia</strong>: Desarrollamos un plan personalizado y un diseño adaptado a tu mercado.</p>
-            <p><strong>Desarrollo y Pruebas</strong>: Construimos y probamos tu tienda para asegurar su funcionalidad.</p>
-            <p><strong>Lanzamiento y Soporte</strong>: Lanzamos tu tienda y proporcionamos soporte continuo.</p>
+            <h2>De la idea al lanzamiento</h2>
+            <p><strong>Te escuchamos:</strong> entendemos tus objetivos, usuarios y necesidades.</p>
+            <p><strong>Proponemos una solución:</strong> definimos el alcance y las tecnologías apropiadas para tu proyecto.</p>
+            <p><strong>Desarrollamos y probamos:</strong> construimos la solución y revisamos su funcionamiento contigo.</p>
+            <p><strong>Te acompañamos:</strong> coordinamos la entrega y los siguientes pasos de acuerdo con el proyecto.</p>
         </section>
 
         <section class="centered-text-two">
-            <h2>Nuestros Servicios</h2>
+            <h2>Un equipo para convertir ideas en productos digitales</h2>
         </section>
-        
+
         <section class="adaptive-grid">
-            <div class="grid-item text-content">
+            <article class="grid-item text-content">
                 <div class="image-center" style="display: flex; justify-content: center; align-items: center; height: 100px;">
                     <img src="img/vctrly-business-illustrations-220-work-on-computer.svg" alt="" style="width: 100px; height: auto;">
                 </div>
-                <h2>Desarrollo Personalizado</h2>
-                <p>Creamos tiendas online únicas que reflejan la identidad de tu marca y están optimizadas para convertir visitantes en clientes. Cada tienda es adaptada a las necesidades específicas de tu negocio, asegurando una experiencia de compra fluida y atractiva.</p>
-            </div>
-            <div class="grid-item text-content">
+                <h2>Soluciones a tu medida</h2>
+                <p>Analizamos el problema que quieres resolver y planteamos una solución digital que se ajuste a tus procesos, prioridades y usuarios.</p>
+            </article>
+            <article class="grid-item text-content">
                 <div class="image-center" style="display: flex; justify-content: center; align-items: center; height: 100px;">
                     <img src="img/vctrly-business-illustrations-19.svg" alt="" style="width: 100px; height: auto;">
                 </div>
-                <h2>Integraciones Avanzadas</h2>
-                <p>Conectamos tu tienda con herramientas de marketing, sistemas de gestión de inventarios, pasarelas de pago y más. Nos aseguramos de que todas las funcionalidades necesarias estén integradas para que puedas gestionar tu negocio sin problemas.</p>
-            </div>
-            <div class="grid-item text-content">
+                <h2>Experiencias conectadas</h2>
+                <p>Desarrollamos sitios y aplicaciones pensando en una experiencia clara y funcional en los dispositivos y canales que necesita tu negocio.</p>
+            </article>
+            <article class="grid-item text-content">
                 <div class="image-center" style="display: flex; justify-content: center; align-items: center; height: 100px;">
                     <img src="img/vctrly-business-illustrations-210-live-meet-zoom-conference.svg" alt="" style="width: 100px; height: auto;">
                 </div>
-                <h2>Soporte Continuo</h2>
-                <p>Nuestro equipo te acompaña durante todo el proceso y después del lanzamiento. Ofrecemos soporte técnico continuo para resolver cualquier inconveniente y asegurarnos de que tu tienda funcione de manera óptima en todo momento.</p>
-            </div>
-        </section>
-        
-        <section class="centered-text-two">
-            <h2>Planes</h2>
+                <h2>Acompañamiento</h2>
+                <p>Mantenemos una comunicación cercana durante el desarrollo y acordamos contigo el alcance, las entregas y el soporte requerido.</p>
+            </article>
         </section>
 
-        <section class="adaptive-grid-two">
-            <div class="grid-item-two text-content">
-                <div class="title-icon">
-                    <img src="img/Basic.svg" alt="">
-                    <h2>Básico</h2>
-                </div>
-                <p>Este plan es perfecto para pequeñas empresas o emprendedores que desean empezar su aventura en el comercio electrónico con PrestaShop. Ofrecemos una solución sencilla pero efectiva que te permite lanzar tu tienda rápidamente. El Plan Básico incluye:</p>
-                <ul>
-                    <li><strong>Instalación y Configuración de PrestaShop</strong>: Configuramos tu tienda con la última versión de PrestaShop, asegurando que todas las funciones esenciales estén listas para su uso.</li>
-                    <li><strong>Diseño Personalizado Básico</strong>: Un diseño atractivo y funcional que sigue las mejores prácticas de usabilidad, adaptado a dispositivos móviles y optimizado para la experiencia del usuario.</li>
-                    <li><strong>Configuración de Métodos de Pago</strong>: Integración de las principales pasarelas de pago compatibles con PrestaShop, permitiendo que tus clientes realicen pagos de manera segura y rápida.</li>
-                    <li><strong>Soporte durante el Primer Mes</strong>: Asistencia técnica para resolver cualquier inconveniente durante el primer mes tras el lanzamiento, asegurando que tu tienda funcione sin problemas.</li>
-                </ul>
-                <p><strong>Precio:</strong> Un solo pago de 1.500€</p>
-                <button class="plan-button" onclick="location.href='hireus.php?plan=basic'">Contratar</button>
-            </div>
-            
-            <div class="grid-item-two text-content">
-                <div class="title-icon">
-                    <img src="img/Professional.svg" alt="">
-                    <h2>Profesional</h2>
-                </div>
-                <p>El Plan Profesional está diseñado para negocios en expansión que necesitan aprovechar al máximo las funcionalidades de PrestaShop. Este plan no solo te proporciona una tienda más avanzada, sino que también optimiza tu tienda para que maximices las ventas. Incluye:</p>
-                <ul>
-                    <li><strong>Diseño Avanzado y Personalizado</strong>: Creación de un diseño único que refleja la identidad de tu marca, con una interfaz intuitiva y optimizada para conversiones. Incluye personalización avanzada de temas PrestaShop.</li>
-                    <li><strong>Integración con Módulos Clave</strong>: Instalación y configuración de módulos esenciales de PrestaShop, como herramientas de SEO, marketing, gestión de inventario, y análisis, para mejorar la funcionalidad de tu tienda.</li>
-                    <li><strong>Optimización de la Tasa de Conversión</strong>: Ajustes y mejoras en las páginas de producto y el proceso de compra para aumentar la conversión, utilizando las capacidades nativas de PrestaShop.</li>
-                    <li><strong>Soporte Continuo durante 1 Año</strong>: Soporte técnico continuo para asegurar que tu tienda se mantenga actualizada, segura y operativa, incluyendo actualizaciones periódicas de PrestaShop.</li>
-                    <li><strong>Analítica y Reportes en PrestaShop</strong>: Configuración de herramientas de análisis dentro de PrestaShop para monitorizar el rendimiento de tu tienda, permitiéndote tomar decisiones basadas en datos.</li>
-                </ul>
-                <p><strong>Precio:</strong> 250€/mes con un contrato de un año.</p>
-                <button class="plan-button" onclick="location.href='hireus.php?plan=professional'">Contratar</button>
-            </div>
-            
-            <div class="grid-item-two text-content">
-                <div class="title-icon">
-                    <img src="img/Premium.svg" alt="">
-                    <h2>Premium</h2>
-                </div>
-                <p>El Plan Avanzado es ideal para empresas que buscan una solución completa y escalable en PrestaShop. Este plan aprovecha todas las capacidades avanzadas de PrestaShop para ofrecer una tienda online de alto rendimiento y totalmente optimizada. Incluye:</p>
-                <ul>
-                    <li><strong>Diseño Premium y Personalización Completa</strong>: Diseño totalmente personalizado con funcionalidades avanzadas, como animaciones y efectos, que utilizan al máximo las capacidades de PrestaShop para crear una experiencia de usuario impresionante.</li>
-                    <li><strong>Integraciones Avanzadas de PrestaShop</strong>: Conexión con sistemas externos como CRM, ERP, y herramientas de marketing automatizado, todos perfectamente integrados en PrestaShop para una gestión empresarial eficiente.</li>
-                    <li><strong>Optimización SEO Avanzada</strong>: Implementación de las mejores prácticas de SEO dentro de PrestaShop para mejorar la visibilidad de tu tienda en motores de búsqueda, atrayendo más tráfico orgánico.</li>
-                    <li><strong>Soporte Prioritario durante 1 Año y Actualizaciones</strong>: Soporte técnico prioritario con actualizaciones regulares de PrestaShop, asegurando que tu tienda esté siempre al día con las últimas mejoras y características.</li>
-                    <li><strong>Estrategias de Marketing en PrestaShop</strong>: Configuración avanzada de campañas de marketing utilizando los módulos de PrestaShop, incluyendo remarketing y email marketing, para maximizar tu ROI.</li>
-                    <li><strong>Consultoría y Auditoría de PrestaShop</strong>: Evaluaciones periódicas del rendimiento de tu tienda, con auditorías completas y recomendaciones estratégicas para mejorar y escalar tu negocio.</li>
-                </ul>
-                <p><strong>Precio:</strong> 400€/mes con un contrato de un año.</p>
-                <button class="plan-button" onclick="location.href='hireus.php?plan=premium'">Contratar</button>
-            </div>
+        <section class="centered-text">
+            <h2>¿Tienes una idea para tu negocio?</h2>
+            <p>Cuéntanos qué necesitas y conversemos sobre la mejor forma de hacerlo realidad.</p>
+            <a class="hi-button" href="hireus.php">Cuéntanos tu proyecto</a>
         </section>
-    </div>
+    </main>
 
     <?php include __DIR__ . '/templates/partials/footer.php'; ?>
 

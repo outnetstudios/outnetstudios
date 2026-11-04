@@ -9,6 +9,12 @@ const planAliasMap = {
     'plan profesional': 'professional',
     premium: 'premium',
     'plan premium': 'premium',
+    aplicaciones: 'aplicaciones',
+    'sitio-web': 'sitio-web',
+    'tienda-online': 'tienda-prestashop',
+    'tienda-prestashop': 'tienda-prestashop',
+    'tienda-woocommerce': 'tienda-woocommerce',
+    'otro-proyecto': 'otro-proyecto',
 };
 
 const countryCodes = {
@@ -64,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const params = new URLSearchParams(window.location.search);
-    const rawPlan = (params.get('plan') || '').trim().toLowerCase();
+    const rawPlan = (params.get('servicio') || params.get('plan') || '').trim().toLowerCase();
     const normalizedPlan = planAliasMap[rawPlan] || '';
 
     if (normalizedPlan) {

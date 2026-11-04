@@ -8,6 +8,34 @@
     background-color: #101827;
 }
 
+.service-platform-logos {
+    display: flex;
+    height: 100px;
+    align-items: center;
+    justify-content: center;
+    gap: 1.4rem;
+}
+
+.service-platform-logos img {
+    width: auto;
+    max-width: 120px;
+    height: 58px;
+    object-fit: contain;
+}
+
+.service-platform-logos img[alt="Android"] {
+    height: 58px;
+}
+
+.service-platform-logos img[alt="Windows"] {
+    height: 54px;
+}
+
+.service-platform-logos--commerce img {
+    max-width: 125px;
+    max-height: 48px;
+}
+
 .hi-preview {
     display: grid;
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);

@@ -183,7 +183,7 @@ $contactData = getContactData($conn);
                         <th>Nombre y Apellido</th>
                         <th>Email</th>
                         <th>Número de Teléfono</th>
-                        <th>Plan de Interés</th>
+                        <th>Proyecto de Interés</th>
                         <th>Nombre de la Empresa</th>
                         <th>Sector/Industria</th>
                         <th>Descripción de Proyecto</th>

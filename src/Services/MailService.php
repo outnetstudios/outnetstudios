@@ -143,7 +143,7 @@ class MailService
             '<p><strong>Nombre:</strong> ' . htmlspecialchars($contactData['nombre_apellido'], ENT_QUOTES, 'UTF-8') . '</p>' .
             '<p><strong>Email:</strong> ' . htmlspecialchars($contactData['email'], ENT_QUOTES, 'UTF-8') . '</p>' .
             '<p><strong>Teléfono:</strong> ' . htmlspecialchars($contactData['telefono'], ENT_QUOTES, 'UTF-8') . '</p>' .
-            '<p><strong>Plan de Interés:</strong> ' . htmlspecialchars($planLabel, ENT_QUOTES, 'UTF-8') . '</p>' .
+            '<p><strong>Proyecto de interés:</strong> ' . htmlspecialchars($planLabel, ENT_QUOTES, 'UTF-8') . '</p>' .
             '<p><strong>Empresa:</strong> ' . htmlspecialchars($contactData['nombre_empresa'], ENT_QUOTES, 'UTF-8') . '</p>' .
             '<p><strong>Sector:</strong> ' . htmlspecialchars($contactData['sector'], ENT_QUOTES, 'UTF-8') . '</p>' .
             '<p><strong>Descripción:</strong> ' . nl2br(htmlspecialchars($contactData['descripcion'], ENT_QUOTES, 'UTF-8')) . '</p>';
@@ -152,7 +152,7 @@ class MailService
             "Nombre: {$contactData['nombre_apellido']}\n" .
             "Email: {$contactData['email']}\n" .
             "Teléfono: {$contactData['telefono']}\n" .
-            "Plan de Interés: {$planLabel}\n" .
+            "Proyecto de interés: {$planLabel}\n" .
             "Empresa: {$contactData['nombre_empresa']}\n" .
             "Sector: {$contactData['sector']}\n" .
             "Descripción: {$contactData['descripcion']}\n";

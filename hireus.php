@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hire Us</title>
+    <meta name="description" content="Cuéntanos sobre tu aplicación, sitio web o tienda online. En Outnet Studios desarrollamos con Android, Windows, PrestaShop y WooCommerce.">
+    <title>Hablemos de tu proyecto | Outnet Studios</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/contact_form.css">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
@@ -85,12 +86,14 @@
                         <label for="telefono">Número de Teléfono <span style="color: red;">*</span></label>
                         <input type="text" id="telefono" name="telefono" required placeholder="Ej: +34 700700700">
 
-                        <label for="plan_interes">Plan de Interés <span style="color: red;">*</span></label>
+                        <label for="plan_interes">Tipo de proyecto <span style="color: red;">*</span></label>
                         <select id="plan_interes" name="plan_interes" required>
-                            <option value="">Selecciona un plan</option>
-                            <option value="basic">Plan Básico</option>
-                            <option value="professional">Plan Profesional</option>
-                            <option value="premium">Plan Premium</option>
+                            <option value="">Selecciona un tipo de proyecto</option>
+                            <option value="aplicaciones">Aplicación para Android o Windows</option>
+                            <option value="sitio-web">Sitio web</option>
+                            <option value="tienda-prestashop">Tienda online con PrestaShop</option>
+                            <option value="tienda-woocommerce">Tienda online con WooCommerce</option>
+                            <option value="otro-proyecto">Otro proyecto digital</option>
                         </select>
                         
                         <label for="nombre_empresa">Nombre de la Empresa</label>

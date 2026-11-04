@@ -3,54 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Conoce la misión y visión de Outnet Studios. Transformamos el eCommerce con soluciones personalizadas, liderando el futuro del comercio digital con innovación y tecnología avanzada.">
-    <meta name="keywords" content="Misión, Visión, eCommerce, PrestaShop, soluciones digitales">
-    <title>Misión y Visión - Outnet Studios</title>
+    <meta name="description" content="Conoce Outnet Studios: desarrollamos aplicaciones para Android y Windows, sitios web y tiendas online con PrestaShop y WooCommerce.">
+    <meta name="keywords" content="Outnet Studios, aplicaciones, desarrollo web, PrestaShop, WooCommerce">
+    <title>Quiénes somos | Outnet Studios</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <?php include __DIR__ . '/templates/partials/navbar.php'; ?>
 
-    <div class="content">
+    <main class="content">
         <section class="banner-two" style="background-image: url('https://outnetstudios.github.io/outnetstudios/img/imagen-de-fondo.png');">
             <div class="banner-text">
-                <h1>Misión</h1>
-                <p>Impulsar el crecimiento y éxito de negocios en línea mediante la creación de soluciones de eCommerce personalizadas. Diseñamos experiencias de compra excepcionales que conectan a las marcas con sus clientes y optimizan sus ingresos. Nos mantenemos a la vanguardia tecnológica, integrando nuevas herramientas y tecnologías emergentes para ofrecer soluciones innovadoras y de alto impacto en el comercio electrónico.</p>
-                
-                <h1>Visión</h1>
-                <p>Ser líderes en el desarrollo de soluciones de eCommerce integrales, combinando tecnologías avanzadas y emergentes. Revolucionamos la manera en que las empresas interactúan con sus clientes, creando plataformas de compra inteligentes, ágiles y personalizadas que se adapten al futuro del comercio digital. Expandimos nuestras soluciones más allá de una sola plataforma, ofreciendo tecnología versátil y adaptable.</p>
-                
-                <button class="hire-us-button" onclick="location.href='hireus.php'">Contáctanos</button>
-            </div>            
-        </section>
-    
-        <section class="centered-text">
-            <div class="image-center">
-                <img src="img/vctrly-business-illustrations-240-deal.svg" alt="Ilustración de acuerdo" style="width: 100px; height: auto;">
-            </div>
-            <h2>Transformar el eCommerce con Soluciones Personalizadas</h2>
-            <p>Nos dedicamos a impulsar el crecimiento de negocios en línea mediante soluciones de eCommerce personalizadas. Creamos plataformas que optimizan ventas y conectan emocionalmente con los clientes, ofreciendo una experiencia de compra única. Nuestra misión es estar a la vanguardia tecnológica, integrando herramientas y tecnologías avanzadas, como PrestaShop, para asegurar soluciones innovadoras y de alto rendimiento.</p>
-            <p>PrestaShop nos proporciona la flexibilidad necesaria para desarrollar tiendas online que se adapten a las necesidades específicas de cada negocio, garantizando resultados óptimos en diversas industrias. Creemos en la personalización y la innovación constante para lograr el éxito en el comercio digital.</p>
-        </section>
-        
-        <section class="text-image">
-            <div class="text-left">
-                <h2>Liderar el Futuro del eCommerce con Innovación y Adaptabilidad</h2>
-                <p>Nuestra visión es ser reconocidos como líderes en el desarrollo de soluciones de eCommerce, utilizando el potencial de PrestaShop e integrando tecnologías avanzadas y emergentes. Nos preparamos para un futuro donde las plataformas de eCommerce deben ser inteligentes, ágiles y personalizadas, adaptándose a las nuevas demandas del mercado y del consumidor.</p>
-                <p>Con el tiempo, ampliaremos nuestros horizontes más allá de PrestaShop, explorando e integrando nuevas tecnologías que potencien el comercio electrónico. Buscamos revolucionar la forma en que las empresas interactúan con sus clientes, creando plataformas de compra innovadoras que maximicen las ventas y fortalezcan la relación entre marca y consumidor.</p>
-            </div>
-            <div class="image-right">
-                <img src="img/social-media-marketing-concept-marketing-with-applications.jpg" alt="Simulación de eCommerce">
+                <h1>Tecnología para hacer realidad tus ideas</h1>
+                <p>En Outnet Studios creamos productos digitales que ayudan a personas y negocios a trabajar, conectar y crecer.</p>
+                <a class="hire-us-button" href="hireus.php">Cuéntanos tu proyecto</a>
             </div>
         </section>
 
         <section class="centered-text">
-            <h2>¿Por qué Nos Comprometemos con PrestaShop a Largo Plazo?</h2>
-            <p>Elegimos PrestaShop por su flexibilidad actual y su capacidad de adaptación futura. Como empresa comprometida con la innovación, creemos que PrestaShop tiene las características esenciales para evolucionar con las demandas del mercado. Esto nos permite ofrecer soluciones sostenibles y escalables a largo plazo, alineadas con nuestra visión de ser líderes en el desarrollo de eCommerce.</p>
-            <p>Al elegir PrestaShop como nuestra plataforma principal, aseguramos a nuestros clientes acceso a una solución robusta, confiable y adaptable, respaldada por una comunidad global que continúa mejorando la plataforma.</p>
-        </section> 
-    </div>
+            <div class="image-center">
+                <img src="img/vctrly-business-illustrations-240-deal.svg" alt="" style="width: 100px; height: auto;">
+            </div>
+            <h2>Nuestra misión</h2>
+            <p>Entender los retos de cada cliente y convertirlos en soluciones digitales útiles, accesibles y diseñadas para sus necesidades. Desarrollamos aplicaciones para Android y Windows, sitios web y tiendas online con PrestaShop y WooCommerce.</p>
+        </section>
+
+        <section class="text-image">
+            <div class="text-left">
+                <h2>Nuestra visión</h2>
+                <p>Ser un aliado tecnológico cercano para negocios que quieren aprovechar mejor las herramientas digitales. Creemos en soluciones claras, adaptables y construidas para resolver necesidades reales.</p>
+                <p>Trabajamos en distintos tipos de proyectos digitales, desde aplicaciones y sitios web hasta plataformas de comercio electrónico, eligiendo las herramientas según cada objetivo.</p>
+            </div>
+            <div class="image-right">
+                <img src="img/social-media-marketing-concept-marketing-with-applications.jpg" alt="Herramientas y soluciones digitales">
+            </div>
+        </section>
+
+        <section class="centered-text">
+            <h2>¿Qué podemos desarrollar contigo?</h2>
+            <p><strong>Aplicaciones:</strong> soluciones para Android y Windows.</p>
+            <p><strong>Sitios web:</strong> páginas y experiencias web adaptables a dispositivos móviles.</p>
+            <p><strong>Tiendas online:</strong> comercio electrónico con PrestaShop o WooCommerce.</p>
+        </section>
+    </main>
 
     <?php include __DIR__ . '/templates/partials/footer.php'; ?>
 

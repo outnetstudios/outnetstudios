@@ -46,7 +46,7 @@ if ($result) {
                             <th>Nombre</th>
                             <th>Email</th>
                             <th>Teléfono</th>
-                            <th>Plan</th>
+                            <th>Proyecto de interés</th>
                             <th>Empresa</th>
                             <th>Sector</th>
                             <th>Descripción</th>
