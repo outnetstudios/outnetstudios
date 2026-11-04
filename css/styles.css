@@ -269,16 +269,9 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.action-button:hover,
-.navbar .action-button:hover {
+.action-button:hover {
     background: var(--action-hover-background);
     color: var(--action-hover-foreground);
-}
-
-.navbar .action-button {
-    min-height: 32px;
-    padding: 0.4rem 0.9rem;
-    font-size: 0.9rem;
 }
 
 .action-button--teal {
@@ -309,6 +302,22 @@ body {
 .action-button--blue:hover {
     background: #0056b3;
     color: #fff;
+}
+
+#hire-us-link {
+    background-color: var(--bottom-color-one);
+    color: var(--text-color);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 30px;
+}
+
+#hire-us-link:hover {
+    background-color: var(--bottom-hover);
+    color: var(--text-colorthree);
 }
 
 .action-button:focus-visible,
