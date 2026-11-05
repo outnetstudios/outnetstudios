@@ -34,7 +34,6 @@ body {
 
 /* Navbar estilos */
 .navbar {
-     /* Fondo transparente por defecto */
     color: var(--text-color);
     padding: 1rem;
     position: fixed;
@@ -43,7 +42,7 @@ body {
     left: 0;
     z-index: 1000;
     box-sizing: border-box;
-    background-color: transparent;
+    background-color: var(--navbar-bg-color);
     transition: background-color 0.2s ease, box-shadow 0.2s ease, backdrop-filter 0.2s ease; /* Transición suave para el cambio de color */
 }
 
@@ -275,13 +274,13 @@ body {
 }
 
 .action-button--teal {
-    background: #49c9b0;
-    color: #10211f;
+    background: var(--action-background);
+    color: var(--action-foreground);
 }
 
 .action-button--teal:hover {
-    background: #72dfca;
-    color: #10211f;
+    background: var(--action-hover-background);
+    color: var(--action-hover-foreground);
 }
 
 .action-button--whatsapp {
@@ -295,13 +294,13 @@ body {
 }
 
 .action-button--blue {
-    background: linear-gradient(90deg, #0051ff, #0e0edb);
-    color: #fff;
+    background: var(--action-background);
+    color: var(--action-foreground);
 }
 
 .action-button--blue:hover {
-    background: #0056b3;
-    color: #fff;
+    background: var(--action-hover-background);
+    color: var(--action-hover-foreground);
 }
 
 #hire-us-link {
