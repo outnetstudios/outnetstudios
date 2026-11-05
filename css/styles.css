@@ -42,7 +42,7 @@ body {
     left: 0;
     z-index: 1000;
     box-sizing: border-box;
-    background-color: var(--navbar-bg-color);
+    background-color: transparent;
     transition: background-color 0.2s ease, box-shadow 0.2s ease, backdrop-filter 0.2s ease; /* Transición suave para el cambio de color */
 }
 
