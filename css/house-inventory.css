@@ -4,6 +4,13 @@
     color: #172033;
 }
 
+.hi-page .navbar,
+.hi-page .navbar.navbar--solid,
+.hi-page .navbar.active,
+.hi-page .navbar.scrolled {
+    background-color: #1F2126;
+}
+
 .service-platform-logos {
     display: flex;
     height: 100px;

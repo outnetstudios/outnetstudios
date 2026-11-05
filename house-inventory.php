@@ -11,7 +11,7 @@
     <meta property="og:image" content="https://outnetstudios.wasmer.app/img/house-inventory/dashboard-windows.png">
     <title>House Inventory | Caso de éxito - Outnet Studios</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/house-inventory.css">
+    <link rel="stylesheet" href="css/house-inventory.css?v=2">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
 </head>
 <body class="hi-page">
